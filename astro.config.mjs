@@ -4,14 +4,17 @@ import react from '@astrojs/react';
 import vercel from '@astrojs/vercel/serverless';
 
 export default defineConfig({
+  // Mantenemos 'server' para el despliegue dinámico en Vercel
   output: 'server',
   adapter: vercel({
     webAnalytics: { enabled: true },
-    // Esta opción es vital: ayuda a Vercel a mapear correctamente las rutas
-    imageService: true,
+    // Forzamos la inclusión de las rutas para evitar el 404
+    includeFiles: ['./src/pages/**/*'],
   }),
   integrations: [
-    tailwind({ applyBaseStyles: false }),
+    tailwind({
+      applyBaseStyles: false,
+    }),
     react(),
   ],
   vite: {
