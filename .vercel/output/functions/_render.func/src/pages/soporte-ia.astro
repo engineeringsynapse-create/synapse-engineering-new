@@ -1,0 +1,434 @@
+---
+import Layout from '../layouts/MainLayout.astro';
+import Navbar from '../components/shared/Navbar.astro';
+import Footer from '../components/shared/Footer.astro';
+import { Send, ShieldCheck, Plus, Menu, X, Trash2 } from 'lucide-react';
+---
+
+<Layout title="Soporte IA | Synapse Engineering">
+  <Navbar />
+  
+  <main>
+    <div id="delete-modal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4">
+      <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
+      <div class="bg-white rounded-[32px] p-8 max-w-sm w-full relative z-10 shadow-2xl border border-slate-100 animate-in zoom-in-95 duration-200">
+        <div class="flex justify-center mb-6">
+          <div class="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center text-red-500">
+            <Trash2 size={32} />
+          </div>
+        </div>
+        <h3 class="text-xl font-black text-slate-900 text-center mb-2 uppercase tracking-tight">¿Eliminar chat?</h3>
+        <p class="text-slate-500 text-center text-sm mb-8 leading-relaxed">
+          Esto eliminará permanentemente la conversación <span id="modal-chat-name" class="font-bold text-slate-700"></span>.
+        </p>
+        <div class="flex gap-3">
+          <button id="cancel-delete" class="flex-1 py-4 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-2xl font-bold text-xs uppercase tracking-widest transition-all">Cancelar</button>
+          <button id="confirm-delete" class="flex-1 py-4 bg-red-500 hover:bg-red-600 text-white rounded-2xl font-bold text-xs uppercase tracking-widest transition-all shadow-lg">Eliminar</button>
+        </div>
+      </div>
+    </div>
+
+    <section class="bg-[#001529] flex items-center h-[50vh] pt-28 pb-12 md:pt-0 md:pb-0 border-b border-white/5 overflow-hidden relative">
+      <div class="absolute inset-0 opacity-5 bg-[url('/grid-light.svg')] bg-center pointer-events-none"></div>
+      <div class="container mx-auto px-6 relative z-10">
+        <span class="text-cyan-400 text-[10px] font-black uppercase tracking-[0.3em] mb-4 block animate-pulse">SISTEMA OPERATIVO V2.0</span>
+        <h1 class="text-5xl md:text-7xl font-black text-white uppercase tracking-tighter leading-none mb-4">
+          SOPORTE <span class="text-cyan-400 block md:inline">INTELIGENTE</span>
+        </h1>
+        <div class="h-2 w-24 bg-cyan-500 mt-6"></div>
+        <p class="text-slate-300 mt-6 max-w-xl text-lg font-medium leading-relaxed italic">
+          Asesoría técnica inmediata bajo normativa <span class="text-white font-bold">IEC 61439-1</span> para ingeniería eléctrica.
+        </p>
+      </div>
+    </section>
+
+    <section class="py-12 md:py-24 bg-[#f8fafc] relative min-h-[800px]">
+      <div class="container mx-auto px-6">
+        <div class="bg-white rounded-[40px] shadow-[0_40px_80px_-15px_rgba(0,0,0,0.1)] border border-slate-200 overflow-hidden flex h-[750px] max-w-6xl mx-auto relative">
+          
+          <aside id="sidebar" class="absolute inset-y-0 left-0 z-40 w-72 bg-slate-50 border-r border-slate-100 transition-all duration-300 transform -translate-x-full md:relative md:flex md:translate-x-0 md:min-w-[288px] flex flex-col overflow-hidden">
+            <button id="close-sidebar" class="md:hidden absolute top-2 right-2 p-3 text-slate-400 hover:text-red-500 transition-colors z-50">
+              <X size={20} />
+            </button>
+
+            <div class="p-6 flex flex-col h-full min-w-[288px] relative">
+              <button id="new-chat-btn" class="flex items-center justify-center gap-2 w-full py-4 bg-[#001529] text-white rounded-2xl hover:bg-blue-600 transition-all font-bold text-xs shadow-lg mb-6 uppercase tracking-widest whitespace-nowrap mt-4">
+                <Plus size={16} /> Nuevo Chat
+              </button>
+
+              <div class="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-4 px-2 whitespace-nowrap">Conversaciones</div>
+              <div id="chat-list" class="flex-1 overflow-y-auto space-y-2 pr-2 custom-scrollbar"></div>
+            </div>
+          </aside>
+
+          <div id="sidebar-overlay" class="fixed inset-0 bg-black/20 backdrop-blur-sm z-30 hidden md:hidden transition-opacity"></div>
+
+          <div class="flex-1 flex flex-col min-w-0">
+            <div class="px-8 py-5 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
+              <div class="flex items-center gap-3">
+                <button id="toggle-sidebar" class="p-2 text-slate-600 hover:bg-slate-200 rounded-lg transition-colors">
+                  <Menu size={20} />
+                </button>
+                <div class="flex gap-1.5 hidden sm:flex">
+                    <div class="w-3 h-3 rounded-full bg-red-400"></div>
+                    <div class="w-3 h-3 rounded-full bg-amber-400"></div>
+                    <div class="w-3 h-3 rounded-full bg-emerald-400"></div>
+                </div>
+                <span class="text-[11px] font-black text-blue-600 uppercase tracking-widest italic ml-2 truncate">
+                    ASISTENTE IA DE SYNAPSE
+                </span>
+              </div>
+              <div id="status-ia" class="flex items-center gap-2">
+                  <span class="relative flex h-2 w-2">
+                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                      <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                  </span>
+                  <span class="text-[10px] font-bold text-slate-400 uppercase hidden sm:inline">En línea</span>
+              </div>
+            </div>
+
+            <div id="chat-box" class="flex-1 overflow-y-auto p-6 md:p-10 space-y-8 custom-scrollbar"></div>
+
+            <form id="chat-form" class="p-6 md:p-8 bg-slate-50 border-t border-slate-100">
+              <div class="max-w-4xl mx-auto relative">
+                <input id="user-input" type="text" autocomplete="off" placeholder="Describa su requerimiento técnico..." class="w-full bg-white rounded-2xl py-4 md:py-6 px-6 md:px-10 text-sm focus:outline-none border-2 border-slate-200 focus:border-blue-600 transition-all shadow-sm pr-20" />
+                <button type="submit" class="absolute right-3 top-1/2 -translate-y-1/2 bg-[#001529] text-white p-3 md:p-4 rounded-xl hover:bg-blue-600 transition-all">
+                  <Send size={20} />
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Layout>
+
+<script>
+  const chatBox = document.getElementById('chat-box');
+  const chatForm = document.getElementById('chat-form');
+  const userInput = document.getElementById('user-input') as HTMLInputElement;
+  const chatList = document.getElementById('chat-list');
+  const newChatBtn = document.getElementById('new-chat-btn');
+  const toggleSidebar = document.getElementById('toggle-sidebar');
+  const closeSidebar = document.getElementById('close-sidebar');
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  const deleteModal = document.getElementById('delete-modal');
+  const modalChatName = document.getElementById('modal-chat-name');
+
+  let currentChatId = localStorage.getItem('active_chat_id') || Date.now().toString();
+  let chatHistory = JSON.parse(localStorage.getItem('synapse_history') || '[]');
+  let idToDelete = "";
+
+  const WELCOME_MSG = "Saludos. Soy el asistente inteligente de **Synapse Engineering**. ¿En qué puedo asesorarle hoy?";
+
+  async function getAIResponse(message) {
+    const chat = chatHistory.find(c => c.id === currentChatId);
+    const isReturningUser = chat && chat.messages.length > 0;
+    const finalMessage = isReturningUser 
+      ? `[Omitir presentaciones. Responder directamente]: ${message}` 
+      : message;
+
+    const response = await fetch(`${window.location.origin}/api/chat`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: finalMessage })
+    });
+    const data = await response.json();
+    return data.response;
+  }
+
+  function toggleEditMode(msgId) {
+    const textContainer = document.getElementById(`text-container-${msgId}`);
+    const currentText = (document.getElementById(`text-${msgId}`) as HTMLElement).innerText;
+    
+    textContainer.innerHTML = `
+      <div class="flex flex-col gap-3 animate-in fade-in zoom-in-95 duration-200">
+        <textarea id="edit-input-${msgId}" class="w-full bg-white border-2 border-blue-500 rounded-xl p-3 text-sm focus:outline-none min-h-[80px] text-slate-700 font-medium">${currentText}</textarea>
+        <div class="flex gap-2 justify-end">
+          <button class="cancel-edit px-4 py-2 bg-slate-100 text-slate-500 rounded-lg text-[10px] font-black uppercase hover:bg-slate-200 transition-all">Cancelar</button>
+          <button class="save-edit px-4 py-2 bg-blue-600 text-white rounded-lg text-[10px] font-black uppercase hover:bg-blue-700 transition-all shadow-md">Actualizar</button>
+        </div>
+      </div>
+    `;
+
+    textContainer.querySelector('.cancel-edit').addEventListener('click', () => loadActiveChat());
+    
+    textContainer.querySelector('.save-edit').addEventListener('click', async () => {
+      const newText = (document.getElementById(`edit-input-${msgId}`) as HTMLTextAreaElement).value.trim();
+      if (newText && newText !== currentText) {
+        await processUpdate(msgId, newText);
+      } else {
+        loadActiveChat();
+      }
+    });
+  }
+
+  async function processUpdate(msgId, newText) {
+    const chat = chatHistory.find(c => c.id === currentChatId);
+    if (!chat) return;
+    const userMsgIndex = chat.messages.findIndex(m => m.id === msgId);
+    if (userMsgIndex === -1) return;
+    chat.messages[userMsgIndex].text = newText;
+    chat.messages = chat.messages.slice(0, userMsgIndex + 1);
+    localStorage.setItem('synapse_history', JSON.stringify(chatHistory));
+    loadActiveChat();
+    const typingId = `typing-${Date.now()}`;
+    showTyping(typingId);
+    try {
+      const aiResponse = await getAIResponse(newText);
+      hideTyping(typingId);
+      const aId = `a-${Date.now()}`;
+      saveMessage('ai', aiResponse, aId);
+      loadActiveChat();
+    } catch (e) {
+      hideTyping(typingId);
+      saveMessage('ai', "[ERROR DE CONEXIÓN]", `err-${Date.now()}`);
+      loadActiveChat();
+    }
+  }
+
+  function showTyping(id) {
+    const typingDiv = document.createElement('div');
+    typingDiv.id = id;
+    typingDiv.className = "text-slate-400 text-[10px] font-bold uppercase tracking-widest animate-pulse ml-16 mb-4";
+    typingDiv.innerText = "IA Recalculando respuesta...";
+    chatBox?.appendChild(typingDiv);
+    chatBox!.scrollTop = chatBox!.scrollHeight;
+  }
+
+  function hideTyping(id) {
+    document.getElementById(id)?.remove();
+  }
+
+  async function copyToClipboard(text, btn) {
+    try {
+      await navigator.clipboard.writeText(text);
+      const originalInner = btn.innerHTML;
+      btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+      setTimeout(() => { btn.innerHTML = originalInner; }, 2000);
+    } catch (err) { console.error('Error al copiar:', err); }
+  }
+
+  function renderHistory() {
+    if (!chatList) return;
+    const sortedHistory = [...chatHistory].sort((a, b) => (a.pinned === b.pinned ? 0 : a.pinned ? -1 : 1));
+    chatList.innerHTML = sortedHistory.map(chat => `
+      <div id="container-${chat.id}" class="group relative mb-2">
+        <div class="relative flex items-center">
+          <button class="chat-item w-full text-left p-4 pr-12 text-[10px] rounded-2xl transition-all truncate border font-black uppercase tracking-tighter flex items-center gap-2 ${chat.id === currentChatId ? 'bg-blue-600 text-white shadow-lg' : 'bg-white border-slate-100 text-slate-500 hover:border-blue-300'}" data-id="${chat.id}">
+            ${chat.pinned ? `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" class="flex-shrink-0 text-cyan-400"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>` : ''}
+            <span class="truncate">${chat.title}</span>
+          </button>
+          <button class="options-trigger absolute right-3 p-2 text-current z-30 transition-colors hover:text-cyan-400" data-id="${chat.id}">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/><circle cx="12" cy="5" r="1.5"/></svg>
+          </button>
+        </div>
+        <div id="menu-${chat.id}" class="hidden absolute left-0 top-12 w-48 bg-white border border-slate-200 shadow-2xl rounded-2xl z-[100] py-2">
+          <button class="rename-trigger w-full flex items-center gap-3 px-4 py-2.5 text-[10px] font-bold text-slate-600 hover:bg-slate-50" data-id="${chat.id}">CAMBIAR NOMBRE</button>
+          <button class="pin-btn w-full flex items-center gap-3 px-4 py-2.5 text-[10px] font-bold text-slate-600 hover:bg-slate-50" data-id="${chat.id}">${chat.pinned ? 'DESFIJAR' : 'FIJAR CHAT'}</button>
+          <button class="delete-trigger w-full flex items-center gap-3 px-4 py-2.5 text-[10px] font-bold text-red-500 hover:bg-red-50" data-id="${chat.id}">ELIMINAR</button>
+        </div>
+      </div>
+    `).join('');
+    attachActions();
+  }
+
+  function attachActions() {
+    document.querySelectorAll('.chat-item').forEach(btn => {
+      btn.addEventListener('click', () => {
+        currentChatId = (btn as HTMLElement).dataset.id!;
+        saveAndRefresh();
+        if(window.innerWidth < 768) closeMenu();
+      });
+    });
+
+    document.querySelectorAll('.options-trigger').forEach(trigger => {
+      trigger.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const id = (trigger as HTMLElement).dataset.id!;
+        document.querySelectorAll('[id^="menu-"]').forEach(m => m.id !== `menu-${id}` && m.classList.add('hidden'));
+        document.getElementById(`menu-${id}`)?.classList.toggle('hidden');
+      });
+    });
+
+    document.querySelectorAll('.rename-trigger').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const id = (btn as HTMLElement).dataset.id!;
+        const chat = chatHistory.find(c => c.id === id);
+        const nuevo = prompt("NUEVO NOMBRE:", chat.title);
+        if (nuevo) { chat.title = nuevo.toUpperCase(); saveAndRefresh(); }
+      });
+    });
+
+    document.querySelectorAll('.pin-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const id = (btn as HTMLElement).dataset.id!;
+        const chat = chatHistory.find(c => c.id === id);
+        chat.pinned = !chat.pinned;
+        saveAndRefresh();
+      });
+    });
+
+    document.querySelectorAll('.delete-trigger').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        idToDelete = (btn as HTMLElement).dataset.id!;
+        const chat = chatHistory.find(c => c.id === idToDelete);
+        if (modalChatName) modalChatName.innerText = `"${chat.title}"`;
+        deleteModal?.classList.replace('hidden', 'flex');
+      });
+    });
+  }
+
+  function loadActiveChat() {
+    if (!chatBox) return;
+    chatBox.innerHTML = '';
+    const chat = chatHistory.find(c => c.id === currentChatId);
+    if (chat && chat.messages.length > 0) {
+      chat.messages.forEach(m => chatBox.appendChild(createMessage(m.text, m.role === 'ai', m.id)));
+    } else {
+      chatBox.appendChild(createMessage(WELCOME_MSG, true, 'welcome'));
+    }
+    chatBox.scrollTop = chatBox.scrollHeight;
+  }
+
+  function createMessage(text, isAi, specificId) {
+    const div = document.createElement('div');
+    const msgId = specificId;
+    div.className = `group flex gap-5 max-w-4xl relative ${isAi ? '' : 'ml-auto flex-row-reverse animate-in fade-in slide-in-from-right-4'}`;
+    const formattedText = (text || "").replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    
+    // CAMBIO: Se subió a top-1 para ajustarlo lo más arriba posible
+    const toolPosition = isAi ? 'top-1 right-4' : 'top-1 left-4';
+
+    div.innerHTML = `
+      <div class="w-10 h-10 md:w-12 md:h-12 rounded-2xl ${isAi ? 'bg-[#001529] text-cyan-400' : 'bg-blue-600 text-white'} flex items-center justify-center shadow-xl flex-shrink-0 relative z-10">
+        ${isAi ? '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>' : '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>'}
+      </div>
+      <div class="space-y-2 ${isAi ? '' : 'text-right'} relative max-w-[85%] md:max-w-[75%]">
+        <div class="bg-white border border-slate-200 p-4 md:p-6 rounded-[28px] ${isAi ? 'rounded-tl-none pt-7 md:pt-7' : 'rounded-tr-none bg-blue-50/50 pt-7 md:pt-7'} shadow-sm text-slate-700 text-sm relative transition-all group-hover:border-blue-300">
+          
+          <div class="absolute ${toolPosition} opacity-0 group-hover:opacity-100 transition-all duration-200 z-20">
+            <div class="flex flex-row bg-white border border-slate-200 shadow-md rounded-xl p-0 gap-0.5">
+              <button class="copy-msg p-0.5 ${isAi ? 'hover:bg-slate-100' : 'hover:bg-slate-50'} rounded-lg text-slate-400 hover:text-emerald-600 transition-colors">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+              </button>
+              ${!isAi ? `
+              <button class="edit-msg p-0.5 hover:bg-slate-50 rounded-lg text-slate-400 hover:text-blue-600 transition-colors" data-id="${msgId}">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+              </button>
+              ` : ''}
+            </div>
+          </div>
+
+          <p class="font-black text-[#001529] mb-1 uppercase text-[9px] tracking-widest text-left">${isAi ? 'Synapse Core AI' : 'Usuario'}</p>
+          <div id="text-container-${msgId}">
+            <div id="text-${msgId}" class="break-words leading-relaxed text-left ${isAi ? 'pr-8' : ''}">${formattedText}</div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    div.querySelector('.copy-msg')?.addEventListener('click', () => {
+      copyToClipboard((div.querySelector(`#text-${msgId}`) as HTMLElement).innerText, div.querySelector('.copy-msg'));
+    });
+
+    if (!isAi) {
+      div.querySelector('.edit-msg')?.addEventListener('click', () => {
+        toggleEditMode(msgId);
+      });
+    }
+    return div;
+  }
+
+  chatForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const message = userInput.value.trim();
+    if (!message) return;
+    const uId = `u-${Date.now()}`;
+    chatBox?.appendChild(createMessage(message, false, uId));
+    saveMessage('user', message, uId);
+    userInput.value = '';
+    const typingId = `typing-${Date.now()}`;
+    showTyping(typingId);
+    try {
+      const aiResponse = await getAIResponse(message);
+      hideTyping(typingId);
+      const aId = `a-${Date.now()}`;
+      saveMessage('ai', aiResponse, aId);
+      loadActiveChat();
+    } catch (error) {
+      hideTyping(typingId);
+      saveMessage('ai', "[ERROR DE SISTEMA]", `err-${Date.now()}`);
+      loadActiveChat();
+    }
+  });
+
+  function saveMessage(role, text, id) {
+    let chat = chatHistory.find(c => c.id === currentChatId);
+    if (!chat) {
+      chat = { id: currentChatId, title: text.substring(0, 20).toUpperCase() + "...", messages: [], pinned: false };
+      chatHistory.unshift(chat);
+    }
+    chat.messages.push({ role, text, id });
+    localStorage.setItem('synapse_history', JSON.stringify(chatHistory));
+    renderHistory();
+  }
+
+  function saveAndRefresh() {
+    localStorage.setItem('synapse_history', JSON.stringify(chatHistory));
+    localStorage.setItem('active_chat_id', currentChatId);
+    renderHistory();
+    loadActiveChat();
+  }
+
+  function openMenu() { sidebar?.classList.remove('-translate-x-full'); overlay?.classList.replace('hidden', 'block'); }
+  function closeMenu() { sidebar?.classList.add('-translate-x-full'); overlay?.classList.replace('block', 'hidden'); }
+
+  toggleSidebar?.addEventListener('click', () => {
+    if (window.innerWidth >= 768) {
+      sidebar?.classList.toggle('md:hidden');
+    } else { 
+      openMenu(); 
+    }
+  });
+
+  closeSidebar?.addEventListener('click', closeMenu);
+  overlay?.addEventListener('click', closeMenu);
+
+  newChatBtn?.addEventListener('click', () => {
+    currentChatId = Date.now().toString();
+    localStorage.setItem('active_chat_id', currentChatId);
+    loadActiveChat();
+    renderHistory();
+    if(window.innerWidth < 768) closeMenu();
+  });
+
+  document.getElementById('cancel-delete')?.addEventListener('click', () => deleteModal?.classList.replace('flex', 'hidden'));
+  document.getElementById('confirm-delete')?.addEventListener('click', () => {
+    chatHistory = chatHistory.filter(c => c.id !== idToDelete);
+    if (currentChatId === idToDelete) currentChatId = chatHistory.length > 0 ? chatHistory[0].id : Date.now().toString();
+    deleteModal?.classList.replace('flex', 'hidden');
+    saveAndRefresh();
+  });
+
+  window.onclick = () => document.querySelectorAll('[id^="menu-"]').forEach(m => m.classList.add('hidden'));
+
+  function init() {
+    renderHistory();
+    loadActiveChat();
+  }
+  
+  init();
+</script>
+
+<style>
+  .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+  .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+  #chat-box { scroll-behavior: smooth; }
+</style>

@@ -1,0 +1,73 @@
+---
+// src/components/shared/CartDrawer.astro
+---
+
+<div id="cart-drawer" class="fixed inset-y-0 right-0 z-[9999] w-full max-w-sm bg-white shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out p-6 overflow-y-auto border-l border-slate-100">
+  
+  <div class="flex justify-between items-center mb-8">
+    <h2 class="text-xl font-black text-slate-900 uppercase tracking-tighter">Tu Carrito</h2>
+    <button id="close-cart" class="text-slate-400 hover:text-blue-600 transition-colors font-bold uppercase text-xs">Cerrar</button>
+  </div>
+
+  <div id="cart-items" class="space-y-6">
+    </div>
+
+  <div class="mt-8 border-t border-slate-100 pt-6 space-y-3">
+    <div class="flex justify-between text-sm text-slate-500">
+      <span>Subtotal:</span>
+      <span id="sub-total">S/ 0.00</span>
+    </div>
+    <div class="flex justify-between text-sm text-slate-500">
+      <span>IGV (18%):</span>
+      <span id="tax-total">S/ 0.00</span>
+    </div>
+    <div class="flex justify-between text-xl font-black mt-2 text-slate-900">
+      <span>Total:</span>
+      <span id="cart-total">S/ 0.00</span>
+    </div>
+    
+    <a href="/checkout" class="block w-full bg-[#001529] text-white py-4 mt-6 rounded-2xl font-black uppercase text-center hover:bg-blue-700 transition-all shadow-lg hover:shadow-blue-200">
+      Procesar Compra
+    </a>
+  </div>
+</div>
+
+<script>
+  import { $cart, $cartTotal, $subtotal, $igv } from '../../lib/cart';
+
+  const drawer = document.getElementById('cart-drawer');
+  const itemsContainer = document.getElementById('cart-items');
+  const totalEl = document.getElementById('cart-total');
+  const subTotalEl = document.getElementById('sub-total');
+  const taxEl = document.getElementById('tax-total');
+
+  // Suscripción al carrito para actualizar UI en tiempo real
+  $cart.subscribe(items => {
+    const itemsArray = Object.values(items);
+    
+    if (itemsArray.length === 0) {
+      itemsContainer.innerHTML = '<p class="text-center text-slate-400 py-10">Tu carrito está vacío.</p>';
+    } else {
+      itemsContainer.innerHTML = itemsArray.map(item => `
+        <div class="flex gap-4 items-center animate-in fade-in zoom-in duration-300">
+          <img src="${item.product.img}" alt="${item.product.name}" class="w-16 h-16 object-cover rounded-xl border border-slate-100" />
+          <div class="flex-1">
+            <p class="font-bold text-sm text-slate-800 leading-tight">${item.product.name}</p>
+            <p class="text-blue-600 font-black text-sm mt-1">S/ ${item.product.price.toFixed(2)}</p>
+            <p class="text-xs text-slate-400 font-bold uppercase">Cantidad: ${item.quantity}</p>
+          </div>
+        </div>
+      `).join('');
+    }
+  });
+
+  // Suscripción a totales
+  $cartTotal.subscribe(val => totalEl.innerText = `S/ ${val.toFixed(2)}`);
+  $subtotal.subscribe(val => subTotalEl.innerText = `S/ ${val.toFixed(2)}`);
+  $igv.subscribe(val => taxEl.innerText = `S/ ${val.toFixed(2)}`);
+
+  // Evento cerrar
+  document.getElementById('close-cart')?.addEventListener('click', () => {
+    drawer?.classList.add('translate-x-full');
+  });
+</script>

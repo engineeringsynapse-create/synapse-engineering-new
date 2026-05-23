@@ -1,0 +1,49 @@
+---
+const stats = [
+  { label: "Proyectos Ejecutados", value: "500+" },
+  { label: "Años de Experiencia", value: "06" },
+  { label: "Clientes Satisfechos", value: "100%" },
+  { label: "Soporte Técnico", value: "24/7" }
+];
+---
+
+<section class="py-20 bg-[#003d6b] relative overflow-hidden stats-section">
+  <div class="absolute inset-0 opacity-10 pointer-events-none">
+    <div class="absolute top-0 left-0 w-full h-full engineering-grid"></div>
+  </div>
+
+  <div class="container mx-auto px-6 relative z-10">
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-12 text-center">
+      {stats.map((stat) => (
+        <div class="stat-card">
+          <div class="text-5xl md:text-6xl font-black text-white mb-2 tracking-tighter">
+            {stat.value}
+          </div>
+          <div class="text-cyan-400 text-[10px] font-black uppercase tracking-[0.3em]">
+            {stat.label}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .stats-section {
+    /* Aislamos el renderizado de la sección de estadísticas */
+    contain: layout paint;
+    /* Forzamos a que el navegador trate esta sección como una capa de video independiente */
+    transform: translateZ(0);
+  }
+
+  .stat-card {
+    /* Evitamos que el texto cambie de grosor o "tiemble" al hacer scroll */
+    backface-visibility: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .engineering-grid {
+    /* Aseguramos que la malla no sea recalculada constantemente */
+    will-change: transform;
+  }
+</style>

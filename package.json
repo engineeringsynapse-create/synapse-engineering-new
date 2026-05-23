@@ -1,0 +1,33 @@
+{
+  "name": "synapse-engineering-web",
+  "type": "module",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/react": "^3.6.3",
+    "@astrojs/tailwind": "^5.1.5",
+    "@astrojs/vercel": "^7.8.2",
+    "@nanostores/persistent": "^1.3.4",
+    "@studio-freight/lenis": "^1.0.42",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "astro": "^4.0.0",
+    "clsx": "^2.1.1",
+    "framer-motion": "^11.18.2",
+    "gsap": "^3.15.0",
+    "lucide-react": "^0.344.0",
+    "nanostores": "^1.3.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "tailwind-merge": "^2.6.1",
+    "tailwindcss": "^3.4.1",
+    "three": "^0.162.0",
+    "typescript": "^5.3.3"
+  }
+}

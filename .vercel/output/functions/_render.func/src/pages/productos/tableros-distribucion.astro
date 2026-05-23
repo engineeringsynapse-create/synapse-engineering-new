@@ -1,0 +1,109 @@
+---
+import Layout from '../../layouts/MainLayout.astro';
+import Navbar from '../../components/shared/Navbar.astro';
+import Footer from '../../components/shared/Footer.astro';
+import { FileText, CheckCircle2, MessageSquare, ArrowRight } from 'lucide-react';
+
+const especificaciones = [
+  "Interruptores de caja moldeada y bastidor abierto.",
+  "Estructuras en plancha de acero LAF de 1.5mm y 2mm.",
+  "Grado de protección hasta IP65.",
+  "Barras de cobre electrolítico con pureza del 99.9%.",
+  "Pintura electrostática en polvo epóxica (RAL 7032/7035)."
+];
+---
+
+<Layout title="Tableros de Distribución | Synapse Engineering">
+  <Navbar />
+  
+  <main class="bg-white">
+    <section class="bg-[#001529] pt-32 pb-20 relative overflow-hidden">
+      <div class="absolute right-0 top-0 w-1/3 h-full bg-blue-600/10 skew-x-12 translate-x-20"></div>
+      <div class="container mx-auto px-6 relative z-10">
+        <span class="text-cyan-400 font-bold tracking-[0.3em] text-xs uppercase mb-4 block">Suministros Industriales</span>
+        <h1 class="text-5xl md:text-7xl font-black text-white uppercase tracking-tighter mb-6">
+          Tableros de <br/> <span class="text-blue-500">Distribución</span>
+        </h1>
+        <div class="h-2 w-24 bg-cyan-500"></div>
+      </div>
+    </section>
+
+    <section class="py-24">
+      <div class="container mx-auto px-6">
+        <div class="grid lg:grid-cols-3 gap-12">
+          
+          <div class="lg:col-span-2">
+            <h2 class="text-3xl font-black text-slate-900 uppercase mb-8 flex items-center gap-3">
+              <span class="w-8 h-8 bg-blue-600 text-white flex items-center justify-center rounded-lg text-sm">01</span>
+              Descripción Técnica
+            </h2>
+            <p class="text-slate-600 text-lg leading-relaxed mb-12">
+              Diseñamos y fabricamos tableros de distribución en baja tensión para aplicaciones industriales, mineras y comerciales. Nuestros equipos garantizan una distribución segura y confiable de la energía eléctrica, cumpliendo estrictamente con la norma <strong>IEC 61439</strong>.
+            </p>
+
+            <div class="grid md:grid-cols-2 gap-6 mb-16">
+              {especificaciones.map(item => (
+                <div class="flex gap-4 p-5 bg-slate-50 rounded-2xl border border-slate-100 hover:border-blue-200 transition-colors">
+                  <CheckCircle2 class="text-blue-600 shrink-0" size={24} />
+                  <span class="text-sm font-bold text-slate-700 leading-tight">{item}</span>
+                </div>
+              ))}
+            </div>
+
+            <h2 class="text-3xl font-black text-slate-900 uppercase mb-8">Nuestras Fabricaciones</h2>
+            <div class="grid grid-cols-2 gap-4">
+              <div class="rounded-3xl overflow-hidden h-80 bg-slate-100 border border-slate-200 group">
+                <img src="/images/tablero-real-1.jpg" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Tablero Synapse" />
+              </div>
+              <div class="rounded-3xl overflow-hidden h-80 bg-slate-100 border border-slate-200 group">
+                <img src="/images/tablero-real-2.jpg" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Tablero Synapse" />
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-8">
+            <div class="bg-slate-900 p-8 rounded-[2rem] text-white shadow-2xl">
+              <h3 class="text-xl font-black uppercase mb-6 tracking-tighter">Documentación</h3>
+              <div class="space-y-4">
+                <a href="#" class="flex items-center justify-between p-4 bg-white/5 rounded-xl hover:bg-blue-600 transition-all border border-white/10 group">
+                  <div class="flex items-center gap-3">
+                    <FileText class="text-cyan-400" />
+                    <span class="text-xs font-bold uppercase">Ficha Técnica</span>
+                  </div>
+                  <ArrowRight size={16} class="opacity-0 group-hover:opacity-100 transition-opacity" />
+                </a>
+                <a href="#" class="flex items-center justify-between p-4 bg-white/5 rounded-xl hover:bg-blue-600 transition-all border border-white/10 group">
+                  <div class="flex items-center gap-3">
+                    <FileText class="text-cyan-400" />
+                    <span class="text-xs font-bold uppercase">Catálogo 2026</span>
+                  </div>
+                  <ArrowRight size={16} class="opacity-0 group-hover:opacity-100 transition-opacity" />
+                </a>
+              </div>
+            </div>
+
+            <div class="bg-blue-50 p-8 rounded-[2rem] border border-blue-100">
+              <div class="flex items-center gap-3 mb-6">
+                <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white">
+                  <MessageSquare size={20} />
+                </div>
+                <h3 class="text-xl font-black text-[#005596] uppercase tracking-tighter leading-none">Cotizar <br/> este Producto</h3>
+              </div>
+              <form class="space-y-4">
+                <input type="text" placeholder="Nombre completo" class="w-full p-4 rounded-xl border border-blue-200 text-sm font-bold focus:outline-none focus:ring-2 ring-blue-500" />
+                <input type="email" placeholder="E-mail" class="w-full p-4 rounded-xl border border-blue-200 text-sm font-bold focus:outline-none focus:ring-2 ring-blue-500" />
+                <textarea placeholder="Cuéntanos tu requerimiento" rows="4" class="w-full p-4 rounded-xl border border-blue-200 text-sm font-bold focus:outline-none focus:ring-2 ring-blue-500"></textarea>
+                <button class="w-full bg-blue-600 text-white py-4 rounded-xl font-black uppercase text-xs tracking-widest shadow-lg hover:bg-[#003d6b] transition-all">
+                  Enviar Solicitud
+                </button>
+              </form>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>
