@@ -4,12 +4,12 @@ import react from '@astrojs/react';
 import vercel from '@astrojs/vercel/serverless';
 
 export default defineConfig({
-  // Mantenemos 'server' para el despliegue en Vercel
+  // Mantenemos 'server' para el despliegue dinámico en Vercel
   output: 'server',
   adapter: vercel({
     webAnalytics: { enabled: true },
-    // Esta opción ayuda a Vercel a gestionar mejor las rutas dinámicas
-    imageService: true,
+    // Forzamos la inclusión de las rutas para evitar el 404
+    includeFiles: ['./src/pages/**/*'],
   }),
   integrations: [
     tailwind({
@@ -19,7 +19,7 @@ export default defineConfig({
   ],
   vite: {
     ssr: {
-      // Aseguramos que estas librerías se procesen correctamente en el servidor
+      // Aseguramos que estas librerías críticas se procesen en el servidor
       noExternal: ['react-icons', 'lucide-react', '@studio-freight/lenis', 'framer-motion'],
     },
     optimizeDeps: {
