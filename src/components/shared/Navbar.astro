@@ -133,20 +133,13 @@ const inactiveClass = "text-slate-700 hover:text-blue-600 transition-colors";
 
 <script>
   import { $cart } from '../../lib/cart';
+
   const initMenu = () => {
     const btn = document.getElementById('mobile-menu-button');
     const menu = document.getElementById('mobile-menu');
-    const cartCount = document.getElementById('cart-count');
-
-    $cart.subscribe(items => {
-        const count = Object.values(items).reduce((acc, item) => acc + item.quantity, 0);
-        if(cartCount) {
-            cartCount.innerText = count.toString();
-            cartCount.classList.toggle('hidden', count === 0);
-        }
-    });
-
+    
     if (!btn || !menu) return;
+
     const newBtn = btn.cloneNode(true);
     btn.parentNode?.replaceChild(newBtn, btn);
     newBtn.addEventListener('click', (e) => {
@@ -164,6 +157,17 @@ const inactiveClass = "text-slate-700 hover:text-blue-600 transition-colors";
     });
   };
 
+  const initCart = () => {
+    const cartCount = document.getElementById('cart-count');
+    if (!cartCount) return;
+
+    $cart.subscribe(items => {
+        const count = Object.values(items).reduce((acc, item) => acc + item.quantity, 0);
+        cartCount.innerText = count.toString();
+        cartCount.classList.toggle('hidden', count === 0);
+    });
+  };
+
   const handleScroll = () => {
     const header = document.getElementById('main-header');
     if (window.scrollY > 40) header?.classList.add('header-scrolled');
@@ -172,8 +176,14 @@ const inactiveClass = "text-slate-700 hover:text-blue-600 transition-colors";
 
   document.addEventListener('astro:page-load', () => {
     initMenu();
+    initCart();
     handleScroll();
   });
-  initMenu();
-  window.addEventListener('scroll', handleScroll, { passive: true });
+
+  // Ejecución segura solo en el navegador
+  if (typeof window !== 'undefined') {
+    initMenu();
+    initCart();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+  }
 </script>
