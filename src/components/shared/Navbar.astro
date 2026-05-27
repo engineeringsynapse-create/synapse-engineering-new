@@ -1,5 +1,5 @@
 ---
-import { Phone, Mail, MapPin, Facebook, Linkedin, Instagram, Menu, X, Bot, ShoppingCart } from 'lucide-react';
+import { Phone, Mail, MapPin, Facebook, Linkedin, Instagram, Zap, Menu, X, Bot, ShoppingCart } from 'lucide-react';
 
 const pathname = Astro.url.pathname;
 
@@ -38,8 +38,8 @@ const inactiveClass = "text-slate-700 hover:text-blue-600 transition-colors";
   <nav class="bg-white border-b border-slate-100 py-4 w-full shadow-sm relative">
     <div class="container mx-auto px-6 flex justify-between items-center">
       <a href="/" class="flex items-center gap-3 group">
-        <div class="w-10 h-10 flex items-center justify-center rounded-lg overflow-hidden">
-          <img src="/logo.png" alt="Synapse Logo" class="w-full h-full object-contain" />
+        <div class="w-10 h-10 bg-[#005596] flex items-center justify-center rounded-lg">
+          <Zap size={24} class="text-white" fill="white" />
         </div>
         <div>
           <h1 class="text-xl font-black text-[#005596] leading-none uppercase tracking-tighter">
@@ -118,3 +118,72 @@ const inactiveClass = "text-slate-700 hover:text-blue-600 transition-colors";
     </div>
   </nav>
 </header>
+
+<div class="h-[80px] md:h-[125px]"></div>
+
+<style is:global>
+  #top-bar { display: block; }
+  .header-scrolled #top-bar { display: none !important; }
+  #main-header { transition: background-color 0.3s; }
+  html { scroll-behavior: smooth; scroll-padding-top: 90px; }
+  #mobile-menu-button svg { color: #001529 !important; stroke: #001529 !important; display: block !important; }
+  #mobile-menu-button.menu-open .hamburger-icon { display: none !important; }
+  #mobile-menu-button.menu-open .close-icon { display: block !important; }
+</style>
+
+<script>
+  import { $cart } from '../../lib/cart';
+
+  const initMenu = () => {
+    const btn = document.getElementById('mobile-menu-button');
+    const menu = document.getElementById('mobile-menu');
+    
+    if (!btn || !menu) return;
+
+    const newBtn = btn.cloneNode(true);
+    btn.parentNode?.replaceChild(newBtn, btn);
+    newBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isHidden = menu.classList.toggle('hidden');
+      if (!isHidden) (newBtn as HTMLElement).classList.add('menu-open');
+      else (newBtn as HTMLElement).classList.remove('menu-open');
+    });
+
+    menu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        menu.classList.add('hidden');
+        (newBtn as HTMLElement).classList.remove('menu-open');
+      });
+    });
+  };
+
+  const initCart = () => {
+    const cartCount = document.getElementById('cart-count');
+    if (!cartCount) return;
+
+    $cart.subscribe(items => {
+        const count = Object.values(items).reduce((acc, item) => acc + item.quantity, 0);
+        cartCount.innerText = count.toString();
+        cartCount.classList.toggle('hidden', count === 0);
+    });
+  };
+
+  const handleScroll = () => {
+    const header = document.getElementById('main-header');
+    if (window.scrollY > 40) header?.classList.add('header-scrolled');
+    else header?.classList.remove('header-scrolled');
+  };
+
+  document.addEventListener('astro:page-load', () => {
+    initMenu();
+    initCart();
+    handleScroll();
+  });
+
+  // Ejecución segura solo en el navegador
+  if (typeof window !== 'undefined') {
+    initMenu();
+    initCart();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+  }
+</script>
