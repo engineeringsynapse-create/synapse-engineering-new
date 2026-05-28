@@ -8,8 +8,7 @@ export default defineConfig({
   output: 'server',
   adapter: vercel({
     webAnalytics: { enabled: true },
-    // Forzamos la inclusión de las rutas para evitar el 404
-    includeFiles: ['./src/pages/**/*'],
+    // Eliminamos 'includeFiles' porque causaba el error de compilación
   }),
   integrations: [
     tailwind({
