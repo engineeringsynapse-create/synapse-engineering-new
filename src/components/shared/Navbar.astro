@@ -17,40 +17,82 @@ const inactiveClass = "text-slate-700 hover:text-blue-600 transition-colors";
   <div id="top-bar" class="bg-[#003d6b] text-white py-2 text-[11px] font-medium hidden md:block w-full border-b border-[#004e89]">
     <div class="container mx-auto px-6 flex justify-between items-center">
       <div class="flex gap-6">
-        <div class="flex items-center gap-2"><MapPin size={14} class="text-cyan-400" /> Calle Luis Carranza 2174, Lima</div>
-        <div class="flex items-center gap-2"><Mail size={14} class="text-cyan-400" /> gerencia@synapse.com.pe</div>
+        <div class="flex items-center gap-2">
+          <MapPin size={14} class="text-cyan-400" /> Calle Luis Carranza 2174, Lima
+        </div>
+        <div class="flex items-center gap-2">
+          <Mail size={14} class="text-cyan-400" /> gerencia@synapse.com.pe
+        </div>
       </div>
       <div class="flex items-center gap-4">
         <Facebook size={14} class="hover:text-cyan-400 cursor-pointer transition-colors" />
         <Linkedin size={14} class="hover:text-cyan-400 cursor-pointer transition-colors" />
         <Instagram size={14} class="hover:text-cyan-400 cursor-pointer transition-colors" />
-        <button class="bg-cyan-500 hover:bg-cyan-400 text-white px-3 py-1 rounded font-black uppercase ml-4 tracking-tighter transition-colors">Brochure 2026</button>
+        <button class="bg-cyan-500 hover:bg-cyan-400 text-white px-3 py-1 rounded font-black uppercase ml-4 tracking-tighter transition-colors">
+          Brochure 2026
+        </button>
       </div>
     </div>
   </div>
 
   <nav class="bg-white border-b border-slate-100 py-4 w-full shadow-sm relative">
     <div class="container mx-auto px-4 md:px-6 flex justify-between items-center">
-      
-      <a href="/" class="flex items-center gap-2 md:gap-3 group z-[10]">
+      <a href="/" class="flex items-center gap-2 md:gap-3 group justify-start">
         <div class="w-12 h-12 md:w-10 md:h-10 flex items-center justify-center rounded-lg overflow-hidden shrink-0">
           <img src="/logo.png" alt="Synapse Logo" class="w-full h-full object-contain" />
         </div>
-        <div class="hidden sm:block">
-          <h1 class="text-lg md:text-xl font-black text-[#005596] leading-none uppercase tracking-tighter">Synapse Engineering</h1>
-          <p class="text-[8px] md:text-[9px] text-slate-500 font-bold tracking-widest uppercase">Tableros Eléctricos | Celdas | Automatización</p>
+        <div>
+          <h1 class="text-lg md:text-xl font-black text-[#005596] leading-none uppercase tracking-tighter">
+            Synapse Engineering
+          </h1>
+          <p class="text-[8px] md:text-[9px] text-slate-500 font-bold tracking-widest uppercase">
+            Tableros Eléctricos | Celdas | Automatización
+          </p>
         </div>
       </a>
 
-      <div class="flex items-center gap-2 md:gap-4 z-[1200]">
-        <button id="mobile-menu-button" class="lg:hidden text-[#001529] p-2 flex items-center justify-center">
+      <div class="hidden lg:flex items-center gap-8 text-[13px] font-bold uppercase">
+        <a href="/" class={isActive('/') ? activeClass : inactiveClass}>INICIO</a>
+        <a href="/empresa" class={isActive('/empresa') ? activeClass : inactiveClass}>LA EMPRESA</a>
+        <a href="/productos" class={isActive('/productos') ? activeClass : inactiveClass}>PRODUCTOS</a>
+        <a href="/disenos" class={isActive('/disenos') ? activeClass : inactiveClass}>DISEÑOS</a>
+        <a href="/clientes" class={isActive('/clientes') ? activeClass : inactiveClass}>CLIENTES</a>
+        <a href="/contacto" class={isActive('/contacto') ? activeClass : inactiveClass}>CONTACTO</a>
+        <a href="/tienda" class={isActive('/tienda') ? activeClass : inactiveClass}>TIENDA</a>
+        
+        <a href="/soporte-ia" class={isActive('/soporte-ia') ? "text-cyan-500 flex items-center gap-2" : "text-slate-700 hover:text-cyan-500 transition-colors flex items-center gap-2"}>
+          <span class="relative flex h-2 w-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-cyan-300"></span>
+          </span>
+          SOPORTE IA
+        </a>
+
+        <a href="/tienda/carrito" class="relative text-slate-700 hover:text-blue-600 transition-colors">
+          <ShoppingCart size={20} />
+          <span id="cart-count" class="absolute -top-2 -right-2 bg-blue-600 text-white text-[9px] font-black rounded-full h-4 w-4 flex items-center justify-center hidden">0</span>
+        </a>
+      </div>
+
+      <div class="flex items-center gap-2 md:gap-4">
+        <a href="https://wa.me/51971444230" target="_blank" class="hidden sm:flex items-center gap-3 bg-slate-50 p-2 rounded-full pr-6 border border-slate-100 hover:shadow-md transition-all">
+          <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white">
+            <Phone size={18} />
+          </div>
+          <div class="leading-none">
+            <p class="text-[10px] text-slate-400 font-bold uppercase">WhatsApp</p>
+            <p class="text-sm font-black text-slate-800">971 444 230</p>
+          </div>
+        </a>
+        
+        <button id="mobile-menu-button" class="lg:hidden text-[#001529] focus:outline-none p-2 flex items-center justify-center relative z-[1100]">
           <span class="hamburger-icon block"><Menu size={28} /></span>
           <span class="close-icon hidden"><X size={28} /></span>
         </button>
       </div>
     </div>
 
-    <div id="mobile-menu" class="hidden absolute top-full left-0 w-full bg-white border-b border-slate-100 shadow-xl lg:hidden z-[1100]">
+    <div id="mobile-menu" class="hidden absolute top-full left-0 w-full bg-white border-b border-slate-100 shadow-xl lg:hidden">
       <div class="flex flex-col p-6 gap-6 font-bold uppercase">
         <a href="/" class={isActive('/') ? activeClass : inactiveClass}>INICIO</a>
         <a href="/empresa" class={isActive('/empresa') ? activeClass : inactiveClass}>LA EMPRESA</a>
@@ -59,10 +101,33 @@ const inactiveClass = "text-slate-700 hover:text-blue-600 transition-colors";
         <a href="/clientes" class={isActive('/clientes') ? activeClass : inactiveClass}>CLIENTES</a>
         <a href="/contacto" class={isActive('/contacto') ? activeClass : inactiveClass}>CONTACTO</a>
         <a href="/tienda" class={isActive('/tienda') ? activeClass : inactiveClass}>TIENDA</a>
-        <a href="/soporte-ia" class="text-cyan-600">SOPORTE IA</a>
+        
+        <a href="/soporte-ia" class={`flex items-center gap-3 p-4 rounded-xl justify-center ${isActive('/soporte-ia') ? 'bg-cyan-100 text-cyan-700' : 'bg-cyan-50/50 text-cyan-600 border border-cyan-100'}`}>
+          <Bot size={20} /> Soporte IA Online
+        </a>
+
+        <a href="/tienda/carrito" class="flex items-center justify-center gap-3 p-4 rounded-xl border border-slate-100 text-slate-700 hover:bg-slate-50">
+          <ShoppingCart size={20} /> Ver Carrito
+        </a>
+
         <hr class="border-slate-100" />
-        <a href="https://wa.me/51971444230" class="text-blue-600">WhatsApp: 971 444 230</a>
+        <a href="https://wa.me/51971444230" class="flex items-center gap-3 text-blue-600">
+          <Phone size={20} /> 971 444 230
+        </a>
       </div>
     </div>
   </nav>
 </header>
+
+<script>
+  const btn = document.getElementById('mobile-menu-button');
+  const menu = document.getElementById('mobile-menu');
+  const ham = document.querySelector('.hamburger-icon');
+  const close = document.querySelector('.close-icon');
+
+  btn?.addEventListener('click', () => {
+    menu?.classList.toggle('hidden');
+    ham?.classList.toggle('hidden');
+    close?.classList.toggle('hidden');
+  });
+</script>
