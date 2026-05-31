@@ -5,26 +5,26 @@ import Footer from '../components/shared/Footer.astro';
 import { Maximize2 } from 'lucide-react';
 
 const designs = [
-  { id: "tdf-01", title: "Tablero de distribución TDF-01", desc: "Recepción y distribución segura de energía.", img: "https://images.unsplash.com/photo-1581092334651-ddf26d9a1930?auto=format&fit=crop&q=80", tags: ["Baja Tensión", "SolidWorks"] },
-  { id: "jumbo-02", title: "Tablero de distribución JUMBO", desc: "Alta capacidad para entornos industriales.", img: "https://images.unsplash.com/photo-1581092335397-9583ee92d0bb?auto=format&fit=crop&q=80", tags: ["Minería", "Racks"] },
-  { id: "diseno-03", title: "Diseño 3D Industrial 03", desc: "Detalle técnico para sistemas eléctricos.", img: "https://images.unsplash.com/photo-1581092334651-ddf26d9a1930?auto=format&fit=crop&q=80", tags: ["Automatización", "CAD"] },
-  { id: "diseno-04", title: "Diseño 3D Industrial 04", desc: "Precisión milimétrica en componentes.", img: "https://images.unsplash.com/photo-1581092335397-9583ee92d0bb?auto=format&fit=crop&q=80", tags: ["Ingeniería", "3D"] },
-  { id: "diseno-05", title: "Diseño 3D Industrial 05", desc: "Optimización de espacios eléctricos.", img: "https://images.unsplash.com/photo-1581092334651-ddf26d9a1930?auto=format&fit=crop&q=80", tags: ["Distribución", "Baja Tensión"] },
-  { id: "diseno-06", title: "Diseño 3D Industrial 06", desc: "Componentes de alta resistencia.", img: "https://images.unsplash.com/photo-1581092335397-9583ee92d0bb?auto=format&fit=crop&q=80", tags: ["Industrial", "Racks"] },
-  { id: "diseno-07", title: "Diseño 3D Industrial 07", desc: "Integración de tableros eléctricos.", img: "https://images.unsplash.com/photo-1581092334651-ddf26d9a1930?auto=format&fit=crop&q=80", tags: ["Seguridad", "Energía"] },
-  { id: "diseno-08", title: "Diseño 3D Industrial 08", desc: "Soluciones de automatización.", img: "https://images.unsplash.com/photo-1581092335397-9583ee92d0bb?auto=format&fit=crop&q=80", tags: ["Minería", "Control"] },
-  { id: "diseno-09", title: "Diseño 3D Industrial 09", desc: "Precisión técnica y diseño.", img: "https://images.unsplash.com/photo-1581092334651-ddf26d9a1930?auto=format&fit=crop&q=80", tags: ["Ingeniería", "CAD"] },
-  { id: "diseno-10", title: "Diseño 3D Industrial 10", desc: "Eficiencia en cada componente.", img: "https://images.unsplash.com/photo-1581092335397-9583ee92d0bb?auto=format&fit=crop&q=80", tags: ["Industrial", "Baja Tensión"] },
-  { id: "diseno-11", title: "Diseño 3D Industrial 11", desc: "Robustez en diseño 3D.", img: "https://images.unsplash.com/photo-1581092334651-ddf26d9a1930?auto=format&fit=crop&q=80", tags: ["Componentes", "SolidWorks"] },
-  { id: "diseno-12", title: "Diseño 3D Industrial 12", desc: "Ingeniería de detalle.", img: "https://images.unsplash.com/photo-1581092335397-9583ee92d0bb?auto=format&fit=crop&q=80", tags: ["Minería", "Racks"] },
-  { id: "diseno-13", title: "Diseño 3D Industrial 13", desc: "Alta disponibilidad de energía.", img: "https://images.unsplash.com/photo-1581092334651-ddf26d9a1930?auto=format&fit=crop&q=80", tags: ["Energía", "Industrial"] },
-  { id: "diseno-14", title: "Diseño 3D Industrial 14", desc: "Innovación en tableros.", img: "https://images.unsplash.com/photo-1581092335397-9583ee92d0bb?auto=format&fit=crop&q=80", tags: ["Automatización", "CAD"] },
-  { id: "diseno-15", title: "Diseño 3D Industrial 15", desc: "Cumplimiento normativo.", img: "https://images.unsplash.com/photo-1581092334651-ddf26d9a1930?auto=format&fit=crop&q=80", tags: ["Seguridad", "Baja Tensión"] },
-  { id: "diseno-16", title: "Diseño 3D Industrial 16", desc: "Soluciones a medida.", img: "https://images.unsplash.com/photo-1581092335397-9583ee92d0bb?auto=format&fit=crop&q=80", tags: ["Industrial", "Ingeniería"] },
-  { id: "diseno-17", title: "Diseño 3D Industrial 17", desc: "Calidad certificada.", img: "https://images.unsplash.com/photo-1581092334651-ddf26d9a1930?auto=format&fit=crop&q=80", tags: ["Minería", "SolidWorks"] },
-  { id: "diseno-18", title: "Diseño 3D Industrial 18", desc: "Distribución optimizada.", img: "https://images.unsplash.com/photo-1581092335397-9583ee92d0bb?auto=format&fit=crop&q=80", tags: ["Distribución", "Racks"] },
-  { id: "diseno-19", title: "Diseño 3D Industrial 19", desc: "Tecnología avanzada.", img: "https://images.unsplash.com/photo-1581092334651-ddf26d9a1930?auto=format&fit=crop&q=80", tags: ["Automatización", "Industrial"] },
-  { id: "diseno-20", title: "Diseño 3D Industrial 20", desc: "Precisión máxima.", img: "https://images.unsplash.com/photo-1581092335397-9583ee92d0bb?auto=format&fit=crop&q=80", tags: ["Ingeniería", "3D"] }
+  { id: "tdf-01", title: "Tablero de distribución principal TDF-01", desc: "Recepción y distribución segura de energía con envolvente autosoportado.", img: "https://images.unsplash.com/photo-1581092334651-ddf26d9a1930?auto=format&fit=crop&q=80", tags: ["Baja Tensión", "SolidWorks"] },
+  { id: "jumbo-02", title: "Tablero de distribución JUMBO", desc: "Alta capacidad - Jumbo Series para entornos industriales exigentes.", img: "https://images.unsplash.com/photo-1581092335397-9583ee92d0bb?auto=format&fit=crop&q=80", tags: ["Minería", "Racks"] },
+  { id: "diseno-03", title: "Diseño de Ingeniería 03", desc: "Solución técnica optimizada para procesos de alta demanda energética.", img: "https://images.unsplash.com/photo-1581092334651-ddf26d9a1930?auto=format&fit=crop&q=80", tags: ["Automatización", "CAD"] },
+  { id: "diseno-04", title: "Diseño de Ingeniería 04", desc: "Precisión milimétrica en el modelado de componentes eléctricos.", img: "https://images.unsplash.com/photo-1581092335397-9583ee92d0bb?auto=format&fit=crop&q=80", tags: ["Ingeniería", "3D"] },
+  { id: "diseno-05", title: "Diseño de Ingeniería 05", desc: "Distribución eficiente para entornos de centros de control.", img: "https://images.unsplash.com/photo-1581092334651-ddf26d9a1930?auto=format&fit=crop&q=80", tags: ["Distribución", "Baja Tensión"] },
+  { id: "diseno-06", title: "Diseño de Ingeniería 06", desc: "Componentes de alta resistencia y durabilidad certificada.", img: "https://images.unsplash.com/photo-1581092335397-9583ee92d0bb?auto=format&fit=crop&q=80", tags: ["Industrial", "Racks"] },
+  { id: "diseno-07", title: "Diseño de Ingeniería 07", desc: "Integración de tableros con protocolos de seguridad avanzada.", img: "https://images.unsplash.com/photo-1581092334651-ddf26d9a1930?auto=format&fit=crop&q=80", tags: ["Seguridad", "Energía"] },
+  { id: "diseno-08", title: "Diseño de Ingeniería 08", desc: "Automatización aplicada para optimización de recursos eléctricos.", img: "https://images.unsplash.com/photo-1581092335397-9583ee92d0bb?auto=format&fit=crop&q=80", tags: ["Minería", "Control"] },
+  { id: "diseno-09", title: "Diseño de Ingeniería 09", desc: "Ingeniería de detalle en gabinetes de alta complejidad.", img: "https://images.unsplash.com/photo-1581092334651-ddf26d9a1930?auto=format&fit=crop&q=80", tags: ["Ingeniería", "CAD"] },
+  { id: "diseno-10", title: "Diseño de Ingeniería 10", desc: "Eficiencia energética comprobada en cada componente.", img: "https://images.unsplash.com/photo-1581092335397-9583ee92d0bb?auto=format&fit=crop&q=80", tags: ["Industrial", "Baja Tensión"] },
+  { id: "diseno-11", title: "Diseño de Ingeniería 11", desc: "Robustez y diseño ergonómico para mantenimiento sencillo.", img: "https://images.unsplash.com/photo-1581092334651-ddf26d9a1930?auto=format&fit=crop&q=80", tags: ["Componentes", "SolidWorks"] },
+  { id: "diseno-12", title: "Diseño de Ingeniería 12", desc: "Ingeniería avanzada para el sector minero industrial.", img: "https://images.unsplash.com/photo-1581092335397-9583ee92d0bb?auto=format&fit=crop&q=80", tags: ["Minería", "Racks"] },
+  { id: "diseno-13", title: "Diseño de Ingeniería 13", desc: "Alta disponibilidad para infraestructuras críticas.", img: "https://images.unsplash.com/photo-1581092334651-ddf26d9a1930?auto=format&fit=crop&q=80", tags: ["Energía", "Industrial"] },
+  { id: "diseno-14", title: "Diseño de Ingeniería 14", desc: "Innovación aplicada en gabinetes eléctricos modernos.", img: "https://images.unsplash.com/photo-1581092335397-9583ee92d0bb?auto=format&fit=crop&q=80", tags: ["Automatización", "CAD"] },
+  { id: "diseno-15", title: "Diseño de Ingeniería 15", desc: "Cumplimiento estricto con normativas internacionales.", img: "https://images.unsplash.com/photo-1581092334651-ddf26d9a1930?auto=format&fit=crop&q=80", tags: ["Seguridad", "Baja Tensión"] },
+  { id: "diseno-16", title: "Diseño de Ingeniería 16", desc: "Soluciones a medida para entornos de gran escala.", img: "https://images.unsplash.com/photo-1581092335397-9583ee92d0bb?auto=format&fit=crop&q=80", tags: ["Industrial", "Ingeniería"] },
+  { id: "diseno-17", title: "Diseño de Ingeniería 17", desc: "Calidad certificada y diseño de precisión.", img: "https://images.unsplash.com/photo-1581092334651-ddf26d9a1930?auto=format&fit=crop&q=80", tags: ["Minería", "SolidWorks"] },
+  { id: "diseno-18", title: "Diseño de Ingeniería 18", desc: "Distribución de energía optimizada y segura.", img: "https://images.unsplash.com/photo-1581092335397-9583ee92d0bb?auto=format&fit=crop&q=80", tags: ["Distribución", "Racks"] },
+  { id: "diseno-19", title: "Diseño de Ingeniería 19", desc: "Tecnología de punta en automatización de procesos.", img: "https://images.unsplash.com/photo-1581092334651-ddf26d9a1930?auto=format&fit=crop&q=80", tags: ["Automatización", "Industrial"] },
+  { id: "diseno-20", title: "Diseño de Ingeniería 20", desc: "Precisión máxima para resultados garantizados.", img: "https://images.unsplash.com/photo-1581092335397-9583ee92d0bb?auto=format&fit=crop&q=80", tags: ["Ingeniería", "3D"] }
 ];
 ---
 
@@ -48,7 +48,7 @@ const designs = [
 
     <section class="py-20 bg-slate-50">
       <div class="container mx-auto px-6">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           {designs.map((design) => (
             <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all flex flex-col h-full">
               <div class="relative h-64 bg-slate-100 flex items-center justify-center p-6">
@@ -62,19 +62,19 @@ const designs = [
                 </div>
               </div>
               
-              <div class="p-6 flex flex-col flex-grow">
-                <h3 class="text-lg font-black text-[#001529] uppercase tracking-tight mb-3">
+              <div class="p-8 flex flex-col flex-grow">
+                <h3 class="text-xl font-black text-[#001529] uppercase tracking-tight mb-3">
                   {design.title}
                 </h3>
-                <p class="text-slate-500 text-sm font-medium leading-relaxed mb-6 flex-grow">
+                <p class="text-slate-500 text-sm font-medium leading-relaxed mb-8 flex-grow">
                   {design.desc}
                 </p>
                 
                 <a 
                   href={`/disenos/${design.id}`} 
-                  class="w-full bg-[#001529] hover:bg-blue-800 text-white text-[11px] font-black py-3 rounded-lg transition-all text-center tracking-widest uppercase flex items-center justify-center gap-2"
+                  class="w-full bg-[#001529] hover:bg-blue-800 text-white text-[11px] font-black py-4 rounded-lg transition-all text-center tracking-widest uppercase flex items-center justify-center gap-2"
                 >
-                  Ver ficha técnica <Maximize2 size={12} />
+                  Ver ficha técnica completa <Maximize2 size={14} />
                 </a>
               </div>
             </div>
