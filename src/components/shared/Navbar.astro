@@ -15,13 +15,13 @@ const inactiveClass = "text-slate-700 hover:text-blue-600 transition-colors";
 
 <header id="main-header" class="fixed top-0 left-0 w-full z-[1000]">
   <div id="top-bar" class="bg-[#003d6b] text-white py-1.5 text-[10px] w-full border-b border-[#004e89] flex">
-    <div class="container mx-auto px-4 flex justify-between items-center">
+    <div class="container mx-auto px-4 flex justify-between items-center flex-wrap gap-x-4 gap-y-1">
       <div class="flex gap-4">
-        <div class="flex items-center gap-1.5">
-          <MapPin size={12} class="text-cyan-400" /> Lima
+        <div class="flex items-center gap-1.5 whitespace-nowrap">
+          <MapPin size={12} class="text-cyan-400 shrink-0" /> Lima
         </div>
-        <div class="hidden sm:flex items-center gap-1.5">
-          <Mail size={12} class="text-cyan-400" /> gerencia@synapse.com.pe
+        <div class="flex items-center gap-1.5 whitespace-nowrap">
+          <Mail size={12} class="text-cyan-400 shrink-0" /> gerencia@synapse.com.pe
         </div>
       </div>
       <div class="flex items-center gap-3">
