@@ -4,79 +4,84 @@ import { ShieldCheck, Truck } from 'lucide-react';
 ---
 
 <MainLayout title="Carrito de Pedidos | Synapse Engineering">
-  <main class="container mx-auto px-4 md:px-6 py-12 mt-10 max-w-7xl">
-    <div class="flex gap-4 mb-8 text-xs font-semibold uppercase tracking-wider text-slate-400">
-      <span class="text-[#001529] border-b-2 border-[#001529] pb-1">1. Orden</span> 
-      <span class="text-slate-300">/</span> 
-      <span class="text-slate-400">2. Dirección</span> 
-      <span class="text-slate-300">/</span> 
-      <span class="text-slate-400">3. Pago</span>
-    </div>
-
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-      <div class="lg:col-span-2 space-y-6">
-        <div id="cart-items-list" class="space-y-4">
-          <p class="text-slate-500 font-medium animate-pulse">Cargando productos...</p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
-          <div class="flex items-center gap-4 p-5 bg-white border border-slate-100 rounded-xl shadow-sm">
-            <div class="p-2 bg-emerald-50 rounded-lg">
-              <ShieldCheck className="text-emerald-600 w-6 h-6" />
-            </div>
-            <div>
-              <p class="text-sm font-bold text-slate-800">Compra Segura</p>
-              <p class="text-xs text-slate-500">Protección de datos SSL cifrados</p>
-            </div>
-          </div>
-          <div class="flex items-center gap-4 p-5 bg-white border border-slate-100 rounded-xl shadow-sm">
-            <div class="p-2 bg-blue-50 rounded-lg">
-              <Truck className="text-blue-600 w-6 h-6" />
-            </div>
-            <div>
-              <p class="text-sm font-bold text-slate-800">Envío Especializado</p>
-              <p class="text-xs text-slate-500">Logística para equipos pesados</p>
-            </div>
-          </div>
-        </div>
+  <div class="bg-[#f8fafc] min-h-screen w-full py-1">
+    <main class="container mx-auto px-4 md:px-6 py-12 mt-6 max-w-7xl">
+      
+      <div class="flex gap-4 mb-8 text-xs font-semibold uppercase tracking-wider text-slate-400">
+        <span class="text-[#001529] border-b-2 border-[#001529] pb-1">1. Orden</span> 
+        <span class="text-slate-300">/</span> 
+        <span class="text-slate-400">2. Dirección</span> 
+        <span class="text-slate-300">/</span> 
+        <span class="text-slate-400">3. Pago</span>
       </div>
 
-      <div id="cart-summary" class="bg-white p-6 rounded-2xl border border-slate-200/60 shadow-sm sticky top-28">
-        <h2 class="text-lg font-bold mb-5 text-[#001529]">Total a Pagar</h2>
-        
-        <div class="space-y-3 text-sm text-slate-600 border-b border-slate-100 pb-5 mb-5">
-          <div class="flex justify-between">
-            <span>Subtotal</span> 
-            <span id="full-subtotal" class="font-bold text-slate-900">S/ 0.00</span>
+      <h1 class="text-2xl font-black text-[#001529] uppercase mb-6 tracking-tight">Resumen de la orden</h1>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+        <div class="lg:col-span-2 space-y-6">
+          <div id="cart-items-list" class="space-y-4">
+            <p class="text-slate-500 font-medium animate-pulse">Cargando productos...</p>
           </div>
-          <div class="flex justify-between">
-            <span>IGV (18%)</span> 
-            <span id="full-tax" class="font-bold text-slate-900">S/ 0.00</span>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
+            <div class="flex items-center gap-4 p-5 bg-white border border-slate-100 rounded-xl shadow-sm">
+              <div class="p-2 bg-emerald-50 rounded-lg">
+                <ShieldCheck className="text-emerald-600 w-6 h-6" />
+              </div>
+              <div>
+                <p class="text-sm font-bold text-slate-800">Compra Segura</p>
+                <p class="text-xs text-slate-500">Protección de datos SSL cifrados</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-4 p-5 bg-white border border-slate-100 rounded-xl shadow-sm">
+              <div class="p-2 bg-blue-50 rounded-lg">
+                <Truck className="text-blue-600 w-6 h-6" />
+              </div>
+              <div>
+                <p class="text-sm font-bold text-slate-800">Envío Especializado</p>
+                <p class="text-xs text-slate-500">Logística para equipos pesados</p>
+              </div>
+            </div>
           </div>
-        </div>
-        
-        <div class="flex justify-between items-baseline mb-6 border-b border-slate-100 pb-5">
-          <span class="text-base font-bold text-slate-900">Total Final</span> 
-          <span id="full-total" class="text-2xl font-black text-blue-800">S/ 0.00</span>
         </div>
 
-        <div class="mb-6">
-          <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-3 text-center lg:text-left">Aceptamos los medios de pagos</p>
-          <div class="flex flex-wrap gap-2 items-center justify-center lg:justify-start grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition-all duration-300">
-            <svg class="h-5 w-auto" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14.024 15.313H15.82L16.94 8.444H15.143L14.024 15.313ZM22 8.444H20.297C19.789 8.444 19.349 8.741 19.141 9.227L16.275 15.313H18.093L18.456 14.331H20.485C20.533 14.545 20.584 14.773 20.618 15.312H22.215L22 8.444ZM19.982 12.915H18.847L19.414 11.391C19.414 11.391 19.684 10.638 19.82 10.252C19.866 10.45 19.982 12.915 19.982 12.915ZM9.687 11.954C9.697 10.495 7.683 10.415 7.697 9.497C7.702 9.219 7.973 8.918 8.544 8.844C8.827 8.807 9.596 8.773 10.36 9.124L10.612 7.603C10.04 7.4 9.317 7.234 8.455 7.234C6.634 7.234 5.352 8.196 5.337 9.571C5.319 11.603 8.134 11.716 8.106 12.94C8.096 13.311 7.684 13.568 7.07 13.629C6.48 13.688 5.659 13.504 4.966 13.167L4.704 14.733C5.322 15.016 6.223 15.234 7.152 15.234C9.043 15.233 9.675 14.288 9.687 11.954ZM2 8.444L3.633 15.313H5.437L3.804 8.444H2Z" fill="#0A2540"/></svg>
-            <svg class="h-6 w-auto" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="8.72" cy="12" r="5.72" fill="#EB001B"/><circle cx="15.28" cy="12" r="5.72" fill="#F79E1B"/><path d="M12 7.43a5.69 5.69 0 0 1 2.05 4.57 5.69 5.69 0 0 1-2.05 4.57 5.69 5.69 0 0 1-2.05-4.57A5.69 5.69 0 0 1 12 7.43z" fill="#FF5F00"/></svg>
-            <svg class="h-5 w-auto" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18.571 6.945c.205 1.054.025 2.39-.563 3.664-.707 1.534-2.11 2.656-3.834 3.125h-.54a.428.428 0 0 0-.414.36l-.856 5.41a.433.433 0 0 1-.427.365H9.283a.289.289 0 0 1-.284-.334l2.133-13.486a.578.578 0 0 1 .57-.488h3.836c1.472 0 2.493.35 2.923 1.041.134.214.225.438.29.677l.22.667z" fill="#003087"/><path d="M16.947 7.945c.205 1.054.026 2.39-.562 3.664-.707 1.534-2.11 2.656-3.835 3.125h-.54a.428.428 0 0 0-.414.36l-.856 5.41a.433.433 0 0 1-.427.365H7.66a.289.289 0 0 1-.284-.334l2.134-13.486a.578.578 0 0 1 .57-.488h3.836c1.472 0 2.493.35 2.923 1.041.134.214.225.438.29.677l.22.667z" fill="#0079C1"/></svg>
-            <span class="text-[10px] tracking-tighter border border-slate-300 px-1.5 py-0.5 rounded text-slate-500 font-bold bg-slate-50">PagoEfectivo</span>
+        <div id="cart-summary" class="bg-white p-6 rounded-2xl border border-slate-200/60 shadow-sm sticky top-28">
+          <h2 class="text-lg font-bold mb-5 text-[#001529]">Total a Pagar</h2>
+          
+          <div class="space-y-3 text-sm text-slate-600 border-b border-slate-100 pb-5 mb-5">
+            <div class="flex justify-between">
+              <span>Subtotal</span> 
+              <span id="full-subtotal" class="font-bold text-slate-900">S/ 0.00</span>
+            </div>
+            <div class="flex justify-between">
+              <span>IGV (18%)</span> 
+              <span id="full-tax" class="font-bold text-slate-900">S/ 0.00</span>
+            </div>
           </div>
+          
+          <div class="flex justify-between items-baseline mb-6 border-b border-slate-100 pb-5">
+            <span class="text-base font-bold text-slate-900">Total Final</span> 
+            <span id="full-total" class="text-2xl font-black text-blue-800">S/ 0.00</span>
+          </div>
+
+          <div class="mb-6">
+            <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-3 text-center lg:text-left">Aceptamos los medios de pagos</p>
+            <div class="flex flex-wrap gap-2 items-center justify-center lg:justify-start grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition-all duration-300">
+              <svg class="h-5 w-auto" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14.024 15.313H15.82L16.94 8.444H15.143L14.024 15.313ZM22 8.444H20.297C19.789 8.444 19.349 8.741 19.141 9.227L16.275 15.313H18.093L18.456 14.331H20.485C20.533 14.545 20.584 14.773 20.618 15.312H22.215L22 8.444ZM19.982 12.915H18.847L19.414 11.391C19.414 11.391 19.684 10.638 19.82 10.252C19.866 10.45 19.982 12.915 19.982 12.915ZM9.687 11.954C9.697 10.495 7.683 10.415 7.697 9.497C7.702 9.219 7.973 8.918 8.544 8.844C8.827 8.807 9.596 8.773 10.36 9.124L10.612 7.603C10.04 7.4 9.317 7.234 8.455 7.234C6.634 7.234 5.352 8.196 5.337 9.571C5.319 11.603 8.134 11.716 8.106 12.94C8.096 13.311 7.684 13.568 7.07 13.629C6.48 13.688 5.659 13.504 4.966 13.167L4.704 14.733C5.322 15.016 6.223 15.234 7.152 15.234C9.043 15.233 9.675 14.288 9.687 11.954ZM2 8.444L3.633 15.313H5.437L3.804 8.444H2Z" fill="#0A2540"/></svg>
+              <svg class="h-6 w-auto" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="8.72" cy="12" r="5.72" fill="#EB001B"/><circle cx="15.28" cy="12" r="5.72" fill="#F79E1B"/><path d="M12 7.43a5.69 5.69 0 0 1 2.05 4.57 5.69 5.69 0 0 1-2.05 4.57 5.69 5.69 0 0 1-2.05-4.57A5.69 5.69 0 0 1 12 7.43z" fill="#FF5F00"/></svg>
+              <svg class="h-5 w-auto" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18.571 6.945c.205 1.054.025 2.39-.563 3.664-.707 1.534-2.11 2.656-3.834 3.125h-.54a.428.428 0 0 0-.414.36l-.856 5.41a.433.433 0 0 1-.427.365H9.283a.289.289 0 0 1-.284-.334l2.133-13.486a.578.578 0 0 1 .57-.488h3.836c1.472 0 2.493.35 2.923 1.041.134.214.225.438.29.677l.22.667z" fill="#003087"/><path d="M16.947 7.945c.205 1.054.026 2.39-.562 3.664-.707 1.534-2.11 2.656-3.835 3.125h-.54a.428.428 0 0 0-.414.36l-.856 5.41a.433.433 0 0 1-.427.365H7.66a.289.289 0 0 1-.284-.334l2.134-13.486a.578.578 0 0 1 .57-.488h3.836c1.472 0 2.493.35 2.923 1.041.134.214.225.438.29.677l.22.667z" fill="#0079C1"/></svg>
+              <span class="text-[10px] tracking-tighter border border-slate-300 px-1.5 py-0.5 rounded text-slate-500 font-bold bg-slate-50">PagoEfectivo</span>
+            </div>
+          </div>
+          
+          <button id="checkout-btn" class="w-full bg-[#001529] text-white py-4 px-4 rounded-xl text-sm font-bold uppercase tracking-wider hover:bg-blue-950 active:scale-[0.99] transition-all flex items-center justify-center gap-2 group cursor-pointer shadow-md shadow-blue-900/10 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed disabled:shadow-none disabled:scale-100">
+            Procesar Compra 
+            <span class="transform group-hover:translate-x-1 transition-transform inline-block group-disabled:translate-x-0">→</span>
+          </button>
         </div>
-        
-        <button id="checkout-btn" class="w-full bg-[#001529] text-white py-4 px-4 rounded-xl text-sm font-bold uppercase tracking-wider hover:bg-blue-950 active:scale-[0.99] transition-all flex items-center justify-center gap-2 group cursor-pointer shadow-md shadow-blue-900/10 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed disabled:shadow-none disabled:scale-100">
-          Procesar Compra 
-          <span class="transform group-hover:translate-x-1 transition-transform inline-block group-disabled:translate-x-0">→</span>
-        </button>
       </div>
-    </div>
-  </main>
+    </main>
+  </div>
 </MainLayout>
 
 <script>
@@ -93,7 +98,6 @@ import { ShieldCheck, Truck } from 'lucide-react';
       const cartArray = Object.values(items);
       
       if (cartArray.length === 0) {
-        // Renderizado del estado vacío
         list.innerHTML = `
           <div class="flex flex-col items-center justify-center p-12 bg-white rounded-2xl border border-slate-200 text-center max-w-2xl mx-auto my-4 shadow-sm">
             <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center border border-slate-100 mb-5">
@@ -106,13 +110,10 @@ import { ShieldCheck, Truck } from 'lucide-react';
             </a>
           </div>
         `;
-        // Deshabilitar botón de compra ya que no hay ítems
         checkoutBtn.disabled = true;
       } else {
-        // Habilitar botón y renderizar los productos del carrito
         checkoutBtn.disabled = false;
         list.innerHTML = `
-          <h1 class="text-2xl font-black text-[#001529] uppercase mb-6 tracking-tight">Resumen de la orden</h1>
           <div class="space-y-4">
             ${cartArray.map(item => `
               <div class="flex items-center gap-4 p-4 bg-white border border-slate-100 rounded-xl shadow-sm hover:border-slate-200 transition-all">
@@ -134,7 +135,7 @@ import { ShieldCheck, Truck } from 'lucide-react';
       }
     });
 
-    // Actualización dinámica de precios
+    // Actualización de precios
     $cartTotal.subscribe(val => totalEl.innerText = `S/ ${val.toFixed(2)}`);
     $subtotal.subscribe(val => subTotalEl.innerText = `S/ ${val.toFixed(2)}`);
     $igv.subscribe(val => taxEl.innerText = `S/ ${val.toFixed(2)}`);
@@ -142,7 +143,7 @@ import { ShieldCheck, Truck } from 'lucide-react';
     // WhatsApp Action
     checkoutBtn.addEventListener('click', () => {
       const currentItems = Object.values($cart.get());
-      if (currentItems.length === 0) return; // Validación extra
+      if (currentItems.length === 0) return;
       
       const detalle = currentItems.map(i => `\n- ${i.product.name} (x${i.quantity})`).join('');
       const msg = `Hola, quisiera realizar el siguiente pedido:${detalle}\n\nTotal: ${totalEl.innerText}`;
