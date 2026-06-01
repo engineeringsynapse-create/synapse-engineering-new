@@ -1,7 +1,5 @@
 ---
-import Layout from '../../layouts/MainLayout.astro';
-import Navbar from '../../components/shared/Navbar.astro';
-import Footer from '../../components/shared/Footer.astro';
+import MainLayout from '../../layouts/MainLayout.astro';
 import { ShieldCheck, Truck } from 'lucide-react';
 ---
 
@@ -82,10 +80,9 @@ import { ShieldCheck, Truck } from 'lucide-react';
           </button>
         </div>
       </div>
-    <</main>
+    </main>
   </div>
-  <Footer />
-</Layout>
+</MainLayout>
 
 <script>
   import { $cart, $cartTotal, $subtotal, $igv, removeFromCart } from '../../lib/cart';
