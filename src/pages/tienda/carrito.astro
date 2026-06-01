@@ -1,9 +1,14 @@
 ---
-import MainLayout from '../../layouts/MainLayout.astro';
+import Layout from '../../layouts/MainLayout.astro';
+import Navbar from '../../components/shared/Navbar.astro';
+import Footer from '../../components/shared/Footer.astro';
 import { ShieldCheck, Truck } from 'lucide-react';
 ---
 
-<MainLayout title="Carrito de Pedidos | Synapse Engineering">
+<Layout title="Carrito de Pedidos | Synapse Engineering">
+  <Navbar />
+  
+  <!-- Contenedor general con fondo sutil para que contrasten las tarjetas blancas del diseño -->
   <div class="bg-[#f8fafc] min-h-screen w-full py-1">
     <main class="container mx-auto px-4 md:px-6 py-12 mt-6 max-w-7xl">
       
@@ -80,9 +85,10 @@ import { ShieldCheck, Truck } from 'lucide-react';
           </button>
         </div>
       </div>
-    </main>
+    <</main>
   </div>
-</MainLayout>
+  <Footer />
+</Layout>
 
 <script>
   import { $cart, $cartTotal, $subtotal, $igv, removeFromCart } from '../../lib/cart';
