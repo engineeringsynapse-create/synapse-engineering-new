@@ -2,7 +2,7 @@
 import Layout from '../layouts/MainLayout.astro';
 import Navbar from '../components/shared/Navbar.astro';
 import Footer from '../components/shared/Footer.astro';
-import { Search, ChevronRight, ShoppingCart, Filter, Box, Zap, Cpu, Settings } from 'lucide-react';
+import { Search, ShoppingCart, Filter, Box, Zap, Cpu, Settings } from 'lucide-react';
 
 const products = [
   { id: 1, name: "Interruptor Masterpact MTZ2", brand: "Schneider", cat: "Tableros", price: 4500.00, sku: "MTZ2-100", img: "https://www.se.com/pe/es/product-image-resizer/MTZ2_10_H1_3P_F_2_F_RE_7/1/1" },
@@ -42,7 +42,6 @@ const categorias = [
 
     <div class="container mx-auto px-6 py-12 md:py-16">
       <div class="flex flex-col lg:flex-row gap-8 lg:gap-12">
-        
         <aside class="w-full lg:w-80 flex-shrink-0">
           <div class="bg-white rounded-[32px] p-6 lg:p-8 border border-slate-100 shadow-sm sticky top-32">
             <h3 class="text-[11px] font-black text-slate-900 uppercase tracking-widest mb-6 border-b border-slate-50 pb-4">Filtrar por Categoría</h3>
@@ -129,12 +128,13 @@ const categorias = [
     const filterProducts = () => {
       let visibleCount = 0;
       cards.forEach(card => {
-        const category = (card as HTMLElement).dataset.cat;
-        const title = (card as HTMLElement).querySelector('h4')?.innerText.toLowerCase() || "";
-        const brand = (card as HTMLElement).querySelector('p')?.innerText.toLowerCase() || "";
+        const el = card as HTMLElement;
+        const category = el.dataset.cat;
+        const title = el.querySelector('h4')?.innerText.toLowerCase() || "";
+        const brand = el.querySelector('p')?.innerText.toLowerCase() || "";
         const matchesCategory = currentCategory === "Todos" || category === currentCategory;
         const matchesSearch = title.includes(currentSearch) || brand.includes(currentSearch);
-        (card as HTMLElement).style.display = (matchesCategory && matchesSearch) ? 'block' : 'none';
+        el.style.display = (matchesCategory && matchesSearch) ? 'flex' : 'none';
         if (matchesCategory && matchesSearch) visibleCount++;
       });
       if (countDisplay) countDisplay.innerText = visibleCount.toString();
@@ -144,20 +144,4 @@ const categorias = [
     filterBtns.forEach(btn => {
       btn.addEventListener('click', () => {
         filterBtns.forEach(b => b.classList.remove('bg-blue-50', 'text-blue-600'));
-        btn.classList.add('bg-blue-50', 'text-blue-600');
-        currentCategory = (btn as HTMLElement).dataset.category || "Todos";
-        filterProducts();
-      });
-    });
-
-    searchInput?.addEventListener('input', (e) => {
-      currentSearch = (e.target as HTMLInputElement).value.toLowerCase();
-      filterProducts();
-    });
-
-    document.querySelector('[data-category="Todos"]')?.classList.add('bg-blue-50', 'text-blue-600');
-  };
-
-  document.addEventListener('astro:page-load', initTienda);
-  initTienda();
-</script>
+        btn.classList.add('bg-
