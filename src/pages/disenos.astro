@@ -5,26 +5,26 @@ import Footer from '../components/shared/Footer.astro';
 import { Maximize2 } from 'lucide-react';
 
 const designs = [
-  { id: "tdf-01", title: "Tablero de distribución principal TDF-01", desc: "Recepción y distribución segura de energía con envolvente autosoportado.", img: "https://images.unsplash.com/photo-1581092334651-ddf26d9a1930?auto=format&fit=crop&q=80", tags: ["Baja Tensión", "SolidWorks"] },
-  { id: "jumbo-02", title: "Tablero de distribución JUMBO", desc: "Alta capacidad - Jumbo Series para entornos industriales exigentes.", img: "https://images.unsplash.com/photo-1581092335397-9583ee92d0bb?auto=format&fit=crop&q=80", tags: ["Minería", "Racks"] },
-  { id: "diseno-03", title: "Diseño de Ingeniería 03", desc: "Solución técnica optimizada para procesos de alta demanda energética.", img: "https://images.unsplash.com/photo-1581092334651-ddf26d9a1930?auto=format&fit=crop&q=80", tags: ["Automatización", "CAD"] },
-  { id: "diseno-04", title: "Diseño de Ingeniería 04", desc: "Precisión milimétrica en el modelado de componentes eléctricos.", img: "https://images.unsplash.com/photo-1581092335397-9583ee92d0bb?auto=format&fit=crop&q=80", tags: ["Ingeniería", "3D"] },
-  { id: "diseno-05", title: "Diseño de Ingeniería 05", desc: "Distribución eficiente para entornos de centros de control.", img: "https://images.unsplash.com/photo-1581092334651-ddf26d9a1930?auto=format&fit=crop&q=80", tags: ["Distribución", "Baja Tensión"] },
-  { id: "diseno-06", title: "Diseño de Ingeniería 06", desc: "Componentes de alta resistencia y durabilidad certificada.", img: "https://images.unsplash.com/photo-1581092335397-9583ee92d0bb?auto=format&fit=crop&q=80", tags: ["Industrial", "Racks"] },
-  { id: "diseno-07", title: "Diseño de Ingeniería 07", desc: "Integración de tableros con protocolos de seguridad avanzada.", img: "https://images.unsplash.com/photo-1581092334651-ddf26d9a1930?auto=format&fit=crop&q=80", tags: ["Seguridad", "Energía"] },
-  { id: "diseno-08", title: "Diseño de Ingeniería 08", desc: "Automatización aplicada para optimización de recursos eléctricos.", img: "https://images.unsplash.com/photo-1581092335397-9583ee92d0bb?auto=format&fit=crop&q=80", tags: ["Minería", "Control"] },
-  { id: "diseno-09", title: "Diseño de Ingeniería 09", desc: "Ingeniería de detalle en gabinetes de alta complejidad.", img: "https://images.unsplash.com/photo-1581092334651-ddf26d9a1930?auto=format&fit=crop&q=80", tags: ["Ingeniería", "CAD"] },
-  { id: "diseno-10", title: "Diseño de Ingeniería 10", desc: "Eficiencia energética comprobada en cada componente.", img: "https://images.unsplash.com/photo-1581092335397-9583ee92d0bb?auto=format&fit=crop&q=80", tags: ["Industrial", "Baja Tensión"] },
-  { id: "diseno-11", title: "Diseño de Ingeniería 11", desc: "Robustez y diseño ergonómico para mantenimiento sencillo.", img: "https://images.unsplash.com/photo-1581092334651-ddf26d9a1930?auto=format&fit=crop&q=80", tags: ["Componentes", "SolidWorks"] },
-  { id: "diseno-12", title: "Diseño de Ingeniería 12", desc: "Ingeniería avanzada para el sector minero industrial.", img: "https://images.unsplash.com/photo-1581092335397-9583ee92d0bb?auto=format&fit=crop&q=80", tags: ["Minería", "Racks"] },
-  { id: "diseno-13", title: "Diseño de Ingeniería 13", desc: "Alta disponibilidad para infraestructuras críticas.", img: "https://images.unsplash.com/photo-1581092334651-ddf26d9a1930?auto=format&fit=crop&q=80", tags: ["Energía", "Industrial"] },
-  { id: "diseno-14", title: "Diseño de Ingeniería 14", desc: "Innovación aplicada en gabinetes eléctricos modernos.", img: "https://images.unsplash.com/photo-1581092335397-9583ee92d0bb?auto=format&fit=crop&q=80", tags: ["Automatización", "CAD"] },
-  { id: "diseno-15", title: "Diseño de Ingeniería 15", desc: "Cumplimiento estricto con normativas internacionales.", img: "https://images.unsplash.com/photo-1581092334651-ddf26d9a1930?auto=format&fit=crop&q=80", tags: ["Seguridad", "Baja Tensión"] },
-  { id: "diseno-16", title: "Diseño de Ingeniería 16", desc: "Soluciones a medida para entornos de gran escala.", img: "https://images.unsplash.com/photo-1581092335397-9583ee92d0bb?auto=format&fit=crop&q=80", tags: ["Industrial", "Ingeniería"] },
-  { id: "diseno-17", title: "Diseño de Ingeniería 17", desc: "Calidad certificada y diseño de precisión.", img: "https://images.unsplash.com/photo-1581092334651-ddf26d9a1930?auto=format&fit=crop&q=80", tags: ["Minería", "SolidWorks"] },
-  { id: "diseno-18", title: "Diseño de Ingeniería 18", desc: "Distribución de energía optimizada y segura.", img: "https://images.unsplash.com/photo-1581092335397-9583ee92d0bb?auto=format&fit=crop&q=80", tags: ["Distribución", "Racks"] },
-  { id: "diseno-19", title: "Diseño de Ingeniería 19", desc: "Tecnología de punta en automatización de procesos.", img: "https://images.unsplash.com/photo-1581092334651-ddf26d9a1930?auto=format&fit=crop&q=80", tags: ["Automatización", "Industrial"] },
-  { id: "diseno-20", title: "Diseño de Ingeniería 20", desc: "Precisión máxima para resultados garantizados.", img: "https://images.unsplash.com/photo-1581092335397-9583ee92d0bb?auto=format&fit=crop&q=80", tags: ["Ingeniería", "3D"] }
+  { id: "tdf-01", title: "Tablero de distribución principal TDF-01", desc: "Recepción y distribución segura de energía con envolvente autosoportado.", img: "/images/tablero1.png", tags: ["Baja Tensión", "SolidWorks"] },
+  { id: "jumbo-02", title: "Tablero de distribución JUMBO", desc: "Alta capacidad - Jumbo Series para entornos industriales exigentes.", img: "/images/tablero2.png", tags: ["Minería", "Racks"] },
+  { id: "diseno-03", title: "Diseño de Ingeniería 03", desc: "Solución técnica optimizada para procesos de alta demanda energética.", img: "/images/tablero3.png", tags: ["Automatización", "CAD"] },
+  { id: "diseno-04", title: "Diseño de Ingeniería 04", desc: "Precisión milimétrica en el modelado de componentes eléctricos.", img: "/images/tablero4.png", tags: ["Ingeniería", "3D"] },
+  { id: "diseno-05", title: "Diseño de Ingeniería 05", desc: "Distribución eficiente para entornos de centros de control.", img: "/images/tablero5.png", tags: ["Distribución", "Baja Tensión"] },
+  { id: "diseno-06", title: "Diseño de Ingeniería 06", desc: "Componentes de alta resistencia y durabilidad certificada.", img: "/images/tablero6.png", tags: ["Industrial", "Racks"] },
+  { id: "diseno-07", title: "Diseño de Ingeniería 07", desc: "Integración de tableros con protocolos de seguridad avanzada.", img: "/images/tablero7.png", tags: ["Seguridad", "Energía"] },
+  { id: "diseno-08", title: "Diseño de Ingeniería 08", desc: "Automatización aplicada para optimización de recursos eléctricos.", img: "/images/tablero8.png", tags: ["Minería", "Control"] },
+  { id: "diseno-09", title: "Diseño de Ingeniería 09", desc: "Ingeniería de detalle en gabinetes de alta complejidad.", img: "/images/tablero9.png", tags: ["Ingeniería", "CAD"] },
+  { id: "diseno-10", title: "Diseño de Ingeniería 10", desc: "Eficiencia energética comprobada en cada componente.", img: "/images/tablero10.png", tags: ["Industrial", "Baja Tensión"] },
+  { id: "diseno-11", title: "Diseño de Ingeniería 11", desc: "Robustez y diseño ergonómico para mantenimiento sencillo.", img: "/images/tablero11.png", tags: ["Componentes", "SolidWorks"] },
+  { id: "diseno-12", title: "Diseño de Ingeniería 12", desc: "Ingeniería avanzada para el sector minero industrial.", img: "/images/tablero12.png", tags: ["Minería", "Racks"] },
+  { id: "diseno-13", title: "Diseño de Ingeniería 13", desc: "Alta disponibilidad para infraestructuras críticas.", img: "/images/tablero13.png", tags: ["Energía", "Industrial"] },
+  { id: "diseno-14", title: "Diseño de Ingeniería 14", desc: "Innovación aplicada en gabinetes eléctricos modernos.", img: "/images/tablero14.png", tags: ["Automatización", "CAD"] },
+  { id: "diseno-15", title: "Diseño de Ingeniería 15", desc: "Cumplimiento estricto con normativas internacionales.", img: "/images/tablero15.png", tags: ["Seguridad", "Baja Tensión"] },
+  { id: "diseno-16", title: "Diseño de Ingeniería 16", desc: "Soluciones a medida para entornos de gran escala.", img: "/images/tablero16.png", tags: ["Industrial", "Ingeniería"] },
+  { id: "diseno-17", title: "Diseño de Ingeniería 17", desc: "Calidad certificada y diseño de precisión.", img: "/images/tablero17.png", tags: ["Minería", "SolidWorks"] },
+  { id: "diseno-18", title: "Diseño de Ingeniería 18", desc: "Distribución de energía optimizada y segura.", img: "/images/tablero18.png", tags: ["Distribución", "Racks"] },
+  { id: "diseno-19", title: "Diseño de Ingeniería 19", desc: "Tecnología de punta en automatización de procesos.", img: "/images/tablero19.png", tags: ["Automatización", "Industrial"] },
+  { id: "diseno-20", title: "Diseño de Ingeniería 20", desc: "Precisión máxima para resultados garantizados.", img: "/images/tablero20.png", tags: ["Ingeniería", "3D"] }
 ];
 ---
 
