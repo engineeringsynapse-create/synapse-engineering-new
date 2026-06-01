@@ -51,12 +51,8 @@ const designs = [
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           {designs.map((design) => (
             <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all flex flex-col h-full">
-              <div class="relative h-64 bg-slate-50 flex items-center justify-center p-6 border-b border-slate-100">
-                <img 
-                  src={design.img} 
-                  class="max-h-full object-contain border border-slate-200 rounded-md shadow-sm bg-white" 
-                  alt={design.title} 
-                />
+              <div class="relative h-64 bg-slate-100 flex items-center justify-center p-6">
+                <img src={design.img} class="max-h-full object-contain" alt={design.title} />
                 <div class="absolute top-4 right-4 flex gap-2">
                   {design.tags.map(tag => (
                     <span class="bg-[#001529] text-white text-[9px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider">
