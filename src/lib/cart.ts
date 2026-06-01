@@ -1,4 +1,4 @@
-import { map, computed } from 'nanostores';
+import { atom, map, computed } from 'nanostores';
 
 export type Product = {
   id: number;
@@ -8,34 +8,49 @@ export type Product = {
   sku: string;
 };
 
-// Función para obtener el estado inicial de forma segura
-const getStoredCart = () => {
-  if (typeof window !== 'undefined') {
-    const saved = localStorage.getItem('cart');
-    return saved ? JSON.parse(saved) : {};
-  }
-  return {};
+export type CartItem = {
+  product: Product;
+  quantity: number;
 };
 
-export const $cart = map<Record<number, { product: Product; quantity: number }>>(getStoredCart());
+// Estado del carrito como un mapa de objetos
+export const $cart = map<Record<number, CartItem>>({});
 
-// Suscripción para persistir en localStorage
-$cart.subscribe((items) => {
-  if (typeof window !== 'undefined') {
-    localStorage.setItem('cart', JSON.stringify(items));
+// Función profesional para agregar productos
+export function addToCart(product: Product) {
+  const currentCart = $cart.get();
+  const existingItem = currentCart[product.id];
+
+  if (existingItem) {
+    $cart.setKey(product.id, { 
+      ...existingItem, 
+      quantity: existingItem.quantity + 1 
+    });
+  } else {
+    $cart.setKey(product.id, { product, quantity: 1 });
   }
-});
 
-// Cálculos
-export const $cartTotal = computed($cart, (items) => {
+  // Guardado persistente
+  localStorage.setItem('cart', JSON.stringify($cart.get()));
+  alert(`${product.name} agregado al carrito`);
+}
+
+// Cálculos reactivos para el resumen
+export const $subtotal = computed($cart, (items) => {
   return Object.values(items).reduce((acc, item) => acc + (item.product.price * item.quantity), 0);
 });
 
-export const $subtotal = computed($cartTotal, (total) => total / 1.18);
-export const $igv = computed($cartTotal, (total) => total - (total / 1.18));
+export const $igv = computed($subtotal, (sub) => sub * 0.18);
+export const $cartTotal = computed([$subtotal, $igv], (sub, igv) => sub + igv);
 
-export function addToCart(product: Product) {
-  const cart = $cart.get();
-  const current = cart[product.id] || { product, quantity: 0 };
-  $cart.setKey(product.id, { ...current, quantity: current.quantity + 1 });
+// Inicialización desde localStorage (solo en cliente)
+if (typeof window !== 'undefined') {
+  const savedCart = localStorage.getItem('cart');
+  if (savedCart) {
+    try {
+      $cart.set(JSON.parse(savedCart));
+    } catch (e) {
+      console.error("Error al cargar carrito:", e);
+    }
+  }
 }
