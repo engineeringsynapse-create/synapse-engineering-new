@@ -1,157 +1,82 @@
 ---
-
 import '../styles/global.css';
-
 import { Bot, X, Send, Sparkles } from 'lucide-react';
-
-import CartDrawer from '../components/shared/CartDrawer.astro'; // <--- IMPORTACIÓN NUEVA
-
-
+import CartDrawer from '../components/shared/CartDrawer.astro';
 
 interface Props {
-
   title: string;
-
   description: string;
-
 }
 
-
-
 const { title, description } = Astro.props;
-
 ---
 
-
-
 <!DOCTYPE html>
-
 <html lang="es">
-
   <head>
-
     <meta charset="UTF-8" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-
     <meta name="generator" content={Astro.generator} />
-
     <title>{title} | Synapse Engineering</title>
-
     <meta name="description" content={description} />
+    
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
-
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;700;900&display=swap" rel="stylesheet">
-
   </head>
-
   <body>
-
     <div class="grain-overlay" style="pointer-events: none;"></div>
-
     
-
     <slot />
-
-
 
     <CartDrawer />
 
-
-
     <div id="ai-chat-widget" class="fixed bottom-6 right-6 z-[2000] pointer-events-none group">
-
-      </div>
-
-
+    </div>
 
     <script>
-
       // Tus scripts existentes se mantienen igual
-
       const openBtns = [document.getElementById('open-ai-chat'), document.getElementById('open-ai-chat-mobile')];
-
       const closeBtn = document.getElementById('close-chat');
-
       const windowChat = document.getElementById('ai-window');
-
       const widgetContainer = document.getElementById('ai-chat-widget');
 
-
-
       const toggleChat = (forceOpen = null) => {
-
         const isOpen = forceOpen !== null ? !forceOpen : !windowChat?.classList.contains('opacity-0');
-
         
-
         if (!isOpen) {
-
           widgetContainer?.classList.remove('pointer-events-none');
-
           widgetContainer?.classList.add('pointer-events-auto');
-
           windowChat?.classList.remove('opacity-0', 'scale-95', 'translate-y-10', 'pointer-events-none');
-
         } else {
-
           windowChat?.classList.add('opacity-0', 'scale-95', 'translate-y-10', 'pointer-events-none');
-
           widgetContainer?.classList.remove('pointer-events-auto');
-
           widgetContainer?.classList.add('pointer-events-none');
-
         }
-
       };
 
-
-
       openBtns.forEach(btn => {
-
         btn?.addEventListener('click', (e) => {
-
           e.preventDefault();
-
           toggleChat(true);
-
         });
-
       });
 
-
-
       closeBtn?.addEventListener('click', () => toggleChat(false));
-
     </script>
-
   </body>
-
 </html>
 
-
-
 <style is:global>
-
   /* Tus estilos globales existentes (intactos) */
-
   html { scroll-behavior: auto !important; overflow-x: hidden; scrollbar-gutter: stable; }
-
   body { margin: 0; padding: 0; width: 100%; overflow-x: hidden; background-color: #ffffff; -webkit-font-smoothing: antialiased; text-rendering: optimizeSpeed; }
-
   * { cursor: auto !important; }
-
   .custom-scrollbar::-webkit-scrollbar { width: 4px; }
-
   .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-
   .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
-
   .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(6, 182, 212, 0.5); }
-
 </style>
