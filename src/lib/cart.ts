@@ -5,22 +5,28 @@ export type Product = {
   name: string;
   price: number;
   img: string;
-  sku: string; // Asegúrate de incluir el SKU
+  sku: string;
 };
 
-// 1. Intentar cargar del localStorage al iniciar
-const storedCart = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('cart') || '{}') : {};
+// Función para obtener el estado inicial de forma segura
+const getStoredCart = () => {
+  if (typeof window !== 'undefined') {
+    const saved = localStorage.getItem('cart');
+    return saved ? JSON.parse(saved) : {};
+  }
+  return {};
+};
 
-export const $cart = map<Record<number, { product: Product; quantity: number }>>(storedCart);
+export const $cart = map<Record<number, { product: Product; quantity: number }>>(getStoredCart());
 
-// 2. Guardar automáticamente cada vez que el carrito cambie
+// Suscripción para persistir en localStorage
 $cart.subscribe((items) => {
   if (typeof window !== 'undefined') {
     localStorage.setItem('cart', JSON.stringify(items));
   }
 });
 
-// Cálculos (estos ya los tienes bien)
+// Cálculos
 export const $cartTotal = computed($cart, (items) => {
   return Object.values(items).reduce((acc, item) => acc + (item.product.price * item.quantity), 0);
 });
