@@ -91,7 +91,7 @@ const categorias = [
                 <div class="mt-auto pt-6 flex items-center justify-between border-t border-slate-50 mt-4">
                   <p class="text-xl font-black text-slate-900 tracking-tighter">S/ {product.price.toFixed(2)}</p>
                   <button 
-                    onclick={`window.addToCart({id: ${product.id}, name: "${product.name}", price: ${product.price}, img: "${product.img}"})`}
+                    onclick={`window.addToCart({id: ${product.id}, name: "${product.name}", price: ${product.price}, img: "${product.img}", sku: "${product.sku}"})`}
                     class="bg-[#001529] text-white p-3 rounded-2xl hover:bg-blue-600 transition-all shadow-lg"
                   >
                     <ShoppingCart size={18} />

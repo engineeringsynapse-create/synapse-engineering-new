@@ -10,7 +10,7 @@ import MainLayout from '../layouts/MainLayout.astro';
     
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
       <div id="cart-items-list" class="lg:col-span-2 space-y-4">
-        </div>
+      </div>
 
       <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-xl h-fit">
         <h2 class="text-xl font-black mb-6 uppercase text-[#001529]">Total a Pagar</h2>
@@ -39,6 +39,7 @@ import MainLayout from '../layouts/MainLayout.astro';
   const totalEl = document.getElementById('full-total');
   const checkoutBtn = document.getElementById('checkout-btn');
 
+  // Suscripción al carrito para actualizar la lista
   $cart.subscribe(items => {
     const cartArray = Object.values(items);
     if (cartArray.length === 0) {
@@ -59,6 +60,7 @@ import MainLayout from '../layouts/MainLayout.astro';
     }
   });
 
+  // Suscripciones a los totales
   $cartTotal.subscribe(val => totalEl.innerText = `S/ ${val.toFixed(2)}`);
   $subtotal.subscribe(val => subTotalEl.innerText = `S/ ${val.toFixed(2)}`);
   $igv.subscribe(val => taxEl.innerText = `S/ ${val.toFixed(2)}`);
