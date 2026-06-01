@@ -16,6 +16,11 @@ export type CartItem = {
 // Estado del carrito como un mapa de objetos
 export const $cart = map<Record<number, CartItem>>({});
 
+// Nuevo: Contador para el ícono de la Navbar
+export const $cartCount = computed($cart, (items) => {
+  return Object.values(items).reduce((acc, item) => acc + item.quantity, 0);
+});
+
 // Función profesional para agregar productos
 export function addToCart(product: Product) {
   const currentCart = $cart.get();
@@ -32,7 +37,7 @@ export function addToCart(product: Product) {
 
   // Guardado persistente
   localStorage.setItem('cart', JSON.stringify($cart.get()));
-  alert(`${product.name} agregado al carrito`);
+  // Alerta eliminada para una experiencia profesional
 }
 
 // Cálculos reactivos para el resumen

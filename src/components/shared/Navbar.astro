@@ -123,14 +123,26 @@ const inactiveClass = "text-slate-700 hover:text-blue-600 transition-colors";
 </header>
 
 <script>
+  import { $cartCount } from '../../lib/cart';
+
   const btn = document.getElementById('mobile-menu-button');
   const menu = document.getElementById('mobile-menu');
   const ham = document.querySelector('.hamburger-icon');
   const close = document.querySelector('.close-icon');
+  const cartBadge = document.getElementById('cart-count');
 
+  // Lógica del menú móvil
   btn?.addEventListener('click', () => {
     menu?.classList.toggle('hidden');
     ham?.classList.toggle('hidden');
     close?.classList.toggle('hidden');
+  });
+
+  // Lógica del contador del carrito
+  $cartCount.subscribe(count => {
+    if (cartBadge) {
+      cartBadge.innerText = count.toString();
+      cartBadge.classList.toggle('hidden', count === 0);
+    }
   });
 </script>
