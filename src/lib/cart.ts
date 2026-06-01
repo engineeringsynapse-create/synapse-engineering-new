@@ -40,6 +40,21 @@ export function addToCart(product: Product) {
   // Alerta eliminada para una experiencia profesional
 }
 
+// Nueva función para eliminar productos
+export function removeFromCart(productId: number) {
+  const currentCart = $cart.get();
+  // Eliminamos la clave del producto
+  $cart.setKey(productId, undefined as any);
+  
+  // Actualizamos el objeto local
+  const newCart = { ...currentCart };
+  delete newCart[productId];
+  $cart.set(newCart);
+
+  // Guardado persistente
+  localStorage.setItem('cart', JSON.stringify($cart.get()));
+}
+
 // Cálculos reactivos para el resumen
 export const $subtotal = computed($cart, (items) => {
   return Object.values(items).reduce((acc, item) => acc + (item.product.price * item.quantity), 0);
