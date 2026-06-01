@@ -2,7 +2,7 @@
 import Layout from '../../layouts/MainLayout.astro';
 import Navbar from '../../components/shared/Navbar.astro';
 import Footer from '../../components/shared/Footer.astro';
-import { ChevronLeft, List, Clock, ShieldCheck, Cpu } from 'lucide-react';
+import { ChevronLeft, Clock, ShieldCheck, Cpu, Box } from 'lucide-react';
 
 export const prerender = false;
 const { id } = Astro.params;
@@ -39,8 +39,6 @@ const mainTitle = titleParts.join(' ');
 <Layout title={`${design.title} | Synapse Engineering`}>
   <Navbar />
   
-  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
-
   <main class="bg-white min-h-screen pt-32 pb-20">
     <div class="container mx-auto px-6">
       <a href="/disenos" class="inline-flex items-center gap-2 text-[#001529] hover:text-cyan-600 transition-all font-black text-[11px] uppercase tracking-[0.2em] mb-8 group">
@@ -68,12 +66,22 @@ const mainTitle = titleParts.join(' ');
               alt="Modelo 3D"
               auto-rotate 
               camera-controls 
-              style="width: 100%; height: 550px; display: none;"
+              reveal="interaction"
+              shadow-intensity="0"
+              interaction-prompt="none"
+              style="width: 100%; height: 550px; display: none; background-color: #f8fafc;"
             ></model-viewer>
+
+            <div id="toolbar-3d" class="absolute bottom-4 left-1/2 -translate-x-1/2 bg-white/90 backdrop-blur p-2 rounded-xl border border-slate-200 shadow-xl flex gap-2" style="display: none;">
+              <button onclick="setCamera('0deg 90deg 2m')" class="px-3 py-1.5 text-[10px] font-black uppercase hover:bg-cyan-500 hover:text-white rounded-lg transition-all">Frontal</button>
+              <button onclick="setCamera('90deg 90deg 2m')" class="px-3 py-1.5 text-[10px] font-black uppercase hover:bg-cyan-500 hover:text-white rounded-lg transition-all">Lateral</button>
+              <button onclick="setCamera('0deg 0deg 2m')" class="px-3 py-1.5 text-[10px] font-black uppercase hover:bg-cyan-500 hover:text-white rounded-lg transition-all">Superior</button>
+              <button onclick="setCamera('45deg 45deg 2m')" class="px-3 py-1.5 text-[10px] font-black uppercase hover:bg-cyan-500 hover:text-white rounded-lg transition-all">Iso</button>
+            </div>
           </div>
           
           <button id="btn-toggle" class="w-full lg:w-max bg-cyan-500 hover:bg-[#001529] text-white font-black px-12 py-5 rounded-xl flex items-center justify-center gap-3 uppercase tracking-widest transition-all hover:scale-[1.02] active:scale-95 shadow-xl shadow-cyan-500/20 group">
-            <Cpu size={20} class="group-hover:rotate-12 transition-transform" /> 
+            <Box size={20} /> 
             <span id="btn-text">Ver modelo 3D interactivo</span>
           </button>
         </div>
@@ -106,25 +114,25 @@ const mainTitle = titleParts.join(' ');
     </div>
   </main>
   
-  <script>
+  <script is:inline>
     const btn = document.getElementById('btn-toggle');
     const img = document.getElementById('img-diseno');
-    const model = document.getElementById('model-viewer') as HTMLElement;
+    const model = document.getElementById('model-viewer');
+    const toolbar = document.getElementById('toolbar-3d');
     const btnText = document.getElementById('btn-text');
     let is3D = false;
 
-    btn?.addEventListener('click', () => {
+    btn.addEventListener('click', () => {
       is3D = !is3D;
-      if (is3D) {
-        img!.style.display = 'none';
-        model!.style.display = 'block';
-        btnText!.innerText = 'Ver imagen técnica';
-      } else {
-        img!.style.display = 'block';
-        model!.style.display = 'none';
-        btnText!.innerText = 'Ver modelo 3D interactivo';
-      }
+      img.style.display = is3D ? 'none' : 'block';
+      model.style.display = is3D ? 'block' : 'none';
+      toolbar.style.display = is3D ? 'flex' : 'none';
+      btnText.innerText = is3D ? 'Ver imagen técnica' : 'Ver modelo 3D interactivo';
     });
+
+    function setCamera(pos) {
+      model.cameraOrbit = pos;
+    }
   </script>
 
   <Footer />
