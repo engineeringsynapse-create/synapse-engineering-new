@@ -70,9 +70,9 @@ import { ShieldCheck, Truck } from 'lucide-react';
           </div>
         </div>
         
-        <button id="checkout-btn" class="w-full bg-[#001529] text-white py-4 px-4 rounded-xl text-sm font-bold uppercase tracking-wider hover:bg-blue-950 active:scale-[0.99] transition-all flex items-center justify-center gap-2 group cursor-pointer shadow-md shadow-blue-900/10">
+        <button id="checkout-btn" class="w-full bg-[#001529] text-white py-4 px-4 rounded-xl text-sm font-bold uppercase tracking-wider hover:bg-blue-950 active:scale-[0.99] transition-all flex items-center justify-center gap-2 group cursor-pointer shadow-md shadow-blue-900/10 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed disabled:shadow-none disabled:scale-100">
           Procesar Compra 
-          <span class="transform group-hover:translate-x-1 transition-transform inline-block">→</span>
+          <span class="transform group-hover:translate-x-1 transition-transform inline-block group-disabled:translate-x-0">→</span>
         </button>
       </div>
     </div>
@@ -84,7 +84,6 @@ import { ShieldCheck, Truck } from 'lucide-react';
 
   function initCart() {
     const list = document.getElementById('cart-items-list')!;
-    const summary = document.getElementById('cart-summary')!;
     const subTotalEl = document.getElementById('full-subtotal')!;
     const taxEl = document.getElementById('full-tax')!;
     const totalEl = document.getElementById('full-total')!;
@@ -94,8 +93,9 @@ import { ShieldCheck, Truck } from 'lucide-react';
       const cartArray = Object.values(items);
       
       if (cartArray.length === 0) {
+        // Renderizado del estado vacío
         list.innerHTML = `
-          <div class="flex flex-col items-center justify-center p-12 bg-white rounded-2xl border border-slate-200 text-center max-w-2xl mx-auto my-4">
+          <div class="flex flex-col items-center justify-center p-12 bg-white rounded-2xl border border-slate-200 text-center max-w-2xl mx-auto my-4 shadow-sm">
             <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center border border-slate-100 mb-5">
               <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-slate-300"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
             </div>
@@ -106,9 +106,11 @@ import { ShieldCheck, Truck } from 'lucide-react';
             </a>
           </div>
         `;
-        summary.style.display = 'none';
+        // Deshabilitar botón de compra ya que no hay ítems
+        checkoutBtn.disabled = true;
       } else {
-        summary.style.display = 'block';
+        // Habilitar botón y renderizar los productos del carrito
+        checkoutBtn.disabled = false;
         list.innerHTML = `
           <h1 class="text-2xl font-black text-[#001529] uppercase mb-6 tracking-tight">Resumen de la orden</h1>
           <div class="space-y-4">
@@ -132,15 +134,17 @@ import { ShieldCheck, Truck } from 'lucide-react';
       }
     });
 
-    // Actualización de precios
+    // Actualización dinámica de precios
     $cartTotal.subscribe(val => totalEl.innerText = `S/ ${val.toFixed(2)}`);
     $subtotal.subscribe(val => subTotalEl.innerText = `S/ ${val.toFixed(2)}`);
     $igv.subscribe(val => taxEl.innerText = `S/ ${val.toFixed(2)}`);
 
-    // WhatsApp
+    // WhatsApp Action
     checkoutBtn.addEventListener('click', () => {
-      const items = Object.values($cart.get());
-      const detalle = items.map(i => `\n- ${i.product.name} (x${i.quantity})`).join('');
+      const currentItems = Object.values($cart.get());
+      if (currentItems.length === 0) return; // Validación extra
+      
+      const detalle = currentItems.map(i => `\n- ${i.product.name} (x${i.quantity})`).join('');
       const msg = `Hola, quisiera realizar el siguiente pedido:${detalle}\n\nTotal: ${totalEl.innerText}`;
       window.open(`https://wa.me/51971444230?text=${encodeURIComponent(msg)}`, '_blank');
     });
