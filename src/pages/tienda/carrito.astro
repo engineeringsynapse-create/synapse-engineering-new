@@ -1,16 +1,46 @@
 ---
 import MainLayout from '../../layouts/MainLayout.astro';
+import { ShieldCheck, Truck } from 'lucide-react';
 ---
 
 <MainLayout title="Carrito de Pedidos | Synapse Engineering">
   <main class="container mx-auto px-6 py-12 mt-10">
+    <!-- Paso a paso -->
+    <div class="flex gap-4 mb-8 text-sm font-bold text-slate-400">
+      <span class="text-blue-900 border-b-2 border-blue-900 pb-1">1. Orden</span>
+      <span class="text-slate-300">2. Dirección</span>
+      <span class="text-slate-300">3. Pago</span>
+    </div>
+
     <h1 class="text-3xl font-black text-[#001529] uppercase mb-10 tracking-tighter">Resumen de la orden</h1>
     
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
-      <div id="cart-items-list" class="lg:col-span-2 space-y-4">
-        <p class="text-slate-500 font-medium">Cargando productos...</p>
+      <!-- Lista de items -->
+      <div class="lg:col-span-2 space-y-6">
+        <div id="cart-items-list" class="space-y-4">
+          <p class="text-slate-500 font-medium">Cargando productos...</p>
+        </div>
+
+        <!-- Bloques informativos -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+          <div class="flex items-center gap-4 p-4 border border-slate-100 rounded-2xl bg-white">
+            <ShieldCheck className="text-emerald-600" size={24} />
+            <div>
+              <p class="text-xs font-black uppercase text-[#001529]">Compra Segura</p>
+              <p class="text-[10px] text-slate-500">Protección de datos SSL</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-4 p-4 border border-slate-100 rounded-2xl bg-white">
+            <Truck className="text-blue-600" size={24} />
+            <div>
+              <p class="text-xs font-black uppercase text-[#001529]">Envío Especializado</p>
+              <p class="text-[10px] text-slate-500">Logística para equipos pesados</p>
+            </div>
+          </div>
+        </div>
       </div>
 
+      <!-- Resumen de pago profesional -->
       <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-xl h-fit">
         <h2 class="text-xl font-black mb-6 uppercase text-[#001529]">Total a Pagar</h2>
         <div class="space-y-4 text-sm font-bold">
@@ -19,62 +49,20 @@ import MainLayout from '../../layouts/MainLayout.astro';
           <div class="flex justify-between text-lg pt-4 border-t border-slate-100 text-[#001529]"><span>Total Final:</span> <span id="full-total">S/ 0.00</span></div>
         </div>
         
-        <div class="mt-8">
-            <button id="checkout-btn" class="w-full bg-[#001529] text-white py-4 rounded-xl font-black uppercase hover:bg-blue-900 transition-all cursor-pointer">
-                Procesar Compra por WhatsApp
-            </button>
+        <p class="text-[10px] font-bold text-slate-400 mt-6 mb-3 uppercase text-center">Aceptamos los medios de pagos</p>
+        <div class="flex justify-center gap-2 mb-6 opacity-60 grayscale">
+            <img src="/pago-icons.png" alt="Medios de pago" class="h-6 object-contain" /> <!-- Asegúrate de tener este asset -->
+        </div>
+
+        <button id="checkout-btn" class="w-full bg-[#001529] text-white py-4 rounded-xl font-black uppercase hover:bg-blue-900 transition-all cursor-pointer">
+            Procesar Compra →
+        </button>
+
+        <div class="text-center mt-6">
+            <p class="text-[10px] text-slate-400 uppercase mb-2">Libro de reclamaciones</p>
+            <a href="/libro-reclamaciones" class="text-blue-600 text-[10px] font-bold underline">Libro de Reclamaciones</a>
         </div>
       </div>
     </div>
   </main>
 </MainLayout>
-
-<script>
-  import { $cart, $cartTotal, $subtotal, $igv } from '../../lib/cart';
-
-  function initCart() {
-    const list = document.getElementById('cart-items-list')!;
-    const subTotalEl = document.getElementById('full-subtotal')!;
-    const taxEl = document.getElementById('full-tax')!;
-    const totalEl = document.getElementById('full-total')!;
-    const checkoutBtn = document.getElementById('checkout-btn') as HTMLButtonElement;
-
-    // Suscripción al carrito
-    $cart.subscribe(items => {
-      const cartArray = Object.values(items);
-      if (cartArray.length === 0) {
-        list.innerHTML = '<p class="text-slate-400 p-10 text-center border-2 border-dashed border-slate-100 rounded-3xl">Tu carrito está vacío.</p>';
-        checkoutBtn.style.display = 'none';
-      } else {
-        list.innerHTML = cartArray.map(item => `
-          <div class="flex items-center gap-6 p-6 bg-white border border-slate-100 rounded-3xl shadow-sm">
-            <img src="${item.product.img}" alt="${item.product.name}" class="w-20 h-20 object-contain bg-slate-50 rounded-xl" />
-            <div class="flex-1">
-              <h3 class="font-black text-slate-800 uppercase">${item.product.name}</h3>
-              <p class="text-blue-600 font-bold text-xs">SKU: ${item.product.sku} | Cant: ${item.quantity}</p>
-            </div>
-            <p class="font-black text-[#001529]">S/ ${(item.product.price * item.quantity).toFixed(2)}</p>
-          </div>
-        `).join('');
-        checkoutBtn.style.display = 'block';
-      }
-    });
-
-    // Actualización de precios
-    $cartTotal.subscribe(val => totalEl.innerText = `S/ ${val.toFixed(2)}`);
-    $subtotal.subscribe(val => subTotalEl.innerText = `S/ ${val.toFixed(2)}`);
-    $igv.subscribe(val => taxEl.innerText = `S/ ${val.toFixed(2)}`);
-
-    // Acción de WhatsApp
-    checkoutBtn.addEventListener('click', () => {
-      const items = Object.values($cart.get());
-      const detalle = items.map(i => `\n- ${i.product.name} (x${i.quantity})`).join('');
-      const msg = `Hola, quisiera realizar el siguiente pedido:${detalle}\n\nTotal: ${totalEl.innerText}`;
-      window.open(`https://wa.me/51971444230?text=${encodeURIComponent(msg)}`, '_blank');
-    });
-  }
-
-  // Ejecución segura
-  initCart();
-  document.addEventListener('astro:page-load', initCart);
-</script>
