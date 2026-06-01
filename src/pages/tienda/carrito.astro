@@ -10,7 +10,7 @@ import MainLayout from '../layouts/MainLayout.astro';
     
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
       <div id="cart-items-list" class="lg:col-span-2 space-y-4">
-      </div>
+        </div>
 
       <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-xl h-fit">
         <h2 class="text-xl font-black mb-6 uppercase text-[#001529]">Total a Pagar</h2>
@@ -33,49 +33,43 @@ import MainLayout from '../layouts/MainLayout.astro';
 <script>
   import { $cart, $cartTotal, $subtotal, $igv } from '../../lib/cart'; 
 
-  function initCart() {
-    const list = document.getElementById('cart-items-list');
-    const subTotalEl = document.getElementById('full-subtotal');
-    const taxEl = document.getElementById('full-tax');
-    const totalEl = document.getElementById('full-total');
-    const checkoutBtn = document.getElementById('checkout-btn') as HTMLButtonElement;
+  const list = document.getElementById('cart-items-list');
+  const subTotalEl = document.getElementById('full-subtotal');
+  const taxEl = document.getElementById('full-tax');
+  const totalEl = document.getElementById('full-total');
+  const checkoutBtn = document.getElementById('checkout-btn');
 
-    if (!list || !subTotalEl || !taxEl || !totalEl || !checkoutBtn) return;
-
-    $cart.subscribe(items => {
-      const cartArray = Object.values(items);
-      if (cartArray.length === 0) {
-        list.innerHTML = '<p class="text-slate-500 font-bold p-10 text-center border-2 border-dashed border-slate-100 rounded-3xl">Tu carrito está vacío.</p>';
-        checkoutBtn.style.display = 'none';
-      } else {
-        list.innerHTML = cartArray.map(item => `
-          <div class="flex items-center gap-6 p-6 bg-white border border-slate-100 rounded-3xl shadow-sm">
-            <img src="${item.product.img}" alt="${item.product.name}" class="w-20 h-20 object-contain bg-slate-50 rounded-xl" />
-            <div class="flex-1">
-              <h3 class="font-black text-slate-800 uppercase">${item.product.name}</h3>
-              <p class="text-blue-600 font-bold text-sm">SKU: ${item.product.sku}</p>
-            </div>
-            <p class="font-black text-[#001529]">S/ ${item.product.price.toFixed(2)}</p>
+  $cart.subscribe(items => {
+    const cartArray = Object.values(items);
+    if (cartArray.length === 0) {
+      list.innerHTML = '<p class="text-slate-500 font-bold p-10 text-center border-2 border-dashed border-slate-100 rounded-3xl">Tu carrito está vacío.</p>';
+      checkoutBtn.style.display = 'none';
+    } else {
+      list.innerHTML = cartArray.map(item => `
+        <div class="flex items-center gap-6 p-6 bg-white border border-slate-100 rounded-3xl shadow-sm">
+          <img src="${item.product.img}" alt="${item.product.name}" class="w-20 h-20 object-contain bg-slate-50 rounded-xl" />
+          <div class="flex-1">
+            <h3 class="font-black text-slate-800 uppercase">${item.product.name}</h3>
+            <p class="text-blue-600 font-bold text-sm">SKU: ${item.product.sku}</p>
           </div>
-        `).join('');
-        checkoutBtn.style.display = 'block';
-      }
-    });
+          <p class="font-black text-[#001529]">S/ ${item.product.price.toFixed(2)}</p>
+        </div>
+      `).join('');
+      checkoutBtn.style.display = 'block';
+    }
+  });
 
-    $cartTotal.subscribe(val => totalEl.innerText = `S/ ${val.toFixed(2)}`);
-    $subtotal.subscribe(val => subTotalEl.innerText = `S/ ${val.toFixed(2)}`);
-    $igv.subscribe(val => taxEl.innerText = `S/ ${val.toFixed(2)}`);
+  $cartTotal.subscribe(val => totalEl.innerText = `S/ ${val.toFixed(2)}`);
+  $subtotal.subscribe(val => subTotalEl.innerText = `S/ ${val.toFixed(2)}`);
+  $igv.subscribe(val => taxEl.innerText = `S/ ${val.toFixed(2)}`);
 
-    checkoutBtn.addEventListener('click', () => {
-      const items = Object.values($cart.get());
-      const lista = items.map(i => `\n- ${i.product.name} (SKU: ${i.product.sku})`).join('');
-      const total = totalEl.innerText;
-      const mensaje = `Hola, quisiera realizar el siguiente pedido:${lista}\n\nTotal a pagar: ${total}`;
-      window.open(`https://wa.me/51971444230?text=${encodeURIComponent(mensaje)}`, '_blank');
-    });
-  }
-
-  // Ejecución inmediata y también en evento de navegación
-  initCart();
-  document.addEventListener('astro:page-load', initCart);
+  // Acción de WhatsApp
+  checkoutBtn.addEventListener('click', () => {
+    const items = Object.values($cart.get());
+    const lista = items.map(i => `\n- ${i.product.name} (SKU: ${i.product.sku})`).join('');
+    const total = totalEl.innerText;
+    const mensaje = `Hola, quisiera realizar el siguiente pedido:${lista}\n\nTotal a pagar: ${total}`;
+    
+    window.open(`https://wa.me/51999888777?text=${encodeURIComponent(mensaje)}`, '_blank');
+  });
 </script>
