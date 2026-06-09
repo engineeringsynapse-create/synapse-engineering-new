@@ -3,9 +3,17 @@ import { ChevronRight, ShieldCheck, Zap } from 'lucide-react';
 ---
 
 <section class="relative min-h-[90vh] flex items-center overflow-hidden bg-slate-900 pt-20">
-  <div class="absolute inset-0 z-0 opacity-20">
-    <div class="absolute inset-0" style="background-image: radial-gradient(#3b82f6 1px, transparent 1px); background-size: 30px 30px;"></div>
-  </div>
+  <video
+    autoplay
+    loop
+    muted
+    playsinline
+    class="absolute inset-0 w-full h-full object-cover z-0 opacity-40"
+  >
+    <source src="/16943466-uhd_3840_2160_24fps.mp4" type="video/mp4" />
+  </video>
+  
+  <div class="absolute inset-0 z-0 bg-slate-900/60"></div>
   
   <div class="container mx-auto px-6 relative z-10">
     <div class="flex flex-col lg:flex-row items-center gap-12">
