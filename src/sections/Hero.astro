@@ -1,81 +1,162 @@
 ---
+
 import { ChevronRight, ShieldCheck, Zap } from 'lucide-react';
+
 ---
 
+
+
 <section class="relative min-h-[90vh] flex items-center overflow-hidden bg-slate-950 pt-20">
+
   <video
+
     autoplay
+
     loop
+
     muted
+
     playsinline
+
     preload="auto"
+
     poster="https://impoexpo.com.pe/wp-content/uploads/2023/07/celdas-de-media-tension.jpg"
+
     class="absolute inset-0 w-full h-full object-cover z-0 opacity-40"
+
   >
+
     <source src="/16943466-uhd_3840_2160_24fps.mp4" type="video/mp4" />
+
   </video>
+
   
+
   <div class="absolute inset-0 z-0 bg-slate-900/60"></div>
+
   
+
   <div class="container mx-auto px-6 relative z-10">
+
     <div class="flex flex-col lg:flex-row items-center gap-12">
+
       
+
       <div class="w-full lg:w-3/5">
-        <div data-aos="fade-right" data-aos-duration="800" class="inline-flex items-center gap-2 bg-blue-600/10 border border-blue-500/20 px-4 py-2 rounded-full mb-6">
+
+        <div class="inline-flex items-center gap-2 bg-blue-600/10 border border-blue-500/20 px-4 py-2 rounded-full mb-6">
+
           <Zap size={14} class="text-blue-400" />
+
           <span class="text-blue-400 text-[10px] font-black uppercase tracking-[0.2em]">Normas Internacionales IEC 61439</span>
+
         </div>
+
         
-        <h2 data-aos="fade-up" data-aos-duration="1000" class="text-5xl md:text-7xl font-black text-white leading-[0.95] uppercase tracking-tighter mb-8">
+
+        <h2 class="text-5xl md:text-7xl font-black text-white leading-[0.95] uppercase tracking-tighter mb-8">
+
           Ingeniería de <br/> <span class="text-blue-500">Potencia & Control</span>
+
         </h2>
+
         
-        <p data-aos="fade-up" data-aos-duration="1200" class="text-slate-400 text-lg md:text-xl max-w-2xl mb-10 leading-relaxed font-medium">
+
+        <p class="text-slate-400 text-lg md:text-xl max-w-2xl mb-10 leading-relaxed font-medium">
+
           Diseñamos y fabricamos tableros eléctricos de baja y media tensión con precisión milimétrica para la industria minera, energética y comercial en todo el Perú.
+
         </p>
+
         
-        <div data-aos="fade-up" data-aos-duration="1400" class="flex flex-wrap gap-4">
+
+        <div class="flex flex-wrap gap-4">
+
           <a href="#contacto" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-lg font-black uppercase text-xs tracking-widest transition-all shadow-lg shadow-blue-600/20 flex items-center gap-3">
+
             Iniciar Proyecto <ChevronRight size={16} />
+
           </a>
+
           <a href="#productos" class="bg-transparent border border-slate-700 hover:border-slate-500 text-white px-8 py-4 rounded-lg font-black uppercase text-xs tracking-widest transition-all flex items-center gap-3">
+
             Ver Catálogo
+
           </a>
+
         </div>
 
-        <div data-aos="fade-up" data-aos-duration="1600" class="mt-12 flex items-center gap-8 border-t border-slate-800 pt-8">
+
+
+        <div class="mt-12 flex items-center gap-8 border-t border-slate-800 pt-8">
+
           <div class="flex flex-col">
+
             <span class="text-white font-black text-xl leading-none">ISO 9001</span>
+
             <span class="text-slate-500 text-[9px] uppercase font-bold tracking-tighter">Calidad Certificada</span>
+
           </div>
+
           <div class="w-[1px] h-8 bg-slate-800"></div>
+
           <div class="flex flex-col">
+
             <span class="text-white font-black text-xl leading-none">24/7</span>
+
             <span class="text-slate-500 text-[9px] uppercase font-bold tracking-tighter">Soporte Técnico</span>
+
           </div>
+
         </div>
+
       </div>
 
-      <div data-aos="zoom-in" data-aos-duration="1500" class="w-full lg:w-2/5 relative">
+
+
+      <div class="w-full lg:w-2/5 relative">
+
         <div class="relative z-10 rounded-2xl overflow-hidden border border-slate-700 shadow-2xl">
+
           <img 
+
             src="https://impoexpo.com.pe/wp-content/uploads/2023/07/celdas-de-media-tension.jpg" 
+
             alt="Ingeniería Synapse" 
+
             class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
+
             loading="eager"
+
             decoding="async"
+
           />
+
         </div>
+
         <div class="absolute -top-6 -right-6 w-32 h-32 bg-blue-600/20 rounded-full blur-3xl"></div>
+
         <div class="absolute -bottom-6 -left-6 w-32 h-32 bg-cyan-500/10 rounded-full blur-3xl"></div>
+
       </div>
+
+
 
     </div>
+
   </div>
+
 </section>
 
+
+
 <style>
+
   section {
+
     contain: layout;
+
   }
-</style>
+
+</style> 
+
