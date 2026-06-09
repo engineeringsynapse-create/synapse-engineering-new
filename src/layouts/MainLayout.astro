@@ -21,6 +21,8 @@ const { title, description } = Astro.props;
     <title>{title} | Synapse Engineering</title>
     <meta name="description" content={description} />
     
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -37,7 +39,14 @@ const { title, description } = Astro.props;
     <div id="ai-chat-widget" class="fixed bottom-6 right-6 z-[2000] pointer-events-none group">
     </div>
 
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
+      AOS.init({
+        duration: 800,
+        once: true,
+        offset: 100
+      });
+
       // Tus scripts existentes se mantienen igual
       const openBtns = [document.getElementById('open-ai-chat'), document.getElementById('open-ai-chat-mobile')];
       const closeBtn = document.getElementById('close-chat');
