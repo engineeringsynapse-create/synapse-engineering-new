@@ -71,6 +71,9 @@ const { title, description } = Astro.props;
 </html>
 
 <style is:global>
+  /* Inter con font-display: swap para evitar bloqueos */
+  body { font-family: 'Inter', sans-serif; font-display: swap; }
+
   /* Tus estilos globales existentes (intactos) */
   html { scroll-behavior: auto !important; overflow-x: hidden; scrollbar-gutter: stable; }
   body { margin: 0; padding: 0; width: 100%; overflow-x: hidden; background-color: #ffffff; -webkit-font-smoothing: antialiased; text-rendering: optimizeSpeed; }
