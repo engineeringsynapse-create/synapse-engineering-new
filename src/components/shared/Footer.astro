@@ -1,136 +1,77 @@
 ---
-
-import { Zap, Linkedin, Facebook, Instagram, ArrowUp } from 'lucide-react';
-
+import { Zap, Linkedin, Facebook, Instagram, ArrowUp, Mail, MessageCircle, Youtube, Send } from 'lucide-react';
 ---
 
-
-
 <footer class="bg-[#0f172a] text-white pt-24 pb-12">
-
   <div class="container mx-auto px-6">
-
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-20">
-
       
-
       <div class="col-span-1 lg:col-span-1">
-
         <div class="flex items-center gap-3 mb-8">
-
           <div class="w-10 h-10 bg-blue-600 flex items-center justify-center rounded-lg">
-
             <Zap size={22} fill="white" />
-
           </div>
-
           <h4 class="text-xl font-black uppercase tracking-tighter">Synapse Engineering</h4>
-
         </div>
-
         <p class="text-slate-400 text-sm leading-relaxed mb-8">
-
           Diseño, fabricación y automatización de tableros eléctricos de alta gama. Ingeniería que redefine la eficiencia industrial en el Perú.
-
         </p>
-
-        <div class="flex gap-4">
-
-          <a href="#" class="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors shadow-lg"><Linkedin size={18} /></a>
-
-          <a href="#" class="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors shadow-lg"><Facebook size={18} /></a>
-
-          <a href="#" class="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors shadow-lg"><Instagram size={18} /></a>
-
+        <div class="flex flex-wrap gap-2">
+          <a href="#" class="w-9 h-9 bg-slate-800 rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors shadow-lg"><Mail size={16} /></a>
+          <a href="#" class="w-9 h-9 bg-slate-800 rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors shadow-lg"><MessageCircle size={16} /></a>
+          <a href="#" class="w-9 h-9 bg-slate-800 rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors shadow-lg"><Facebook size={16} /></a>
+          <a href="#" class="w-9 h-9 bg-slate-800 rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors shadow-lg"><Linkedin size={16} /></a>
+          <a href="#" class="w-9 h-9 bg-slate-800 rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors shadow-lg"><Instagram size={16} /></a>
+          <a href="#" class="w-9 h-9 bg-slate-800 rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors shadow-lg"><Youtube size={16} /></a>
+          <a href="#" class="w-9 h-9 bg-slate-800 rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors shadow-lg"><Send size={16} /></a>
         </div>
-
       </div>
 
-
-
       <div>
-  <h5 class="font-black text-xs uppercase tracking-[0.2em] text-blue-400 mb-8">Plataforma</h5>
-  <ul class="space-y-4 text-slate-400 text-sm font-bold uppercase tracking-tighter">
-    <li><a href="/" class="hover:text-white transition-colors">Inicio</a></li>
-    <li><a href="#empresa" class="hover:text-white transition-colors">La Empresa</a></li>
-    <li><a href="#productos" class="hover:text-white transition-colors">Productos</a></li>
-    <li><a href="/disenos" class="hover:text-white transition-colors">Diseños</a></li>
-    <li><a href="/clientes" class="hover:text-white transition-colors">Clientes</a></li>
-    <li><a href="/contacto" class="hover:text-white transition-colors">Contacto</a></li>
-    <li><a href="/tienda" class="hover:text-white transition-colors">Tienda</a></li>
-    <li><a href="/soporte-ia" class="hover:text-white transition-colors">Soporte IA</a></li>
-  </ul>
-</div>
-
-
-
-      <div>
-
-        <h5 class="font-black text-xs uppercase tracking-[0.2em] text-blue-400 mb-8">Especialidades</h5>
-
-        <ul class="space-y-4 text-slate-400 text-sm font-medium">
-
-          <li>Tableros de Distribución</li>
-
-          <li>Celdas de Media Tensión</li>
-
-          <li>Centros de Control de Motores</li>
-
-          <li>Automatización de Procesos</li>
-
-          <li>Sistemas de Transferencia</li>
-
+        <h5 class="font-black text-xs uppercase tracking-[0.2em] text-blue-400 mb-8">Plataforma</h5>
+        <ul class="space-y-4 text-slate-400 text-sm font-bold uppercase tracking-tighter">
+          <li><a href="/" class="hover:text-white transition-colors">Inicio</a></li>
+          <li><a href="#empresa" class="hover:text-white transition-colors">La Empresa</a></li>
+          <li><a href="#productos" class="hover:text-white transition-colors">Productos</a></li>
+          <li><a href="/disenos" class="hover:text-white transition-colors">Diseños</a></li>
+          <li><a href="/clientes" class="hover:text-white transition-colors">Clientes</a></li>
+          <li><a href="/contacto" class="hover:text-white transition-colors">Contacto</a></li>
+          <li><a href="/tienda" class="hover:text-white transition-colors">Tienda</a></li>
+          <li><a href="/soporte-ia" class="hover:text-white transition-colors">Soporte IA</a></li>
         </ul>
-
       </div>
-
-
 
       <div>
-
-        <h5 class="font-black text-xs uppercase tracking-[0.2em] text-blue-400 mb-8">Normativas</h5>
-
-        <div class="grid grid-cols-2 gap-3 opacity-40 grayscale">
-
-          <div class="bg-white/10 p-4 rounded-xl flex items-center justify-center font-black text-[9px]">ISO 9001</div>
-
-          <div class="bg-white/10 p-4 rounded-xl flex items-center justify-center font-black text-[9px]">IEC 61439</div>
-
-          <div class="bg-white/10 p-4 rounded-xl flex items-center justify-center font-black text-[9px]">CNE PERÚ</div>
-
-          <div class="bg-white/10 p-4 rounded-xl flex items-center justify-center font-black text-[9px]">IEEE</div>
-
-        </div>
-
+        <h5 class="font-black text-xs uppercase tracking-[0.2em] text-blue-400 mb-8">Especialidades</h5>
+        <ul class="space-y-4 text-slate-400 text-sm font-medium">
+          <li>Tableros de Distribución</li>
+          <li>Celdas de Media Tensión</li>
+          <li>Centros de Control de Motores</li>
+          <li>Automatización de Procesos</li>
+          <li>Sistemas de Transferencia</li>
+        </ul>
       </div>
 
-
-
+      <div>
+        <h5 class="font-black text-xs uppercase tracking-[0.2em] text-blue-400 mb-8">Normativas</h5>
+        <div class="grid grid-cols-2 gap-3 opacity-40 grayscale">
+          <div class="bg-white/10 p-4 rounded-xl flex items-center justify-center font-black text-[9px]">ISO 9001</div>
+          <div class="bg-white/10 p-4 rounded-xl flex items-center justify-center font-black text-[9px]">IEC 61439</div>
+          <div class="bg-white/10 p-4 rounded-xl flex items-center justify-center font-black text-[9px]">CNE PERÚ</div>
+          <div class="bg-white/10 p-4 rounded-xl flex items-center justify-center font-black text-[9px]">IEEE</div>
+        </div>
+      </div>
     </div>
-
-
 
     <div class="pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-6">
-
       <p class="text-slate-500 text-[10px] font-black uppercase tracking-widest">
-
         © 2026 Synapse Engineering S.A.C. - Todos los derechos reservados
-
       </p>
-
       <div class="flex gap-6">
-
          <a href="#inicio" class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-white hover:bg-blue-700 transition-all">
-
             <ArrowUp size={18} />
-
          </a>
-
       </div>
-
     </div>
-
   </div>
-
-</footer> 
-
+</footer>
