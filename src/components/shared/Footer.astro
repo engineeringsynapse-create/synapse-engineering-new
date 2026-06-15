@@ -1,5 +1,5 @@
 ---
-import { Zap, Linkedin, Facebook, Instagram, ArrowUp, Mail, MessageCircle, Youtube, Send } from 'lucide-react';
+import { Zap, Linkedin, Facebook, Instagram, ArrowUp, Mail, Youtube } from 'lucide-react';
 ---
 
 <footer class="bg-[#0f172a] text-white pt-24 pb-12">
@@ -18,12 +18,23 @@ import { Zap, Linkedin, Facebook, Instagram, ArrowUp, Mail, MessageCircle, Youtu
         </p>
         <div class="flex flex-wrap gap-2">
           <a href="#" class="w-9 h-9 bg-slate-800 rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors shadow-lg"><Mail size={16} /></a>
-          <a href="#" class="w-9 h-9 bg-slate-800 rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors shadow-lg"><MessageCircle size={16} /></a>
+          
+          <a href="#" class="w-9 h-9 bg-slate-800 rounded-full flex items-center justify-center hover:bg-[#25D366] transition-colors shadow-lg p-[7px]">
+            <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12.012 2C6.48 2 2 6.48 2 12.012c0 1.83.486 3.636 1.392 5.238l-1.392 5.094 5.232-1.368c1.554.852 3.3 1.302 5.082 1.302 5.532 0 10.014-4.482 10.014-10.014C22.014 6.48 17.532 2 12.012 2zM12 20.322c-1.608 0-3.18-.414-4.578-1.218l-3.15.822.846-3.072c-.87-1.464-1.332-3.156-1.332-4.842C3.786 7.494 7.482 3.798 12 3.798c4.518 0 8.214 3.696 8.214 8.214 0 4.518-3.696 8.214-8.214 8.214zm4.494-6.198c-.246-.12-1.464-.72-1.692-.804-.228-.084-.396-.126-.564.126-.168.252-.654.804-.804.978-.15.174-.3.198-.546.072-.246-.12-1.044-.384-1.986-1.224-.732-.654-1.23-1.464-1.374-1.71-.144-.246-.018-.378.108-.504.114-.114.246-.288.372-.432.126-.144.168-.246.252-.414.084-.168.042-.318-.024-.438-.066-.126-.564-1.356-.774-1.86-.204-.492-.408-.42-.564-.426-.144-.006-.312-.006-.48-.006-.168 0-.444.066-.678.318-.234.252-.894.876-.894 2.136 0 1.26.918 2.478 1.044 2.652.126.174 1.806 2.76 4.38 3.864.612.264 1.092.42 1.464.54.612.192 1.17.168 1.614.102.492-.072 1.464-.6 1.674-1.182.21-.582.21-1.08.144-1.182-.066-.102-.246-.162-.492-.282z"/>
+            </svg>
+          </a>
+          
           <a href="#" class="w-9 h-9 bg-slate-800 rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors shadow-lg"><Facebook size={16} /></a>
           <a href="#" class="w-9 h-9 bg-slate-800 rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors shadow-lg"><Linkedin size={16} /></a>
           <a href="#" class="w-9 h-9 bg-slate-800 rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors shadow-lg"><Instagram size={16} /></a>
           <a href="#" class="w-9 h-9 bg-slate-800 rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors shadow-lg"><Youtube size={16} /></a>
-          <a href="#" class="w-9 h-9 bg-slate-800 rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors shadow-lg"><Send size={16} /></a>
+          
+          <a href="#" class="w-9 h-9 bg-slate-800 rounded-full flex items-center justify-center hover:bg-black transition-colors shadow-lg p-[8px]">
+             <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+               <path d="M16.802 2C16.802 2.332 16.802 2.664 16.802 3C18.122 3 19.342 3.612 20.122 4.664C20.122 6.064 20.122 7.464 20.122 8.864C19.062 8.362 17.842 8.162 16.622 8.362C16.622 7.212 16.622 6.062 16.622 4.912C15.222 5.612 14.122 6.762 13.522 8.162C12.922 9.562 12.822 11.162 13.222 12.662C13.622 14.162 14.522 15.462 15.822 16.262C17.122 17.062 18.722 17.262 20.222 16.862C21.722 16.462 23.022 15.562 23.822 14.262C23.962 14.862 24.042 15.462 24.042 16.062C24.042 17.362 23.702 18.662 23.042 19.762C22.382 20.862 21.402 21.762 20.242 22.362C19.082 22.962 17.782 23.262 16.482 23.262C15.182 23.262 13.882 22.962 12.722 22.362C11.562 21.762 10.582 20.862 9.922 19.762C9.262 18.662 8.922 17.362 8.922 16.062C8.922 14.762 9.262 13.462 9.922 12.362C10.582 11.262 11.562 10.362 12.722 9.762C12.722 8.362 12.722 6.962 12.722 5.562C10.722 5.962 8.922 7.062 7.722 8.662C6.522 10.262 6.022 12.362 6.222 14.362C6.422 16.362 7.322 18.262 8.822 19.562C10.322 20.862 12.322 21.562 14.322 21.562C16.322 21.562 18.322 20.862 19.822 19.562C21.322 18.262 22.222 16.362 22.422 14.362C22.622 12.362 22.122 10.262 20.922 8.662C19.722 7.062 17.922 5.962 15.922 5.562C15.922 4.162 15.922 2.762 15.922 1.362C16.202 1.562 16.502 1.762 16.802 2Z"/>
+             </svg>
+          </a>
         </div>
       </div>
 
