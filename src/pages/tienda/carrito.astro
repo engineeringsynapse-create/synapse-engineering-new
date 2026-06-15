@@ -90,16 +90,21 @@ import { ShieldCheck, Truck } from 'lucide-react';
   </div>
 </MainLayout>
 
-<!-- Modal de Datos -->
-<div id="checkout-modal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
-  <div class="bg-white rounded-2xl p-8 w-full max-w-sm shadow-2xl">
-    <h3 class="text-lg font-bold text-[#001529] mb-5 uppercase">Tus Datos</h3>
+<div id="checkout-modal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+  <div class="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl">
+    <h3 class="text-lg font-bold mb-4 text-[#001529]">Finalizar Pedido</h3>
     <div class="space-y-4">
-      <input type="text" id="user-name" class="w-full p-3 border border-slate-200 rounded-lg text-sm" placeholder="Nombre Completo">
-      <input type="text" id="user-doc" class="w-full p-3 border border-slate-200 rounded-lg text-sm" placeholder="DNI o RUC">
-      <div class="flex gap-2 mt-4">
-        <button id="close-modal" class="flex-1 py-3 bg-slate-100 rounded-xl font-bold text-sm">Cancelar</button>
-        <button id="submit-order" class="flex-1 py-3 bg-[#001529] text-white rounded-xl font-bold text-sm">Enviar Pedido</button>
+      <div>
+        <label class="text-xs font-bold text-slate-500 uppercase">Nombre Completo</label>
+        <input type="text" id="user-name" class="w-full mt-1 p-3 border rounded-lg" placeholder="Ej: Juan Pérez">
+      </div>
+      <div>
+        <label class="text-xs font-bold text-slate-500 uppercase">DNI / RUC</label>
+        <input type="text" id="user-doc" class="w-full mt-1 p-3 border rounded-lg" placeholder="Ej: 12345678">
+      </div>
+      <div class="flex gap-2 mt-6">
+        <button id="close-modal" class="w-full py-3 bg-slate-100 rounded-xl font-bold">Cancelar</button>
+        <button id="submit-order" class="w-full py-3 bg-[#001529] text-white rounded-xl font-bold">Enviar Pedido</button>
       </div>
     </div>
   </div>
@@ -119,18 +124,20 @@ import { ShieldCheck, Truck } from 'lucide-react';
     const closeBtn = document.getElementById('close-modal')!;
     const submitBtn = document.getElementById('submit-order')!;
 
-    // Abrir modal
-    checkoutBtn.addEventListener('click', () => modal.classList.remove('hidden'));
-    closeBtn.addEventListener('click', () => modal.classList.add('hidden'));
-
-    // Lógica original de renderizado
     $cart.subscribe(items => {
       const cartArray = Object.values(items);
+      
       if (cartArray.length === 0) {
         list.innerHTML = `
           <div class="flex flex-col items-center justify-center p-12 bg-white rounded-2xl border border-slate-200 text-center max-w-2xl mx-auto my-4 shadow-sm">
+            <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center border border-slate-100 mb-5">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-slate-300"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+            </div>
             <h3 class="text-xl font-bold text-slate-800 mb-2">¡Su carrito está vacío!</h3>
-            <a href="/tienda" class="bg-[#001529] text-white px-8 py-3.5 rounded-xl text-sm font-bold uppercase tracking-wider hover:bg-blue-950 transition-all">Ir a la Tienda</a>
+            <p class="text-slate-500 mb-6 text-sm max-w-sm">Parece que aún no has añadido componentes a tu orden.</p>
+            <a href="/tienda" class="bg-[#001529] text-white px-8 py-3.5 rounded-xl text-sm font-bold uppercase tracking-wider hover:bg-blue-950 transition-all inline-block shadow-sm">
+              Ir a la Tienda
+            </a>
           </div>
         `;
         checkoutBtn.disabled = true;
@@ -139,15 +146,17 @@ import { ShieldCheck, Truck } from 'lucide-react';
         list.innerHTML = `
           <div class="space-y-4">
             ${cartArray.map(item => `
-              <div class="flex items-center gap-4 p-4 bg-white border border-slate-100 rounded-xl shadow-sm">
-                <img src="${item.product.img}" alt="${item.product.name}" class="w-20 h-20 object-contain bg-slate-50 p-1 rounded-lg" />
+              <div class="flex items-center gap-4 p-4 bg-white border border-slate-100 rounded-xl shadow-sm hover:border-slate-200 transition-all">
+                <img src="${item.product.img}" alt="${item.product.name}" class="w-20 h-20 object-contain bg-slate-50 border border-slate-100 p-1 rounded-lg" />
                 <div class="flex-1 min-w-0">
                   <h3 class="font-bold text-slate-800 uppercase text-sm truncate">${item.product.name}</h3>
-                  <p class="text-blue-600 font-semibold text-xs mt-0.5">SKU: ${item.product.sku} | Cant: ${item.quantity}</p>
+                  <p class="text-blue-600 font-semibold text-xs mt-0.5">SKU: ${item.product.sku} <span class="text-slate-300 mx-1.5">|</span> Cant: ${item.quantity}</p>
                 </div>
                 <div class="text-right flex items-center gap-4">
-                  <p class="font-bold text-[#001529] text-sm">S/ ${(item.product.price * item.quantity).toFixed(2)}</p>
-                  <button onclick="window.removeProduct(${item.product.id})" class="text-slate-400 hover:text-red-500">Eliminar</button>
+                  <p class="font-bold text-[#001529] text-sm whitespace-nowrap">S/ ${(item.product.price * item.quantity).toFixed(2)}</p>
+                  <button onclick="window.removeProduct(${item.product.id})" class="text-slate-400 hover:text-red-500 transition-colors p-2 rounded-lg hover:bg-slate-50" title="Eliminar producto">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+                  </button>
                 </div>
               </div>
             `).join('')}
@@ -160,16 +169,22 @@ import { ShieldCheck, Truck } from 'lucide-react';
     $subtotal.subscribe(val => subTotalEl.innerText = `S/ ${val.toFixed(2)}`);
     $igv.subscribe(val => taxEl.innerText = `S/ ${val.toFixed(2)}`);
 
-    // Procesar envío a WhatsApp
+    // Lógica del modal
+    checkoutBtn.addEventListener('click', () => modal.classList.remove('hidden'));
+    closeBtn.addEventListener('click', () => modal.classList.add('hidden'));
+
     submitBtn.addEventListener('click', () => {
       const name = (document.getElementById('user-name') as HTMLInputElement).value;
       const doc = (document.getElementById('user-doc') as HTMLInputElement).value;
       const currentItems = Object.values($cart.get());
       
-      if (!name || !doc) { alert("Por favor, ingresa tus datos."); return; }
+      if (!name || !doc) {
+        alert("Por favor, completa tus datos.");
+        return;
+      }
 
       const detalle = currentItems.map(i => `\n- ${i.product.name} (x${i.quantity})`).join('');
-      const msg = `Pedido Synapse:\n\n*Cliente:* ${name}\n*Documento:* ${doc}\n*Productos:*${detalle}\n\n*Total:* ${totalEl.innerText}`;
+      const msg = `Hola, quisiera realizar un pedido:\n\n*Cliente:* ${name}\n*Documento:* ${doc}\n\n*Productos:*${detalle}\n\n*Total:* ${totalEl.innerText}`;
       
       window.open(`https://wa.me/51971444230?text=${encodeURIComponent(msg)}`, '_blank');
       modal.classList.add('hidden');
