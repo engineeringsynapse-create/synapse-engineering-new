@@ -198,13 +198,22 @@ import { ShieldCheck, Truck } from 'lucide-react';
       const name = (document.getElementById('user-name') as HTMLInputElement).value;
       const doc = (document.getElementById('user-doc') as HTMLInputElement).value;
       const paymentMethod = (document.getElementById('payment-method') as HTMLSelectElement).value;
-      const currentItems = Object.values($cart.get());
       
-      if (!name || !doc) {
-        alert("Por favor, completa tus datos.");
-        return;
+      let errorEl = document.getElementById('error-msg');
+      if (!errorEl) {
+        errorEl = document.createElement('p');
+        errorEl.id = 'error-msg';
+        errorEl.className = 'text-red-500 text-[10px] font-bold text-center mt-2 uppercase tracking-wider';
+        submitBtn.parentNode?.parentNode?.insertBefore(errorEl, submitBtn.parentNode);
       }
 
+      if (!name || !doc) {
+        errorEl.innerText = "¡Atención! Por favor, completa tus datos antes de enviar.";
+        return;
+      }
+      
+      errorEl.innerText = "";
+      const currentItems = Object.values($cart.get());
       const detalle = currentItems.map(i => `\n- ${i.product.name} (x${i.quantity})`).join('');
       const msg = `Hola, quisiera realizar un pedido:\n\n*Cliente:* ${name}\n*Documento:* ${doc}\n*Método de pago:* ${paymentMethod}\n\n*Productos:*${detalle}\n\n*Total:* ${totalEl.innerText}`;
       
