@@ -2,7 +2,7 @@
 import { ChevronRight, ShieldCheck, Zap } from 'lucide-react';
 ---
 
-<section class="relative min-h-[90vh] flex items-center overflow-hidden bg-slate-950 pt-20">
+<section class="relative min-h-[90vh] flex items-center overflow-hidden bg-slate-950 pt-24 md:pt-32">
   <div 
     class="absolute inset-0 w-full h-full z-0 opacity-40 bg-cover bg-center bg-no-repeat"
     style="background-image: url('/fondo.jpg'); background-size: cover; background-position: center center;"
@@ -19,7 +19,7 @@ import { ChevronRight, ShieldCheck, Zap } from 'lucide-react';
           <span class="text-blue-400 text-[10px] font-black uppercase tracking-[0.2em]">Normas Internacionales IEC 61439</span>
         </div>
         
-        <h2 class="text-5xl md:text-7xl font-black text-white leading-[0.95] uppercase tracking-tighter mb-8">
+        <h2 class="text-4xl md:text-5xl lg:text-7xl font-black text-white leading-[0.95] uppercase tracking-tighter mb-8">
           Ingeniería de <br/> <span class="text-blue-500">Potencia & Control</span>
         </h2>
         
@@ -48,7 +48,8 @@ import { ChevronRight, ShieldCheck, Zap } from 'lucide-react';
           </div>
         </div>
       </div>
-      </div>
+      
+    </div>
   </div>
 </section>
 
@@ -56,7 +57,6 @@ import { ChevronRight, ShieldCheck, Zap } from 'lucide-react';
   section {
     contain: layout;
   }
-  /* Fuerza al navegador a no desenfocar la imagen */
   .bg-cover {
     image-rendering: -webkit-optimize-contrast;
     image-rendering: crisp-edges;
