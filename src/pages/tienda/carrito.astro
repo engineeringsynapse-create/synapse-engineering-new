@@ -209,6 +209,10 @@ import { ShieldCheck, Truck } from 'lucide-react';
 
       if (!name || !doc) {
         errorEl.innerText = "¡Atención! Por favor, completa tus datos antes de enviar.";
+        // Auto-limpiar después de 3 segundos
+        setTimeout(() => {
+          errorEl.innerText = "";
+        }, 3000);
         return;
       }
       
