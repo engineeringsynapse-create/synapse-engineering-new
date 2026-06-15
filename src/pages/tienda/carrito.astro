@@ -1,10 +1,13 @@
 ---
 import MainLayout from '../../layouts/MainLayout.astro';
-import Footer from '../../components/shared/Footer.astro'; // <--- ESTA ES LA RUTA CORRECTA
+import Navbar from '../../components/shared/Navbar.astro';
+import Footer from '../../components/shared/Footer.astro';
 import { ShieldCheck, Truck } from 'lucide-react';
 ---
 
 <MainLayout title="Carrito de Pedidos | Synapse Engineering">
+  <Navbar />
+  
   <div class="bg-[#f8fafc] min-h-screen w-full py-1">
     <main class="container mx-auto px-4 md:px-6 py-12 mt-6 max-w-7xl">
       
