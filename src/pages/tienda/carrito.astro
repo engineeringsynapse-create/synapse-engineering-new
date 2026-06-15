@@ -105,6 +105,19 @@ import { ShieldCheck, Truck } from 'lucide-react';
         <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">DNI / RUC</label>
         <input type="text" id="user-doc" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all" placeholder="Ej: 10123456789">
       </div>
+      <div class="space-y-2 pt-2">
+        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Método de Pago</label>
+        <div class="grid grid-cols-2 gap-2">
+          <label class="flex flex-col items-center justify-center p-3 border-2 border-slate-200 rounded-xl cursor-pointer hover:border-blue-500 transition-all">
+            <input type="radio" name="payment" value="Transferencia" class="hidden" checked>
+            <span class="text-[10px] font-bold text-slate-600">Transferencia</span>
+          </label>
+          <label class="flex flex-col items-center justify-center p-3 border-2 border-slate-200 rounded-xl cursor-pointer hover:border-blue-500 transition-all">
+            <input type="radio" name="payment" value="Yape/Plin" class="hidden">
+            <span class="text-[10px] font-bold text-slate-600">Yape / Plin</span>
+          </label>
+        </div>
+      </div>
       <div class="grid grid-cols-2 gap-3 mt-8">
         <button id="close-modal" class="py-3.5 bg-slate-100 text-slate-600 rounded-xl font-bold text-sm hover:bg-slate-200 transition-all">Cancelar</button>
         <button id="submit-order" class="py-3.5 bg-[#001529] text-white rounded-xl font-bold text-sm hover:bg-blue-950 transition-all shadow-lg shadow-blue-900/20">Enviar</button>
@@ -133,11 +146,7 @@ import { ShieldCheck, Truck } from 'lucide-react';
       if (cartArray.length === 0) {
         list.innerHTML = `
           <div class="flex flex-col items-center justify-center p-12 bg-white rounded-2xl border border-slate-200 text-center max-w-2xl mx-auto my-4 shadow-sm">
-            <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center border border-slate-100 mb-5">
-              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-slate-300"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
-            </div>
             <h3 class="text-xl font-bold text-slate-800 mb-2">¡Su carrito está vacío!</h3>
-            <p class="text-slate-500 mb-6 text-sm max-w-sm">Parece que aún no has añadido componentes a tu orden.</p>
             <a href="/tienda" class="bg-[#001529] text-white px-8 py-3.5 rounded-xl text-sm font-bold uppercase tracking-wider hover:bg-blue-950 transition-all inline-block shadow-sm">Ir a la Tienda</a>
           </div>
         `;
@@ -189,6 +198,7 @@ import { ShieldCheck, Truck } from 'lucide-react';
     submitBtn.addEventListener('click', () => {
       const name = (document.getElementById('user-name') as HTMLInputElement).value;
       const doc = (document.getElementById('user-doc') as HTMLInputElement).value;
+      const payment = (document.querySelector('input[name="payment"]:checked') as HTMLInputElement).value;
       const currentItems = Object.values($cart.get());
       
       if (!name || !doc) {
@@ -197,7 +207,7 @@ import { ShieldCheck, Truck } from 'lucide-react';
       }
 
       const detalle = currentItems.map(i => `\n- ${i.product.name} (x${i.quantity})`).join('');
-      const msg = `Hola, quisiera realizar un pedido:\n\n*Cliente:* ${name}\n*Documento:* ${doc}\n\n*Productos:*${detalle}\n\n*Total:* ${totalEl.innerText}`;
+      const msg = `Pedido Synapse Engineering:\n\n*Cliente:* ${name}\n*Documento:* ${doc}\n*Método de Pago:* ${payment}\n\n*Productos:*${detalle}\n\n*Total:* ${totalEl.innerText}`;
       
       window.open(`https://wa.me/51971444230?text=${encodeURIComponent(msg)}`, '_blank');
       closeModal();
