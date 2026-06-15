@@ -105,18 +105,13 @@ import { ShieldCheck, Truck } from 'lucide-react';
         <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">DNI / RUC</label>
         <input type="text" id="user-doc" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all" placeholder="Ej: 10123456789">
       </div>
-      <div class="space-y-2">
+      <div class="space-y-1.5">
         <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Método de Pago</label>
-        <div class="grid grid-cols-2 gap-2">
-          <label class="cursor-pointer">
-            <input type="radio" name="pay-method" value="Transferencia" class="peer sr-only" checked>
-            <div class="p-3 text-center border-2 border-slate-200 rounded-xl peer-checked:border-blue-600 peer-checked:bg-blue-50 transition-all text-xs font-bold text-slate-600">Transferencia</div>
-          </label>
-          <label class="cursor-pointer">
-            <input type="radio" name="pay-method" value="Yape/Plin" class="peer sr-only">
-            <div class="p-3 text-center border-2 border-slate-200 rounded-xl peer-checked:border-blue-600 peer-checked:bg-blue-50 transition-all text-xs font-bold text-slate-600">Yape / Plin</div>
-          </label>
-        </div>
+        <select id="payment-method" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:border-blue-500 outline-none">
+          <option value="Transferencia Bancaria">Transferencia Bancaria</option>
+          <option value="Yape / Plin">Yape / Plin</option>
+          <option value="Pago contra entrega">Pago contra entrega</option>
+        </select>
       </div>
       <div class="grid grid-cols-2 gap-3 mt-8">
         <button id="close-modal" class="py-3.5 bg-slate-100 text-slate-600 rounded-xl font-bold text-sm hover:bg-slate-200 transition-all">Cancelar</button>
@@ -202,7 +197,7 @@ import { ShieldCheck, Truck } from 'lucide-react';
     submitBtn.addEventListener('click', () => {
       const name = (document.getElementById('user-name') as HTMLInputElement).value;
       const doc = (document.getElementById('user-doc') as HTMLInputElement).value;
-      const method = (document.querySelector('input[name="pay-method"]:checked') as HTMLInputElement).value;
+      const paymentMethod = (document.getElementById('payment-method') as HTMLSelectElement).value;
       const currentItems = Object.values($cart.get());
       
       if (!name || !doc) {
@@ -211,7 +206,7 @@ import { ShieldCheck, Truck } from 'lucide-react';
       }
 
       const detalle = currentItems.map(i => `\n- ${i.product.name} (x${i.quantity})`).join('');
-      const msg = `Hola, quisiera realizar un pedido:\n\n*Cliente:* ${name}\n*Documento:* ${doc}\n*Método de Pago:* ${method}\n\n*Productos:*${detalle}\n\n*Total:* ${totalEl.innerText}`;
+      const msg = `Hola, quisiera realizar un pedido:\n\n*Cliente:* ${name}\n*Documento:* ${doc}\n*Método de pago:* ${paymentMethod}\n\n*Productos:*${detalle}\n\n*Total:* ${totalEl.innerText}`;
       
       window.open(`https://wa.me/51971444230?text=${encodeURIComponent(msg)}`, '_blank');
       closeModal();
