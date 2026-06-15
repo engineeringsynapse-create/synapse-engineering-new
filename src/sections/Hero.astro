@@ -3,12 +3,10 @@ import { ChevronRight, Zap } from 'lucide-react';
 ---
 
 <section class="relative min-h-[90vh] flex items-center overflow-hidden bg-slate-950 pt-20">
-  <!-- Contenedor del Slider -->
-  <div id="hero-slider" class="absolute inset-0 z-0">
-    <div class="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat transition-opacity duration-1000 opacity-100" style="background-image: url('/fondo1.jpg');"></div>
-    <div class="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat transition-opacity duration-1000 opacity-0" style="background-image: url('/fondo2.jpg');"></div>
-    <div class="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat transition-opacity duration-1000 opacity-0" style="background-image: url('/fondo3.jpg');"></div>
-  </div>
+  <div 
+    class="absolute inset-0 z-0 w-full h-full bg-cover bg-center bg-no-repeat" 
+    style="background-image: url('/fondo1.jpg');"
+  ></div>
   
   <div class="absolute inset-0 z-0 bg-slate-900/60"></div>
   
@@ -38,19 +36,6 @@ import { ChevronRight, Zap } from 'lucide-react';
     </div>
   </div>
 </section>
-
-<script>
-  const slides = document.querySelectorAll('#hero-slider > div');
-  let currentSlide = 0;
-
-  function nextSlide() {
-    slides[currentSlide].classList.replace('opacity-100', 'opacity-0');
-    currentSlide = (currentSlide + 1) % slides.length;
-    slides[currentSlide].classList.replace('opacity-0', 'opacity-100');
-  }
-
-  setInterval(nextSlide, 5000); // Cambia cada 5 segundos
-</script>
 
 <style>
   section { contain: layout; }
