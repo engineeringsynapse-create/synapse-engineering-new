@@ -13,35 +13,24 @@ const points = [
 <section id="empresa" class="py-12 bg-white">
   <div class="container mx-auto px-6">
     
-    <div class="flex flex-col lg:flex-row-reverse items-center gap-12">
+    <div class="flex flex-col lg:flex-row items-center lg:items-start gap-12">
       
-      <div class="w-full lg:w-1/2">
-        <div class="relative">
-          <img 
-            src="https://impoexpo.com.pe/wp-content/uploads/2023/07/fabricacion-de-tableros-de-control-y-distribucion-electrica.jpg" 
-            alt="Fábrica Synapse" 
-            class="rounded-3xl shadow-2xl relative z-10 w-full h-auto object-cover"
-          />
-          <div class="absolute -bottom-6 -left-6 w-40 h-40 bg-[#005596] rounded-3xl -z-0 hidden lg:block"></div>
-        </div>
-      </div>
-
-      <div class="w-full lg:w-1/2">
+      <div class="w-full lg:w-1/2 text-center lg:text-left">
         <span class="text-blue-600 font-black uppercase tracking-[0.3em] text-[10px]">Diferenciación Técnica</span>
         <h3 class="text-3xl md:text-5xl font-black text-slate-900 mt-2 mb-6 uppercase tracking-tighter leading-none">
           Liderazgo en <br/><span class="text-blue-600">Ingeniería Eléctrica</span>
         </h3>
-        <p class="text-slate-600 text-base md:text-lg mb-8 leading-relaxed max-w-lg">
-          No solo ensamblamos tableros; creamos soluciones integrales de gestión de energía. Cada equipo que sale de nuestra planta pasa por un riguroso proceso de control de calidad.
+        <p class="text-slate-600 text-lg mb-8 leading-relaxed max-w-lg mx-auto lg:mx-0">
+          No solo ensamblamos tableros; creamos soluciones integrales de gestión de energía, cada equipo que sale de nuestra planta pasa por un riguroso proceso de control de calidad.
         </p>
         
         <div class="space-y-3 mb-8">
           {points.map((point) => (
-            <div class="flex items-center gap-3">
+            <div class="flex items-center justify-center lg:justify-start gap-3">
               <div class="text-blue-600 shrink-0">
                 <CheckCircle2 size={18} />
               </div>
-              <span class="text-slate-800 font-bold text-sm">{point}</span>
+              <span class="text-slate-800 font-bold text-sm text-left">{point}</span>
             </div>
           ))}
         </div>
@@ -49,6 +38,25 @@ const points = [
         <button class="bg-slate-900 text-white px-8 py-3 rounded-md font-black text-xs uppercase tracking-widest hover:bg-blue-600 transition-colors shadow-lg">
           Conoce nuestra planta
         </button>
+
+        <div class="mt-12 lg:hidden w-full">
+          <img 
+            src="https://impoexpo.com.pe/wp-content/uploads/2023/07/fabricacion-de-tableros-de-control-y-distribucion-electrica.jpg" 
+            alt="Fábrica Synapse" 
+            class="rounded-3xl shadow-2xl w-full h-auto object-cover"
+          />
+        </div>
+      </div>
+
+      <div class="hidden lg:block lg:w-1/2 mt-0">
+        <div class="relative">
+          <img 
+            src="https://impoexpo.com.pe/wp-content/uploads/2023/07/fabricacion-de-tableros-de-control-y-distribucion-electrica.jpg" 
+            alt="Fábrica Synapse" 
+            class="rounded-3xl shadow-2xl w-full h-auto object-cover"
+          />
+          <div class="absolute -bottom-6 -right-6 w-40 h-40 bg-[#005596] rounded-3xl -z-0"></div>
+        </div>
       </div>
 
     </div>
