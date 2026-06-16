@@ -1,5 +1,7 @@
 ---
-import MainLayout from '../layouts/MainLayout.astro';
+import Layout from '../layouts/MainLayout.astro';
+import Navbar from '../components/shared/Navbar.astro';
+import Footer from '../components/shared/Footer.astro';
 import WhyUs from '../sections/WhyUs.astro';
 
 const values = [
@@ -9,35 +11,41 @@ const values = [
 ];
 ---
 
-<MainLayout title="La Empresa" description="Conoce a Synapse Engineering, líderes en soluciones eléctricas industriales.">
-  
-  <section class="bg-[#0b172a] py-24">
-    <div class="container mx-auto px-6">
-      <h1 class="text-5xl md:text-7xl font-black text-white mb-6 uppercase tracking-tighter">
-        La Empresa
-      </h1>
-      <div class="w-20 h-2 bg-cyan-400 mb-8"></div>
-      <p class="text-slate-300 text-lg max-w-2xl leading-relaxed">
-        Ingeniería de vanguardia orientada a la eficiencia operativa y seguridad industrial.
-      </p>
-    </div>
-  </section>
+<Layout title="La Empresa | Synapse Engineering">
+  <Navbar />
 
-  <div class="py-10">
-    <WhyUs />
-  </div>
+  <div class="block md:hidden h-20"></div>
 
-  <section class="py-20 bg-white">
-    <div class="container mx-auto px-6">
-      <div class="grid md:grid-cols-3 gap-8">
-        {values.map((item) => (
-          <div class="bg-slate-50 p-10 rounded-3xl border border-slate-100 hover:shadow-xl transition-shadow">
-            <h3 class="text-blue-600 font-black text-2xl mb-4 uppercase">{item.title}</h3>
-            <p class="text-slate-600 leading-relaxed">{item.desc}</p>
-          </div>
-        ))}
+  <main class="bg-white">
+    <section class="relative h-[40vh] md:h-[50vh] flex items-center bg-[#001529]">
+      <div class="container mx-auto px-6 relative z-10">
+        <h1 class="text-5xl md:text-7xl font-black text-white uppercase tracking-tighter mb-4">
+          LA EMPRESA
+        </h1>
+        <div class="h-2 w-24 bg-cyan-500 mb-6"></div>
+        <p class="text-slate-300 max-w-xl font-medium text-lg leading-relaxed">
+          Ingeniería de vanguardia orientada a la eficiencia operativa y seguridad industrial.
+        </p>
       </div>
-    </div>
-  </section>
+    </section>
 
-</MainLayout>
+    <div class="py-10">
+      <WhyUs />
+    </div>
+
+    <section class="py-20 bg-slate-50">
+      <div class="container mx-auto px-6">
+        <div class="grid md:grid-cols-3 gap-8">
+          {values.map((item) => (
+            <div class="bg-white p-10 rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl transition-all">
+              <h3 class="text-[#001529] font-black text-2xl mb-4 uppercase">{item.title}</h3>
+              <p class="text-slate-600 leading-relaxed text-sm">{item.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>
