@@ -1,5 +1,7 @@
 ---
 import { CheckCircle2 } from 'lucide-react';
+// Recibimos la propiedad showButton (por defecto es false)
+const { showButton = false } = Astro.props;
 
 const points = [
   "Uso de componentes originales (Siemens, ABB, Schneider).",
@@ -12,7 +14,6 @@ const points = [
 
 <section id="empresa" class="py-12 bg-white">
   <div class="container mx-auto px-6">
-    
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
       
       <div class="w-full text-center lg:text-left">
@@ -35,14 +36,15 @@ const points = [
           ))}
         </div>
 
-        <button class="bg-slate-900 text-white px-8 py-3 rounded-md font-black text-xs uppercase tracking-widest hover:bg-blue-600 transition-colors shadow-lg">
-          Conoce nuestra planta
-        </button>
+        {showButton && (
+          <a href="/empresa" class="inline-block bg-slate-900 text-white px-8 py-3 rounded-md font-black text-xs uppercase tracking-widest hover:bg-blue-600 transition-colors shadow-lg">
+            Conoce nuestra planta
+          </a>
+        )}
       </div>
 
       <div class="relative w-full group">
         <div class="absolute -inset-0.5 bg-gradient-to-r from-blue-600 via-cyan-400 to-blue-600 rounded-[2rem] opacity-30 group-hover:opacity-75 blur transition duration-1000"></div>
-        
         <div class="relative rounded-3xl shadow-2xl border border-slate-100 overflow-hidden bg-white">
           <img 
             src="https://i.pinimg.com/736x/28/37/8f/28378f2f7f85e14d4d90a263f0f81ec0.jpg" 
@@ -51,7 +53,6 @@ const points = [
           />
         </div>
       </div>
-
     </div>
   </div>
 </section>
