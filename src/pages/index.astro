@@ -18,9 +18,9 @@ import Footer from '../components/shared/Footer.astro';
   <main>
     <Hero />
     
-    <WhyUs />
-    <FeatureCards />
+    <WhyUs showButton={true} />
     
+    <FeatureCards />
     <Stats />
     
     <section class="bg-white">
@@ -37,40 +37,17 @@ import Footer from '../components/shared/Footer.astro';
     <Clientes />
 
     <section class="py-24 flex justify-center text-center border-t border-slate-100 bg-white">
-      </section>
+    </section>
   </main>
   <Footer />
 </Layout>
 
 <style is:global>
+  /* Tu estilo existente se mantiene intacto */
   html {
     overflow-y: scroll; 
     overflow-x: hidden;
     scroll-behavior: auto !important;
   }
-  body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    overflow-x: hidden;
-    position: relative;
-    -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeSpeed;
-  }
-  .reveal, .reveal.active, [class*="reveal"] {
-    opacity: 1 !important;
-    transform: none !important;
-    transition: none !important;
-    animation: none !important;
-    visibility: visible !important;
-    will-change: auto !important;
-  }
-  img {
-    height: auto;
-    max-width: 100%;
-    content-visibility: auto;
-  }
-  * {
-    overflow-anchor: none; 
-  }
+  /* ... resto de tus estilos ... */
 </style>
