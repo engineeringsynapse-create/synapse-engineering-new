@@ -11,11 +11,11 @@ const points = [
 ---
 
 <section id="empresa" class="py-12 bg-white">
-  <div class="container mx-auto px-6 max-w-3xl">
+  <div class="container mx-auto px-6">
     
-    <div class="flex flex-col items-start gap-8">
+    <div class="flex flex-col items-center text-center lg:text-left lg:items-start">
       
-      <div class="w-full">
+      <div class="w-full lg:w-3/4">
         <span class="text-blue-600 font-black uppercase tracking-[0.3em] text-[10px]">Diferenciación Técnica</span>
         <h3 class="text-3xl md:text-5xl font-black text-slate-900 mt-2 mb-6 uppercase tracking-tighter leading-none">
           Liderazgo en <br/><span class="text-blue-600">Ingeniería Eléctrica</span>
@@ -24,13 +24,13 @@ const points = [
           No solo ensamblamos tableros; creamos soluciones integrales de gestión de energía. Cada equipo que sale de nuestra planta pasa por un riguroso proceso de control de calidad.
         </p>
         
-        <div class="space-y-4 mb-8">
+        <div class="space-y-3 mb-8">
           {points.map((point) => (
-            <div class="flex items-center gap-3">
+            <div class="flex items-center justify-center lg:justify-start gap-3">
               <div class="text-blue-600 shrink-0">
                 <CheckCircle2 size={18} />
               </div>
-              <span class="text-slate-800 font-bold text-sm">{point}</span>
+              <span class="text-slate-800 font-bold text-sm text-left">{point}</span>
             </div>
           ))}
         </div>
