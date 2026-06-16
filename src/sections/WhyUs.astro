@@ -40,12 +40,14 @@ const points = [
         </button>
       </div>
 
-      <div class="w-full">
-        <div class="rounded-3xl shadow-2xl border border-slate-100 overflow-hidden">
+      <div class="relative w-full group">
+        <div class="absolute -inset-0.5 bg-gradient-to-r from-blue-600 via-cyan-400 to-blue-600 rounded-[2rem] opacity-30 group-hover:opacity-75 blur transition duration-1000"></div>
+        
+        <div class="relative rounded-3xl shadow-2xl border border-slate-100 overflow-hidden bg-white">
           <img 
             src="https://i.pinimg.com/736x/28/37/8f/28378f2f7f85e14d4d90a263f0f81ec0.jpg" 
             alt="Fábrica Synapse" 
-            class="w-full h-[300px] lg:h-[450px] object-cover"
+            class="w-full h-[300px] lg:h-[450px] object-cover transition-transform duration-700 group-hover:scale-105"
           />
         </div>
       </div>
