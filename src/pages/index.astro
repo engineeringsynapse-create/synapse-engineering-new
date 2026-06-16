@@ -7,7 +7,6 @@ import WhyUs from '../sections/WhyUs.astro';
 import Stats from '../sections/Stats.astro';
 import ProductsGrid from '../sections/ProductsGrid.astro';
 import Clientes from '../sections/Clientes.astro';
-// Se eliminó la importación de Contact para limpiar el Inicio
 import Footer from '../components/shared/Footer.astro';
 ---
 
@@ -18,8 +17,10 @@ import Footer from '../components/shared/Footer.astro';
   <Navbar />
   <main>
     <Hero />
-    <FeatureCards />
+    
     <WhyUs />
+    <FeatureCards />
+    
     <Stats />
     
     <section class="bg-white">
@@ -36,32 +37,17 @@ import Footer from '../components/shared/Footer.astro';
     <Clientes />
 
     <section class="py-24 flex justify-center text-center border-t border-slate-100 bg-white">
-      <div class="max-w-3xl px-6">
-        <h4 class="text-3xl md:text-5xl font-black text-slate-900 uppercase tracking-tighter mb-8 leading-none">
-          ¿Tienes un proyecto de <span class="text-blue-600">Automatización?</span>
-        </h4>
-        <p class="text-slate-500 mb-10 font-medium text-lg">Nuestro equipo técnico está listo para asesorarte en el diseño y fabricación de tu próxima solución eléctrica.</p>
-        <a href="/contacto" class="bg-blue-600 text-white px-12 py-5 rounded-full font-black uppercase text-xs tracking-[0.2em] shadow-xl hover:bg-blue-700 transition-all inline-block">
-          Solicitar Cotización Inmediata
-        </a>
-      </div>
-    </section>
-
-    </main>
+      </section>
+  </main>
   <Footer />
 </Layout>
 
 <style is:global>
-  /** * SOLUCIÓN DEFINITIVA ANTISALTOS 
-   **/
-  
-  /* 1. Bloqueo de scrollbar y layout shift */
   html {
     overflow-y: scroll; 
     overflow-x: hidden;
     scroll-behavior: auto !important;
   }
-
   body {
     margin: 0;
     padding: 0;
@@ -71,8 +57,6 @@ import Footer from '../components/shared/Footer.astro';
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeSpeed;
   }
-
-  /* 2. Anulación total de animaciones (Cero Olas) */
   .reveal, .reveal.active, [class*="reveal"] {
     opacity: 1 !important;
     transform: none !important;
@@ -81,15 +65,11 @@ import Footer from '../components/shared/Footer.astro';
     visibility: visible !important;
     will-change: auto !important;
   }
-
-  /* 3. Estabilidad de imágenes */
   img {
     height: auto;
     max-width: 100%;
     content-visibility: auto;
   }
-
-  /* 4. Eliminación de efectos de scroll que causan lag */
   * {
     overflow-anchor: none; 
   }
