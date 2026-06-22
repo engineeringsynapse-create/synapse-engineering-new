@@ -1,5 +1,5 @@
 ---
-import { ChevronRight, Cpu, Zap, Activity, ShieldCheck } from 'lucide-react';
+import { ChevronRight, Cpu, Zap, Activity, ShieldCheck, ChevronLeft } from 'lucide-react';
 
 const products = [
   { title: "Tableros de Distribución", slug: "tableros-distribucion", desc: "Sistemas de baja tensión con interruptores de caja moldeada y bastidor abierto.", icon: Zap, img: "https://impoexpo.com.pe/wp-content/uploads/2023/07/tableros-electricos-de-distribucion.jpg" },
@@ -16,51 +16,57 @@ const products = [
         <span class="text-blue-600 font-black uppercase tracking-[0.3em] text-[10px]">Catálogo Industrial</span>
         <h3 class="text-4xl md:text-5xl font-black text-slate-900 mt-4 uppercase tracking-tighter">Soluciones Eléctricas</h3>
       </div>
-      <p class="text-slate-500 max-w-md text-sm leading-relaxed static-content">
-        Ingeniería aplicada a la fabricación de equipos eléctricos robustos, garantizando continuidad operativa en minería, industria y comercio.
-      </p>
+      
+      <div class="flex gap-2 md:hidden">
+        <button id="prevBtn" class="p-3 bg-white border border-slate-200 rounded-full shadow-lg text-slate-600 hover:bg-blue-600 hover:text-white transition-colors">
+          <ChevronLeft size={20} />
+        </button>
+        <button id="nextBtn" class="p-3 bg-white border border-slate-200 rounded-full shadow-lg text-slate-600 hover:bg-blue-600 hover:text-white transition-colors">
+          <ChevronRight size={20} />
+        </button>
+      </div>
     </div>
 
-    <div class="flex md:grid md:grid-cols-4 gap-6 overflow-x-auto pb-8 snap-x snap-mandatory scrollbar-hide">
-      
+    <div id="carousel" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:overflow-visible overflow-x-auto snap-x snap-mandatory pb-4 scroll-smooth hide-scrollbar">
       {products.map((item) => (
-        <div class="product-card group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl border border-slate-200 transition-all duration-300 min-w-[85%] md:min-w-0 snap-center">
+        <div class="product-card group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl border border-slate-200 transition-all duration-300 min-w-[280px] snap-start">
           <div class="relative h-64 overflow-hidden">
-            <img 
-              src={item.img} 
-              alt={item.title} 
-              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-              loading="lazy"
-            />
+            <img src={item.img} alt={item.title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
             <a href={`/productos/${item.slug}`} class="absolute inset-0 bg-gradient-to-t from-slate-900/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6 no-underline">
-              <span class="text-white text-xs font-bold flex items-center gap-2 pointer-events-none">
-                VER ESPECIFICACIONES <ChevronRight size={14} class="text-blue-400" />
-              </span>
+              <span class="text-white text-xs font-bold flex items-center gap-2 pointer-events-none">VER ESPECIFICACIONES <ChevronRight size={14} class="text-blue-400" /></span>
             </a>
           </div>
           <div class="p-8">
-            <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center mb-6 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
+            <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300 mb-6">
               <item.icon size={24} />
             </div>
-            <h4 class="font-black text-slate-900 text-lg mb-3 uppercase tracking-tight leading-tight">
-              <a href={`/productos/${item.slug}`} class="hover:text-blue-600 transition-colors">{item.title}</a>
-            </h4>
+            <h4 class="font-black text-slate-900 text-lg mb-3 uppercase tracking-tight leading-tight">{item.title}</h4>
             <p class="text-slate-500 text-xs leading-relaxed font-medium">{item.desc}</p>
           </div>
         </div>
       ))}
-      
     </div>
   </div>
 </section>
 
+<script>
+  const carousel = document.getElementById('carousel');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+
+  if (carousel && prevBtn && nextBtn) {
+    nextBtn.addEventListener('click', () => {
+      carousel.scrollBy({ left: 300, behavior: 'smooth' });
+    });
+    prevBtn.addEventListener('click', () => {
+      carousel.scrollBy({ left: -300, behavior: 'smooth' });
+    });
+  }
+</script>
+
 <style>
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none;
-  }
-  .scrollbar-hide {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-  .products-section { contain: layout; content-visibility: auto; }
+  .hide-scrollbar::-webkit-scrollbar { display: none; }
+  .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  .products-section { contain: layout; }
+  .product-card { transform: translateZ(0); backface-visibility: hidden; }
 </style>
