@@ -28,19 +28,19 @@ const products = [
     </div>
 
     <div class="relative">
-      <!-- Se añade 'snap-x snap-mandatory' para el encaje automático -->
       <div id="slider" class="flex md:grid md:grid-cols-4 gap-6 overflow-x-hidden snap-x snap-mandatory" style="touch-action: pan-y;">
         {products.map((item) => (
-          <!-- Se añade 'snap-center' a cada tarjeta para que el navegador sepa dónde encajar -->
-          <div class="product-card group min-w-[100%] md:min-w-0 bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl border border-slate-200 transition-all duration-300 snap-center">
-            <div class="relative h-64 overflow-hidden">
+          <div class="product-card-container group min-w-[100%] md:min-w-0 bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl border border-slate-200 transition-all duration-300 snap-center">
+            <div class="relative h-64 overflow-hidden cursor-pointer" onclick="this.classList.toggle('active-mobile')">
               <img src={item.img} alt={item.title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
-              <a href={`/productos/${item.slug}`} class="absolute inset-0 bg-gradient-to-t from-slate-900/90 to-transparent opacity-0 md:group-hover:opacity-100 active:opacity-100 transition-opacity duration-300 flex items-end p-6">
+              
+              <a href={`/productos/${item.slug}`} class="overlay-link absolute inset-0 bg-gradient-to-t from-slate-900/90 to-transparent opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
                 <span class="text-white text-xs font-bold flex items-center gap-2 pointer-events-none">
                   VER ESPECIFICACIONES <ChevronRight size={14} class="text-blue-400" />
                 </span>
               </a>
             </div>
+            
             <div class="p-6">
               <div class="w-10 h-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center mb-4">
                 <item.icon size={24} />
@@ -55,12 +55,22 @@ const products = [
   </div>
 </section>
 
+<style>
+  .products-section { contain: layout; content-visibility: auto; }
+  
+  /* Lógica para móvil: Al aplicar la clase active-mobile al padre, mostramos el overlay */
+  @media (max-width: 768px) {
+    .active-mobile .overlay-link { opacity: 1 !important; pointer-events: auto !important; }
+    /* Bloqueamos el click del enlace inicialmente en móvil hasta que se active */
+    .overlay-link { pointer-events: none; }
+  }
+</style>
+
 <script>
   const slider = document.getElementById('slider');
   const prevBtn = document.getElementById('prevBtn');
   const nextBtn = document.getElementById('nextBtn');
 
-  // Ajuste preciso para encajar la tarjeta completa
   prevBtn?.addEventListener('click', () => {
     slider?.scrollBy({ left: -slider.clientWidth, behavior: 'smooth' });
   });
@@ -68,7 +78,3 @@ const products = [
     slider?.scrollBy({ left: slider.clientWidth, behavior: 'smooth' });
   });
 </script>
-
-<style>
-  .products-section { contain: layout; content-visibility: auto; }
-</style>
