@@ -1,5 +1,5 @@
 ---
-import { ChevronRight, ChevronLeft, Cpu, Zap, Activity, ShieldCheck } from 'lucide-react';
+import { ChevronRight, Cpu, Zap, Activity, ShieldCheck, ChevronLeft } from 'lucide-react';
 
 const products = [
   { title: "Tableros de Distribución", slug: "tableros-distribucion", desc: "Sistemas de baja tensión con interruptores de caja moldeada y bastidor abierto.", icon: Zap, img: "https://impoexpo.com.pe/wp-content/uploads/2023/07/tableros-electricos-de-distribucion.jpg" },
@@ -10,68 +10,65 @@ const products = [
 ---
 
 <section id="productos" class="py-24 bg-slate-50 border-t border-slate-100 overflow-hidden products-section">
-  <div class="container mx-auto px-6 relative">
-    
+  <div class="container mx-auto px-6">
     <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
       <div class="static-content">
         <span class="text-blue-600 font-black uppercase tracking-[0.3em] text-[10px]">Catálogo Industrial</span>
         <h3 class="text-4xl md:text-5xl font-black text-slate-900 mt-4 uppercase tracking-tighter">Soluciones Eléctricas</h3>
       </div>
-      <p class="text-slate-500 max-w-md text-sm leading-relaxed static-content">
+      
+      <div class="hidden max-md:flex gap-4">
+        <button id="prevBtn" class="p-3 bg-white rounded-full shadow-lg border border-slate-200 text-slate-600 hover:text-blue-600 transition-colors">
+          <ChevronLeft size={20} />
+        </button>
+        <button id="nextBtn" class="p-3 bg-white rounded-full shadow-lg border border-slate-200 text-slate-600 hover:text-blue-600 transition-colors">
+          <ChevronRight size={20} />
+        </button>
+      </div>
+
+      <p class="text-slate-500 max-w-md text-sm leading-relaxed static-content hidden md:block">
         Ingeniería aplicada a la fabricación de equipos eléctricos robustos, garantizando continuidad operativa en minería, industria y comercio.
       </p>
     </div>
 
-    <div class="relative group">
-      <button id="prevBtn" class="absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 p-3 rounded-full shadow-lg border border-slate-200 hidden md:hidden items-center justify-center hover:bg-blue-600 hover:text-white transition-all">
-        <ChevronLeft size={24} />
-      </button>
-      <button id="nextBtn" class="absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 p-3 rounded-full shadow-lg border border-slate-200 hidden md:hidden items-center justify-center hover:bg-blue-600 hover:text-white transition-all">
-        <ChevronRight size={24} />
-      </button>
-
-      <div id="productSlider" class="flex md:grid md:grid-cols-4 gap-8 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-4 no-scrollbar">
-        {products.map((item) => (
-          <div class="product-card min-w-[85%] md:min-w-0 snap-center bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl border border-slate-200 transition-all duration-300">
-            <div class="relative h-64 overflow-hidden">
-              <img src={item.img} alt={item.title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
-              <a href={`/productos/${item.slug}`} class="absolute inset-0 bg-gradient-to-t from-slate-900/90 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-end p-6 no-underline">
-                <span class="text-white text-xs font-bold flex items-center gap-2">VER ESPECIFICACIONES <ChevronRight size={14} class="text-blue-400" /></span>
-              </a>
-            </div>
-            <div class="p-8">
-              <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center mb-6">
-                <item.icon size={24} />
-              </div>
-              <h4 class="font-black text-slate-900 text-lg mb-3 uppercase tracking-tight">{item.title}</h4>
-              <p class="text-slate-500 text-xs leading-relaxed font-medium">{item.desc}</p>
-            </div>
+    <div id="carousel" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 overflow-x-auto snap-x snap-mandatory pb-4 scroll-smooth hide-scrollbar md:overflow-visible">
+      {products.map((item) => (
+        <div class="product-card group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl border border-slate-200 transition-all duration-300 min-w-[300px] md:min-w-0 snap-center">
+          <div class="relative h-64 overflow-hidden">
+            <img src={item.img} alt={item.title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+            <a href={`/productos/${item.slug}`} class="absolute inset-0 bg-gradient-to-t from-slate-900/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6 no-underline">
+              <span class="text-white text-xs font-bold flex items-center gap-2">VER ESPECIFICACIONES <ChevronRight size={14} class="text-blue-400" /></span>
+            </a>
           </div>
-        ))}
-      </div>
+          <div class="p-8">
+            <a href={`/productos/${item.slug}`} class="block mb-6"><div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-colors"><item.icon size={24} /></div></a>
+            <h4 class="font-black text-slate-900 text-lg mb-3 uppercase tracking-tight leading-tight"><a href={`/productos/${item.slug}`} class="hover:text-blue-600 transition-colors">{item.title}</a></h4>
+            <p class="text-slate-500 text-xs leading-relaxed font-medium">{item.desc}</p>
+          </div>
+        </div>
+      ))}
     </div>
   </div>
 </section>
 
 <script>
-  const slider = document.getElementById('productSlider') as HTMLElement;
+  const carousel = document.getElementById('carousel');
   const prevBtn = document.getElementById('prevBtn');
   const nextBtn = document.getElementById('nextBtn');
 
-  // Mostrar botones solo en móvil al detectar scroll
-  const toggleButtons = () => {
-    if (window.innerWidth < 768) {
-      prevBtn?.classList.replace('hidden', 'flex');
-      nextBtn?.classList.replace('hidden', 'flex');
-    }
-  };
-  toggleButtons();
-
-  nextBtn?.addEventListener('click', () => slider.scrollBy({ left: 300, behavior: 'smooth' }));
-  prevBtn?.addEventListener('click', () => slider.scrollBy({ left: -300, behavior: 'smooth' }));
+  if (carousel && prevBtn && nextBtn) {
+    nextBtn.addEventListener('click', () => {
+      carousel.scrollBy({ left: 320, behavior: 'smooth' });
+    });
+    prevBtn.addEventListener('click', () => {
+      carousel.scrollBy({ left: -320, behavior: 'smooth' });
+    });
+  }
 </script>
 
 <style>
-  .no-scrollbar::-webkit-scrollbar { display: none; }
-  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  .hide-scrollbar::-webkit-scrollbar { display: none; }
+  .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  .products-section { contain: layout; }
+  .product-card { transform: translateZ(0); }
 </style>
