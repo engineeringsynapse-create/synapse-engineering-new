@@ -12,41 +12,39 @@ export const POST: APIRoute = async ({ request }) => {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 30000);
 
-    // Detección lógica del Frontend
-    let isFirstMessage = !message.includes('[Usuario frecuente]:');
-    let finalMessage = message.replace(/\[Usuario frecuente\]:/g, '').trim();
+    // Detección exacta y sin fallos del Frontend
+    let isFirstMessage = message.includes('[PRIMER MENSAJE]:');
+    let finalMessage = message.replace(/\[PRIMER MENSAJE\]:/g, '').trim();
     
     let audioIninteligible = false;
     if (finalMessage.includes('[Audio ininteligible]')) {
         audioIninteligible = true;
-        // Traducimos el código al lenguaje natural para Mistral
-        finalMessage = "He enviado una nota de voz, pero hubo un fallo con mi micrófono y solo se grabó silencio.";
+        finalMessage = "He enviado una nota de voz, pero no se escuchó nada. Hubo silencio total.";
     }
 
-    // Identificamos el tiempo actual (Hora Local Lima)
+    // Calculo preciso de la Hora de Lima (Perú)
     const now = new Date();
-    const formatter = new Intl.DateTimeFormat('es-PE', { timeZone: 'America/Lima', hour: 'numeric', hour12: false });
-    const currentHour = parseInt(formatter.format(now));
+    const limaTime = new Date(now.toLocaleString("en-US", {timeZone: "America/Lima"}));
+    const currentHour = limaTime.getHours();
     
     let timeGreeting = "Buenas noches";
     if (currentHour >= 6 && currentHour < 12) timeGreeting = "Buenos días";
     else if (currentHour >= 12 && currentHour < 19) timeGreeting = "Buenas tardes";
 
-    // Prompt estricto de Ingeniero Eléctrico Senior con Saludo Dinámico
+    // Órdenes Estrictas
     const systemPrompt = `Eres Synapse Core AI, un altamente capacitado ingeniero eléctrico senior experto de Synapse Engineering. 
     Tu comunicación es formal, técnica, objetiva, precisa y muy profesional (estilo ChatGPT o Gemini avanzado). 
     
     ESTADO DE LA CONVERSACIÓN:
-    ${isFirstMessage ? `- Es el PRIMER mensaje del usuario. La hora local es ${timeGreeting}. DEBES iniciar tu respuesta saludando obligatoriamente con "${timeGreeting}." y ofreciendo tu asistencia de forma breve (máximo 1 línea de saludo).` : `- Ya estás en medio de una conversación. ESTÁ ESTRICTAMENTE PROHIBIDO volver a decir "Buenos días", "Buenas tardes" o "Buenas noches". Ve directo al grano.`}
-    ${audioIninteligible ? `- El usuario intentó enviar una nota de voz, pero tu sistema solo captó silencio. Infórmale empáticamente que no pudiste escucharlo y pídele que repita el mensaje o lo escriba.` : ''}
+    ${isFirstMessage ? `REGLA DE ORO INQUEBRANTABLE: Este es el PRIMER mensaje del usuario. DEBES empezar tu respuesta EXACTAMENTE con la frase: "${timeGreeting}. Soy el asistente inteligente de Synapse Engineering. ¿En qué le puedo ayudar hoy?". NO ESTÁ PERMITIDO agregar viñetas, NO agregues listas, NO des ejemplos largos de lo que puedes hacer. Ve directo al punto en un párrafo corto y conciso.` : `REGLA DE ORO INQUEBRANTABLE: Ya están conversando. ESTÁ ESTRICTAMENTE PROHIBIDO decir "Buenos días", "Buenas tardes" o "Buenas noches". Responde directo a la consulta.`}
+    
+    ${audioIninteligible ? `REGLA PARA AUDIO: El sistema intentó transcribir la voz del usuario pero solo captó silencio. Respóndele empáticamente que no pudiste escuchar su nota de voz y pídele por favor que lo intente de nuevo o que te escriba.` : ''}
 
-    REGLAS ESTRICTAS DE FORMATO Y COMPORTAMIENTO:
+    REGLAS GENERALES:
     1. NUNCA uses el símbolo de hashtag (#) bajo ninguna circunstancia.
-    2. Evita el uso excesivo de asteriscos (*). Úsalos SÓLO para resaltar una palabra clave real.
-    3. Si el usuario dice "gracias" o se despide, responde con cortesía, amabilidad y profesionalismo humano, demostrando empatía pero manteniendo tu rol de experto.
-    4. Mantén la respuesta visualmente limpia. Estructura la información usando párrafos legibles sin dejar espacios en blanco excesivos.
-    5. Si el usuario sube imágenes, analízalas con rigor técnico e identifica componentes.
-    6. No uses LaTeX ni sintaxis matemática compleja.`;
+    2. Evita el uso excesivo de asteriscos (*). Úsalos SÓLO para resaltar palabras clave.
+    3. Si el usuario dice "gracias", despídete de forma amable, servicial y profesional (ej. "Ha sido un placer asistirle. Quedo a su disposición para futuros proyectos...").
+    4. Si el usuario sube imágenes, analízalas con rigor técnico.`;
 
     let userContent: any = finalMessage;
 

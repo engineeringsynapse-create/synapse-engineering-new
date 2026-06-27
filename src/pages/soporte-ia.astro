@@ -213,11 +213,12 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
   let idToDelete = "";
   let currentImageData = null;
   let isRecording = false;
+  
   let audioTranscript = "";
+  let tempInterim = ""; // Guarda fragmentos rápidos de voz
+
   let recordInterval;
   let recordSeconds = 0;
-
-  // Variables Grabación Funcional
   let mediaRecorder;
   let audioChunks = [];
   let resolveAudioPromise;
@@ -234,23 +235,25 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
       }
     };
     setTimeout(scroll, 50);
-    setTimeout(scroll, 300); // Doble seguro para renders lentos de imágenes o textos muy largos
+    setTimeout(scroll, 300);
   }
 
-  // Parseador de Markdown limpio (Elimina el exceso de aire al final de las tarjetas)
+  // ==========================================
+  // PARSEADOR MARKDOWN (CERO AIRE FINAL)
+  // ==========================================
   function parseMarkdownToHTML(text) {
     if (!text) return "";
     let html = text
-      .replace(/^### (.*$)/gim, '<h3 class="text-sm font-black text-blue-700 mt-4 mb-1 uppercase tracking-wide">$1</h3>')
-      .replace(/^## (.*$)/gim, '<h2 class="text-base font-black text-[#001529] mt-4 mb-1 uppercase tracking-wider">$1</h2>')
-      .replace(/^# (.*$)/gim, '<h1 class="text-lg font-black text-[#001529] mt-4 mb-1 uppercase tracking-widest">$1</h1>')
+      .replace(/^### (.*$)/gim, '<strong class="block text-sm font-black text-blue-700 mt-4 mb-1 uppercase tracking-wide">$1</strong>')
+      .replace(/^## (.*$)/gim, '<strong class="block text-base font-black text-[#001529] mt-4 mb-1 uppercase tracking-wider">$1</strong>')
+      .replace(/^# (.*$)/gim, '<strong class="block text-lg font-black text-[#001529] mt-4 mb-1 uppercase tracking-widest">$1</strong>')
       .replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-slate-800">$1</strong>')
       .replace(/\*(.*?)\*/g, '<em class="text-slate-600">$1</em>')
       .replace(/^\- (.*$)/gim, '<li class="ml-4 mb-1 list-disc marker:text-blue-500">$1</li>')
       .replace(/\n/g, '<br/>');
 
-    html = html.replace(/(<br\/>){2,}/g, '<br/><br/>'); // Limita saltos excesivos
-    html = html.replace(/(<br\/>)+$/g, ''); // ELIMINA SALTOS FANTASMAS AL FINAL PARA QUITAR EL AIRE
+    html = html.replace(/(<br\/>){2,}/g, '<br/><br/>'); 
+    html = html.replace(/(<br\/>|\s)+$/g, ''); // ELIMINA CUALQUIER SALTO O ESPACIO AL FINAL PARA QUITAR EL AIRE FEÍSIMO
     return html.trim();
   }
 
@@ -312,7 +315,7 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
   });
 
   // ==========================================
-  // GRABADORA DE VOZ REAL (CORREGIDA)
+  // GRABADORA DE VOZ Y TRANSCRIPCIÓN PERFECTA
   // ==========================================
   let recognition;
   if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
@@ -323,11 +326,16 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
     recognition.continuous = true;
 
     recognition.onresult = (e) => {
-      let finalTranscript = '';
+      let finalChunk = '';
+      tempInterim = '';
       for (let i = e.resultIndex; i < e.results.length; ++i) {
-        if (e.results[i].isFinal) finalTranscript += e.results[i][0].transcript;
+        if (e.results[i].isFinal) {
+          finalChunk += e.results[i][0].transcript;
+        } else {
+          tempInterim += e.results[i][0].transcript;
+        }
       }
-      if (finalTranscript) audioTranscript += finalTranscript + ' ';
+      if (finalChunk) audioTranscript += finalChunk + ' ';
     };
 
     recognition.onend = () => {
@@ -336,15 +344,16 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
   }
 
   function formatTime(sec) {
-    if (isNaN(sec)) return "0:00";
+    if (isNaN(sec) || !isFinite(sec)) return "0:00";
     const m = Math.floor(sec / 60);
-    const s = sec % 60;
+    const s = Math.floor(sec % 60);
     return `${m}:${s.toString().padStart(2, '0')}`;
   }
 
   async function startRecording() {
     isRecording = true;
     audioTranscript = "";
+    tempInterim = "";
     recordSeconds = 0;
     recordTime!.innerText = "0:00";
     audioChunks = [];
@@ -363,10 +372,9 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
         if (e.data.size > 0) audioChunks.push(e.data);
       };
       
-      // Aseguramos que el stream se detenga correctamente y genere el Blob jugable
       mediaRecorder.onstop = () => {
         mediaRecorder.stream.getTracks().forEach(track => track.stop());
-        const audioBlob = new Blob(audioChunks); 
+        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' }); 
         const reader = new FileReader();
         reader.readAsDataURL(audioBlob);
         reader.onloadend = () => {
@@ -397,7 +405,7 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
       if (recognition) recognition.stop();
       
       if (mediaRecorder && mediaRecorder.state !== "inactive") {
-        mediaRecorder.stop(); // Esto detona mediaRecorder.onstop
+        mediaRecorder.stop(); 
       } else {
         resolve(null);
       }
@@ -408,7 +416,10 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
       sendBtn?.classList.replace('bg-blue-600', 'bg-[#001529]');
       sendBtn?.classList.remove('animate-pulse');
       
-      if (cancel) audioTranscript = "";
+      if (cancel) {
+        audioTranscript = "";
+        tempInterim = "";
+      }
     });
   }
 
@@ -424,12 +435,14 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
   // MOTOR DEL CHAT (Lógica API)
   // ==========================================
   async function getAIResponse(message, image = null) {
-    // Mandamos el historial básico para que la IA sepa si es el primer saludo o no
     const chat = chatHistory.find(c => c.id === currentChatId);
-    const isReturningUser = chat && chat.messages.length > 0;
     
-    // Si el usuario grabó silencio, le mandamos esa etiqueta interna
-    const finalMessage = isReturningUser ? `[Usuario frecuente]: ${message}` : message;
+    // Verificamos matemáticamente si este ES EL PRIMER MENSAJE del chat entero
+    // Como la función se llama DESPUÉS de guardar el mensaje de usuario, la longitud será 1.
+    const isFirstMessage = chat && chat.messages.length === 1;
+    
+    let finalMessage = message;
+    if (isFirstMessage) finalMessage = `[PRIMER MENSAJE]: ${message}`;
 
     const payload = { message: finalMessage, image: image };
 
@@ -459,10 +472,8 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
     const msgId = specificId;
     div.className = `group flex gap-3 md:gap-5 max-w-4xl relative mb-4 ${isAi ? '' : 'ml-auto flex-row-reverse animate-in fade-in slide-in-from-right-4'}`;
     
-    // Limpiamos etiquetas ocultas antes de parsear a la UI
     const isSilence = text === "[Audio ininteligible]";
-    const cleanText = isSilence ? "" : text.replace(/\[Usuario frecuente\]: /g, '').replace(/\[Audio ininteligible\]/g, '').trim();
-    
+    const cleanText = isSilence ? "" : text.trim();
     const formattedText = parseMarkdownToHTML(cleanText);
     const toolPosition = isAi ? 'top-1 right-4' : 'top-1 left-4';
     
@@ -471,11 +482,11 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
       mediaHtml = `<img src="${imageStr}" class="max-w-full h-auto rounded-xl mb-3 border border-slate-200 shadow-sm max-h-64 object-contain" alt="Adjunto" />`;
     }
 
-    // REPRODUCTOR DE AUDIO REAL
+    // REPRODUCTOR DE AUDIO REAL FUNCIONAL (Hack Chrome Infinity Bug incluido)
     let audioHtml = '';
     if (audioData) {
       audioHtml = `
-        <audio id="audio-el-${msgId}" src="${audioData}" preload="metadata" class="hidden"></audio>
+        <audio id="audio-el-${msgId}" src="${audioData}" preload="auto" class="hidden"></audio>
         <div class="flex items-center gap-3 bg-white/60 p-3 rounded-2xl border border-blue-100 mb-3 shadow-sm w-full max-w-[220px] md:max-w-xs transition-all hover:bg-white">
            <button class="audio-play-btn w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center flex-shrink-0 shadow-md hover:bg-blue-700 transition-colors">
               <svg class="play-icon" width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
@@ -494,6 +505,7 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
       `;
     }
 
+    // [&>*:last-child]:mb-0 -> Mata de raíz cualquier margen que intente poner espacio debajo del texto
     div.innerHTML = `
       <div class="w-8 h-8 md:w-10 md:h-10 rounded-2xl ${isAi ? 'bg-[#001529] text-cyan-400' : 'bg-blue-600 text-white'} flex items-center justify-center shadow-md flex-shrink-0 relative z-0">
         ${isAi ? '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>' : '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>'}
@@ -516,7 +528,7 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
 
           <p class="font-black text-[#001529] mb-2 uppercase text-[9px] tracking-widest text-left">${isAi ? 'Synapse Core AI' : 'Usuario'}</p>
           <div id="text-container-${msgId}">
-            <div id="text-${msgId}" class="break-words leading-relaxed text-left ${isAi ? 'pr-8 text-slate-600' : 'text-slate-700'}">
+            <div id="text-${msgId}" class="break-words leading-relaxed text-left ${isAi ? 'pr-8 text-slate-600' : 'text-slate-700'} [&>*:last-child]:mb-0">
               ${audioHtml}
               ${mediaHtml}
               ${audioData && cleanText ? `<p class="text-[10px] text-slate-400 italic mb-1 uppercase font-bold tracking-wider mt-2">Transcripción:</p>` : ''}
@@ -527,19 +539,18 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
       </div>
     `;
 
-    // Botón Copiar
+    // Eventos UI del mensaje creado
     div.querySelector('.copy-msg')?.addEventListener('click', () => {
       copyToClipboard(cleanText, div.querySelector('.copy-msg'));
     });
 
-    // Botón Editar
     if (!isAi) {
       div.querySelector('.edit-msg')?.addEventListener('click', () => {
         toggleEditMode(msgId);
       });
     }
 
-    // Funcionalidad Real de Audio
+    // Funcionalidad de Reproducción de Audio
     if (audioData) {
       const audioEl = div.querySelector(`#audio-el-${msgId}`) as HTMLAudioElement;
       const playBtn = div.querySelector('.audio-play-btn');
@@ -548,13 +559,23 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
       const playIcon = div.querySelector('.play-icon');
       const pauseIcon = div.querySelector('.pause-icon');
 
-      audioEl.addEventListener('loadedmetadata', () => {
-         if (isFinite(audioEl.duration)) timeLabel.innerText = formatTime(Math.floor(audioEl.duration));
-      });
+      // Solución al Bug de Chrome WebM Duration Infinity
+      audioEl.onloadedmetadata = () => {
+         if (audioEl.duration === Infinity) {
+             audioEl.currentTime = 1e101; // Hack para forzar el cálculo de duración
+             audioEl.ontimeupdate = function() {
+                 this.ontimeupdate = null;
+                 timeLabel.innerText = formatTime(this.duration);
+                 this.currentTime = 0;
+             }
+         } else {
+             timeLabel.innerText = formatTime(audioEl.duration);
+         }
+      };
 
       playBtn?.addEventListener('click', () => {
         if (audioEl.paused) {
-          audioEl.play().catch(e => console.error("Error al reproducir audio:", e));
+          audioEl.play().catch(e => console.error("Play error:", e));
           playIcon?.classList.add('hidden');
           pauseIcon?.classList.remove('hidden');
         } else {
@@ -565,16 +586,18 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
       });
 
       audioEl.addEventListener('timeupdate', () => {
-        const percent = (audioEl.currentTime / audioEl.duration) * 100;
-        if(isFinite(percent)) progressBar.style.width = `${percent}%`;
-        if(isFinite(audioEl.currentTime)) timeLabel.innerText = formatTime(Math.floor(audioEl.currentTime));
+        const duration = audioEl.duration;
+        if (!isFinite(duration) || duration === 0) return;
+        const percent = (audioEl.currentTime / duration) * 100;
+        progressBar.style.width = `${percent}%`;
+        timeLabel.innerText = formatTime(audioEl.currentTime);
       });
 
       audioEl.addEventListener('ended', () => {
         playIcon?.classList.remove('hidden');
         pauseIcon?.classList.add('hidden');
         progressBar.style.width = '0%';
-        if (isFinite(audioEl.duration)) timeLabel.innerText = formatTime(Math.floor(audioEl.duration));
+        if (isFinite(audioEl.duration)) timeLabel.innerText = formatTime(audioEl.duration);
       });
     }
 
@@ -591,8 +614,7 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
     const chat = chatHistory.find(c => c.id === currentChatId);
     const msg = chat.messages.find(m => m.id === msgId);
     
-    // Limpiamos etiquetas crudas para no ensuciar la edición
-    const currentText = msg ? msg.text.replace(/\[Usuario frecuente\]: /g, '').replace(/\[Audio ininteligible\]/g, '').trim() : "";
+    const currentText = msg ? msg.text.replace(/\[PRIMER MENSAJE\]: /g, '').replace(/\[Audio ininteligible\]/g, '').trim() : "";
     const textContainer = document.getElementById(`text-container-${msgId}`);
     
     textContainer!.innerHTML = `
@@ -641,7 +663,7 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
     }
   }
 
-  // ENVÍO DE FORMULARIO CON AUDIO INTELIGENTE
+  // ENVÍO DE FORMULARIO
   chatForm?.addEventListener('submit', async (e) => {
     e.preventDefault();
     
@@ -651,9 +673,10 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
 
     if (isRecording) {
       audioBase64 = await stopRecording(false);
-      message = audioTranscript.trim();
+      // Sumamos también fragmentos rápidos que no hayan disparado el onresult final
+      message = (audioTranscript + " " + tempInterim).trim();
       
-      // Inteligencia: Si grabó audio pero no habló, enviamos tag de silencio
+      // Inteligencia: Si grabó audio pero no habló
       if (!message) {
          message = "[Audio ininteligible]";
       }
@@ -690,7 +713,7 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
 
   function saveMessage(role, text, id, image = null, audioData = null) {
     let chat = chatHistory.find(c => c.id === currentChatId);
-    let chatTitle = text && text !== "[Audio ininteligible]" ? text.replace(/\[Usuario frecuente\]: /g, '').substring(0, 20).toUpperCase() + "..." : (audioData ? "NOTA DE VOZ" : "IMAGEN ADJUNTA");
+    let chatTitle = text && text !== "[Audio ininteligible]" ? text.replace(/\[PRIMER MENSAJE\]: /g, '').substring(0, 20).toUpperCase() + "..." : (audioData ? "NOTA DE VOZ" : "IMAGEN ADJUNTA");
     if (!chat) {
       chat = { id: currentChatId, title: chatTitle, messages: [], pinned: false };
       chatHistory.unshift(chat);
