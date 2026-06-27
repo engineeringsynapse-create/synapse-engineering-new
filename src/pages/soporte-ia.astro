@@ -215,7 +215,7 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
   let isRecording = false;
   
   let audioTranscript = "";
-  let tempInterim = ""; // Guarda fragmentos rápidos de voz
+  let tempInterim = ""; 
 
   let recordInterval;
   let recordSeconds = 0;
@@ -225,9 +225,6 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
 
   const WELCOME_MSG = "Saludos. Soy el asistente inteligente de **Synapse Engineering**. ¿En qué puedo asesorarle hoy? Puede enviarme consultas técnicas, notas de voz o imágenes de diagramas y tableros.";
 
-  // ==========================================
-  // SCROLL PERFECTO PARA PC Y MÓVIL
-  // ==========================================
   function scrollToBottom() {
     const scroll = () => {
       if(chatBox) {
@@ -238,9 +235,7 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
     setTimeout(scroll, 300);
   }
 
-  // ==========================================
-  // PARSEADOR MARKDOWN (CERO AIRE FINAL)
-  // ==========================================
+  // PARSEADOR MEJORADO: Elimina de raíz los guiones y saltos de línea al final
   function parseMarkdownToHTML(text) {
     if (!text) return "";
     let html = text
@@ -253,7 +248,8 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
       .replace(/\n/g, '<br/>');
 
     html = html.replace(/(<br\/>){2,}/g, '<br/><br/>'); 
-    html = html.replace(/(<br\/>|\s)+$/g, ''); // ELIMINA CUALQUIER SALTO O ESPACIO AL FINAL PARA QUITAR EL AIRE FEÍSIMO
+    html = html.replace(/(\s*---\s*)$/g, ''); // Elimina el triple guión al final de la tarjeta
+    html = html.replace(/(<br\/>|\s)+$/g, ''); // Cero aire extra al final
     return html.trim();
   }
 
@@ -314,9 +310,6 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
     cameraInput.value = '';
   });
 
-  // ==========================================
-  // GRABADORA DE VOZ Y TRANSCRIPCIÓN PERFECTA
-  // ==========================================
   let recognition;
   if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -431,15 +424,9 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
     stopRecording(true);
   });
 
-  // ==========================================
-  // MOTOR DEL CHAT (Lógica API)
-  // ==========================================
   async function getAIResponse(message, image = null) {
     const chat = chatHistory.find(c => c.id === currentChatId);
-    
-    // Verificamos matemáticamente si este ES EL PRIMER MENSAJE del chat entero
-    // Como la función se llama DESPUÉS de guardar el mensaje de usuario, la longitud será 1.
-    const isFirstMessage = chat && chat.messages.length === 1;
+    const isFirstMessage = chat && chat.messages.length === 1; // Si es 1, significa que el usuario acaba de mandar su primer msg
     
     let finalMessage = message;
     if (isFirstMessage) finalMessage = `[PRIMER MENSAJE]: ${message}`;
@@ -482,7 +469,6 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
       mediaHtml = `<img src="${imageStr}" class="max-w-full h-auto rounded-xl mb-3 border border-slate-200 shadow-sm max-h-64 object-contain" alt="Adjunto" />`;
     }
 
-    // REPRODUCTOR DE AUDIO REAL FUNCIONAL (Hack Chrome Infinity Bug incluido)
     let audioHtml = '';
     if (audioData) {
       audioHtml = `
@@ -505,7 +491,7 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
       `;
     }
 
-    // [&>*:last-child]:mb-0 -> Mata de raíz cualquier margen que intente poner espacio debajo del texto
+    // [&>*:last-child]:mb-0 elimina el margen del ultimo parrafo
     div.innerHTML = `
       <div class="w-8 h-8 md:w-10 md:h-10 rounded-2xl ${isAi ? 'bg-[#001529] text-cyan-400' : 'bg-blue-600 text-white'} flex items-center justify-center shadow-md flex-shrink-0 relative z-0">
         ${isAi ? '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>' : '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>'}
@@ -539,7 +525,6 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
       </div>
     `;
 
-    // Eventos UI del mensaje creado
     div.querySelector('.copy-msg')?.addEventListener('click', () => {
       copyToClipboard(cleanText, div.querySelector('.copy-msg'));
     });
@@ -550,7 +535,6 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
       });
     }
 
-    // Funcionalidad de Reproducción de Audio
     if (audioData) {
       const audioEl = div.querySelector(`#audio-el-${msgId}`) as HTMLAudioElement;
       const playBtn = div.querySelector('.audio-play-btn');
@@ -559,10 +543,9 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
       const playIcon = div.querySelector('.play-icon');
       const pauseIcon = div.querySelector('.pause-icon');
 
-      // Solución al Bug de Chrome WebM Duration Infinity
       audioEl.onloadedmetadata = () => {
          if (audioEl.duration === Infinity) {
-             audioEl.currentTime = 1e101; // Hack para forzar el cálculo de duración
+             audioEl.currentTime = 1e101; 
              audioEl.ontimeupdate = function() {
                  this.ontimeupdate = null;
                  timeLabel.innerText = formatTime(this.duration);
@@ -609,11 +592,9 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
     return div;
   }
 
-  // EDICIÓN DE MENSAJES
   function toggleEditMode(msgId) {
     const chat = chatHistory.find(c => c.id === currentChatId);
     const msg = chat.messages.find(m => m.id === msgId);
-    
     const currentText = msg ? msg.text.replace(/\[PRIMER MENSAJE\]: /g, '').replace(/\[Audio ininteligible\]/g, '').trim() : "";
     const textContainer = document.getElementById(`text-container-${msgId}`);
     
@@ -663,7 +644,7 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
     }
   }
 
-  // ENVÍO DE FORMULARIO
+  // ENVÍO INTELIGENTE: Capturamos el texto ANTES de detener los procesos asincronos
   chatForm?.addEventListener('submit', async (e) => {
     e.preventDefault();
     
@@ -672,12 +653,14 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
     let audioBase64 = null;
 
     if (isRecording) {
-      audioBase64 = await stopRecording(false);
-      // Sumamos también fragmentos rápidos que no hayan disparado el onresult final
-      message = (audioTranscript + " " + tempInterim).trim();
+      // Capturamos TODO lo que el navegador escuchó hasta este milisegundo
+      let speechText = (audioTranscript + " " + tempInterim).trim();
       
-      // Inteligencia: Si grabó audio pero no habló
-      if (!message) {
+      // Detenemos procesos
+      audioBase64 = await stopRecording(false);
+      message = speechText;
+      
+      if (!message || message.length < 2) {
          message = "[Audio ininteligible]";
       }
     }
@@ -745,9 +728,6 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
     } catch (err) { console.error('Error al copiar:', err); }
   }
 
-  // ==========================================
-  // SIDEBAR & HISTORY
-  // ==========================================
   function saveAndRefresh() {
     localStorage.setItem('synapse_history', JSON.stringify(chatHistory));
     localStorage.setItem('active_chat_id', currentChatId);

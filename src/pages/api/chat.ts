@@ -9,18 +9,19 @@ export const POST: APIRoute = async ({ request }) => {
       return new Response(JSON.stringify({ response: "Error de configuración interna." }), { status: 500 });
     }
 
+    // SI EL AUDIO ESTUVO MUDO, NO PREGUNTAMOS A LA IA (Ahorra tiempo y asegura el mensaje exacto)
+    if (message === '[Audio ininteligible]') {
+        return new Response(JSON.stringify({ 
+            response: "Entendido. El sistema no pudo procesar la grabación debido a la ausencia de voz detectable. Por favor, inténtelo de nuevo enviando otra nota de voz o, si lo prefiere, escriba su consulta en el panel de texto para que pueda asistirle de manera efectiva." 
+        }), { status: 200 });
+    }
+
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 30000);
 
-    // Detección exacta y sin fallos del Frontend
+    // Detección exacta del Primer Mensaje
     let isFirstMessage = message.includes('[PRIMER MENSAJE]:');
     let finalMessage = message.replace(/\[PRIMER MENSAJE\]:/g, '').trim();
-    
-    let audioIninteligible = false;
-    if (finalMessage.includes('[Audio ininteligible]')) {
-        audioIninteligible = true;
-        finalMessage = "He enviado una nota de voz, pero no se escuchó nada. Hubo silencio total.";
-    }
 
     // Calculo preciso de la Hora de Lima (Perú)
     const now = new Date();
@@ -36,15 +37,14 @@ export const POST: APIRoute = async ({ request }) => {
     Tu comunicación es formal, técnica, objetiva, precisa y muy profesional (estilo ChatGPT o Gemini avanzado). 
     
     ESTADO DE LA CONVERSACIÓN:
-    ${isFirstMessage ? `REGLA DE ORO INQUEBRANTABLE: Este es el PRIMER mensaje del usuario. DEBES empezar tu respuesta EXACTAMENTE con la frase: "${timeGreeting}. Soy el asistente inteligente de Synapse Engineering. ¿En qué le puedo ayudar hoy?". NO ESTÁ PERMITIDO agregar viñetas, NO agregues listas, NO des ejemplos largos de lo que puedes hacer. Ve directo al punto en un párrafo corto y conciso.` : `REGLA DE ORO INQUEBRANTABLE: Ya están conversando. ESTÁ ESTRICTAMENTE PROHIBIDO decir "Buenos días", "Buenas tardes" o "Buenas noches". Responde directo a la consulta.`}
+    ${isFirstMessage ? `REGLA DE ORO INQUEBRANTABLE: Este es el PRIMER mensaje del usuario. DEBES empezar tu respuesta EXACTAMENTE con la frase: "${timeGreeting}. Soy el asistente inteligente de Synapse Engineering. " Luego, en el mismo párrafo o en el siguiente, responde la duda del usuario de forma directa y concisa. NO des ejemplos largos de lo que puedes hacer. NO uses viñetas ni listas en este primer mensaje.` : `Ya están conversando. ESTÁ ESTRICTAMENTE PROHIBIDO volver a decir "Buenos días", "Buenas tardes" o "Buenas noches". Responde directo a la consulta.`}
     
-    ${audioIninteligible ? `REGLA PARA AUDIO: El sistema intentó transcribir la voz del usuario pero solo captó silencio. Respóndele empáticamente que no pudiste escuchar su nota de voz y pídele por favor que lo intente de nuevo o que te escriba.` : ''}
-
-    REGLAS GENERALES:
+    REGLAS GENERALES DE FORMATO:
     1. NUNCA uses el símbolo de hashtag (#) bajo ninguna circunstancia.
-    2. Evita el uso excesivo de asteriscos (*). Úsalos SÓLO para resaltar palabras clave.
-    3. Si el usuario dice "gracias", despídete de forma amable, servicial y profesional (ej. "Ha sido un placer asistirle. Quedo a su disposición para futuros proyectos...").
-    4. Si el usuario sube imágenes, analízalas con rigor técnico.`;
+    2. Evita el uso excesivo de asteriscos (*). Úsalos SÓLO para resaltar una palabra clave.
+    3. NO dejes espacios en blanco o guiones al final de tus respuestas.
+    4. Si el usuario dice "gracias", despídete de forma amable, empática y servicial, pero mantén tu nivel técnico profesional.
+    5. Si el usuario sube imágenes, analízalas con rigor técnico.`;
 
     let userContent: any = finalMessage;
 
