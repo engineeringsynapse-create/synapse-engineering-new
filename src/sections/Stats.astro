@@ -3,38 +3,46 @@ import { Briefcase, Award, ThumbsUp, Headset } from 'lucide-react';
 
 const stats = [
   { label: "Proyectos Ejecutados", value: "+500", icon: Briefcase },
-  { label: "Años de Experiencia", value: "06", icon: Award },
+  { label: "Años de Experiencia", value: "10", icon: Award },
   { label: "Clientes Satisfechos", value: "100%", icon: ThumbsUp },
   { label: "Soporte Técnico", value: "24/7", icon: Headset }
 ];
 ---
 
-<section class="py-20 bg-[#003d6b] relative overflow-hidden stats-section">
-  <!-- Malla de fondo sutil -->
-  <div class="absolute inset-0 opacity-20 pointer-events-none">
-    <div class="absolute top-0 left-0 w-full h-full engineering-grid"></div>
+<section class="relative py-16 md:py-24 bg-[#001529] overflow-hidden">
+  <!-- Fondo Tecnológico Premium -->
+  <div class="absolute inset-0 z-0 pointer-events-none">
+    <!-- Degradado radial para dar profundidad -->
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#003d6b]/80 via-[#001529] to-[#001529]"></div>
+    <!-- Malla técnica de puntos -->
+    <div class="absolute inset-0 opacity-[0.15]" style="background-image: radial-gradient(#22d3ee 1px, transparent 1px); background-size: 40px 40px;"></div>
   </div>
 
-  <div class="container mx-auto px-6 relative z-10">
-    <!-- Se agregaron divisores (divide-x) para escritorio y flexbox para alinear mejor -->
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-y-12 gap-x-4 lg:gap-x-0 lg:divide-x lg:divide-white/10 text-center">
+  <div class="container mx-auto px-4 md:px-6 relative z-10">
+    <!-- Redujimos el gap en móviles (gap-3) y lo mantenemos amplio en PC (gap-6) -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
       {stats.map((stat) => {
         const Icon = stat.icon;
         return (
-          <div class="stat-card group flex flex-col items-center justify-center p-4 transition-transform duration-300 hover:-translate-y-1 cursor-default">
+          <div class="group relative bg-gradient-to-b from-white/[0.08] to-white/[0.02] border border-white/[0.05] hover:border-cyan-400/40 rounded-2xl p-5 md:p-8 flex flex-col items-center justify-center text-center transition-all duration-500 hover:-translate-y-1 hover:shadow-2xl hover:shadow-cyan-500/10 backdrop-blur-md overflow-hidden cursor-default">
             
-            <!-- Icono animado al hover -->
-            <div class="mb-4 text-cyan-400 opacity-70 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300">
-              <Icon size={36} strokeWidth={1.5} />
+            <!-- Línea de luz superior animada (Hardware feel) -->
+            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-0 h-[2px] bg-cyan-400 group-hover:w-1/2 transition-all duration-500 ease-out opacity-0 group-hover:opacity-100"></div>
+
+            <!-- Contenedor del Icono con efecto Glow -->
+            <div class="relative mb-3 md:mb-5">
+              <div class="absolute inset-0 bg-cyan-400/0 blur-xl rounded-full group-hover:bg-cyan-400/40 transition-all duration-500 scale-50 group-hover:scale-150"></div>
+              <!-- Tamaños reducidos en celular (w-6) y normales en PC (w-9) -->
+              <Icon strokeWidth={1.5} class="text-cyan-400/80 group-hover:text-cyan-400 relative z-10 w-7 h-7 md:w-10 md:h-10 transition-transform duration-500 group-hover:scale-110" />
             </div>
 
-            <!-- Número -->
-            <div class="text-5xl md:text-6xl font-black text-white mb-3 tracking-tighter drop-shadow-md group-hover:text-cyan-50 transition-colors duration-300">
+            <!-- Número con textura metalizada/degradada -->
+            <div class="text-3xl md:text-5xl lg:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-white/60 mb-1 md:mb-2 tracking-tighter drop-shadow-sm">
               {stat.value}
             </div>
 
-            <!-- Etiqueta -->
-            <div class="text-cyan-400 text-[10px] md:text-xs font-black uppercase tracking-[0.25em] md:tracking-[0.3em]">
+            <!-- Etiqueta refinada -->
+            <div class="text-cyan-400/70 group-hover:text-cyan-400 text-[9px] md:text-xs font-bold uppercase tracking-[0.15em] md:tracking-[0.25em] transition-colors duration-300">
               {stat.label}
             </div>
             
@@ -44,28 +52,3 @@ const stats = [
     </div>
   </div>
 </section>
-
-<style>
-  .stats-section {
-    /* Aislamos el renderizado de la sección de estadísticas */
-    contain: layout paint;
-    /* Forzamos a que el navegador trate esta sección como una capa de video independiente */
-    transform: translateZ(0);
-  }
-
-  .stat-card {
-    /* Evitamos que el texto cambie de grosor o "tiemble" al hacer scroll */
-    backface-visibility: hidden;
-    -webkit-font-smoothing: antialiased;
-  }
-
-  .engineering-grid {
-    /* Aseguramos que la malla no sea recalculada constantemente */
-    will-change: transform;
-    /* Patrón de cuadrícula para darle aspecto de planos de ingeniería */
-    background-image: 
-      linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-    background-size: 40px 40px;
-  }
-</style>
