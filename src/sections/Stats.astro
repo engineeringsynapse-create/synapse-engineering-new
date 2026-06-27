@@ -9,43 +9,41 @@ const stats = [
 ];
 ---
 
-<section class="relative py-16 md:py-24 bg-white overflow-hidden border-y border-slate-50">
-  <!-- Fondo Tecnológico Claro Premium -->
+<!-- Ajustamos pt-4 y md:pt-8 para quitar el exceso de aire arriba -->
+<section class="relative pt-4 pb-16 md:pt-8 md:pb-24 bg-white overflow-hidden">
+  <!-- Fondo Tecnológico (Malla sutil corporativa) -->
   <div class="absolute inset-0 z-0 pointer-events-none flex justify-center items-center">
-    <!-- Resplandor sutil central para dar volumen -->
-    <div class="absolute w-full h-full bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-slate-50/80 via-white to-white"></div>
-    <!-- Malla técnica de puntos azules corporativos (muy elegante y sutil) -->
     <div class="absolute inset-0 opacity-[0.03]" style="background-image: radial-gradient(#003d6b 1px, transparent 1px); background-size: 32px 32px;"></div>
   </div>
 
   <div class="container mx-auto px-4 md:px-6 relative z-10">
-    <!-- Grid adaptable: compacto en móvil, espaciado en PC -->
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
       {stats.map((stat) => {
         const Icon = stat.icon;
         return (
-          <div class="group relative bg-white border border-slate-100/80 rounded-2xl p-5 md:p-8 flex flex-col items-center justify-center text-center transition-all duration-500 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-[#003d6b]/5 cursor-default overflow-hidden">
+          <!-- Tarjeta con contraste (slate-50/100) en lugar de blanco puro -->
+          <div class="group relative bg-gradient-to-b from-slate-50 to-slate-100/80 border border-slate-200 rounded-2xl p-5 md:p-8 flex flex-col items-center justify-center text-center transition-all duration-500 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-[#003d6b]/10 cursor-default overflow-hidden">
             
-            <!-- Línea superior tecnológica que se expande al hover -->
-            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-0 h-1 bg-gradient-to-r from-cyan-400 to-[#005596] group-hover:w-full transition-all duration-500 ease-out z-20"></div>
+            <!-- Línea LED difuminada que se enciende al hover -->
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 z-20"></div>
 
-            <!-- Fondo sutil en la tarjeta al hacer hover -->
-            <div class="absolute inset-0 bg-gradient-to-b from-slate-50/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0"></div>
+            <!-- Capa de interacción azul sutil -->
+            <div class="absolute inset-0 bg-[#005596]/[0.02] opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0"></div>
 
-            <!-- Contenedor del Icono -->
-            <div class="relative mb-3 md:mb-6 z-10">
-              <div class="p-3 md:p-4 rounded-full bg-slate-50 group-hover:bg-blue-50/50 transition-colors duration-500">
-                <Icon strokeWidth={1.5} class="text-[#005596] w-7 h-7 md:w-9 md:h-9 transition-transform duration-500 group-hover:scale-110" />
+            <!-- Contenedor del Icono (Micro-tarjeta blanca para dar profundidad 3D) -->
+            <div class="relative mb-4 md:mb-6 z-10">
+              <div class="p-3 md:p-4 rounded-xl bg-white border border-slate-100 shadow-sm group-hover:border-cyan-100 group-hover:shadow-md group-hover:shadow-cyan-400/20 transition-all duration-500">
+                <Icon strokeWidth={1.5} class="text-[#005596] w-6 h-6 md:w-8 md:h-8 transition-transform duration-500 group-hover:scale-110 group-hover:text-cyan-500" />
               </div>
             </div>
 
             <!-- Número corporativo -->
-            <div class="text-3xl md:text-5xl lg:text-6xl font-black text-[#003d6b] mb-1 md:mb-2 tracking-tighter relative z-10">
+            <div class="text-3xl md:text-5xl font-black text-[#003d6b] mb-1.5 md:mb-2 tracking-tighter relative z-10 drop-shadow-sm">
               {stat.value}
             </div>
 
-            <!-- Etiqueta refinada en azul secundario -->
-            <div class="text-slate-500 group-hover:text-[#005596] text-[9px] md:text-xs font-bold uppercase tracking-[0.15em] md:tracking-[0.2em] transition-colors duration-300 relative z-10">
+            <!-- Etiqueta refinada -->
+            <div class="text-slate-500 group-hover:text-[#003d6b] text-[9px] md:text-xs font-bold uppercase tracking-[0.15em] md:tracking-[0.2em] transition-colors duration-300 relative z-10">
               {stat.label}
             </div>
             
