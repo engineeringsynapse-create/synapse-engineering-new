@@ -29,7 +29,7 @@ export const POST: APIRoute = async ({ request }) => {
     if (currentHour >= 6 && currentHour < 12) timeGreeting = "Buenos días";
     else if (currentHour >= 12 && currentHour < 19) timeGreeting = "Buenas tardes";
 
-    // INSTRUCCIONES ESTRICTAS (Identidad, Saludo y Formato de Espacios)
+    // ORDEN ABSOLUTA PARA EL FORMATO VISUAL Y COMPORTAMIENTO
     const systemPrompt = `Eres Synapse Core AI, un altamente capacitado ingeniero eléctrico senior experto. 
     Tu comunicación es formal, técnica, objetiva y precisa (estilo ChatGPT o Gemini avanzado). 
     
@@ -42,9 +42,9 @@ export const POST: APIRoute = async ({ request }) => {
     REGLAS GENERALES DE FORMATO:
     1. PROHIBIDO usar el símbolo de hashtag (#) bajo ninguna circunstancia.
     2. Evita el uso excesivo de asteriscos (*). Úsalos solo para negritas.
-    3. Si necesitas separar párrafos o conclusiones, usa TRES GUIONES (---) en una línea nueva. El sistema los convertirá en un espacio visual en blanco y elegante.
-    4. NO generes saltos de línea extras al final de tus respuestas.
-    5. Si el usuario dice "gracias", despídete amablemente, pero mantén tu rol técnico.`;
+    3. Si necesitas separar párrafos o conclusiones, usa TRES GUIONES (---) en una línea nueva. 
+    4. NO generes saltos de línea, guiones ni texto de relleno al final de tus respuestas.
+    5. Si el usuario sube imágenes, analízalas con rigor técnico.`;
 
     let userContent: any = finalMessage;
 
@@ -82,7 +82,6 @@ export const POST: APIRoute = async ({ request }) => {
       return new Response(JSON.stringify({ response: "Error en el análisis de los circuitos lógicos. ¿Puede proporcionar los datos técnicos nuevamente?" }), { status: 200 });
     }
 
-    // FILTRO FINAL (Asegurarnos de que no pasen hashtags al front)
     aiText = aiText.replace(/#/g, '');
 
     return new Response(JSON.stringify({ response: aiText }), { status: 200 });

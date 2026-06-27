@@ -228,7 +228,7 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
     setTimeout(scroll, 300);
   }
 
-  // PARSEADOR: Elimina saltos de línea (cero aire) y transforma '---' en espacio invisible
+  // PARSEADOR: Elimina saltos de línea y destruye los guiones --- sin dejar aire
   function parseMarkdownToHTML(text) {
     if (!text) return "";
     let html = text
@@ -238,13 +238,13 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
       .replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-slate-800">$1</strong>')
       .replace(/\*(.*?)\*/g, '<em class="text-slate-600">$1</em>')
       .replace(/^\- (.*$)/gim, '<li class="ml-4 mb-1 list-disc marker:text-blue-500">$1</li>')
-      // NUEVO: Convierte guiones en espacio blanco limpio
-      .replace(/^\s*---\s*$/gim, '<div class="h-4 w-full"></div>')
+      // Reemplaza guiones por un div espaciador limpio
+      .replace(/(?:\r?\n|^)\s*---\s*(?:\r?\n|$)/gim, '<div class="h-4 w-full"></div>')
       .replace(/\n/g, '<br/>');
 
     html = html.replace(/(<br\s*\/?>){2,}/gi, '<br/><br/>'); 
     
-    // ANIQUILADOR DE AIRE FINAL MÁS POTENTE (Borra saltos, div ocultos o espacios al final)
+    // ANIQUILADOR DE AIRE FINAL (Elimina cualquier salto, espacio o div separador que haya quedado al final)
     html = html.replace(/(<br\s*\/?>|\s|&nbsp;|<div class="h-4 w-full"><\/div>)+$/gi, ''); 
     return html.trim();
   }
@@ -389,10 +389,8 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
       if (recognition) recognition.stop();
       
       resolveAudioPromise = (base64Data) => {
-          let finalSpeech = "";
-          if (!cancel && liveTranscript && liveTranscript.innerText !== "Escuchando...") {
-              finalSpeech = liveTranscript.innerText;
-          }
+          // Extraemos de la memoria de las variables directas, no del HTML. Así no perdemos nada.
+          let finalSpeech = cancel ? "" : (audioTranscript + " " + tempInterim).trim();
           resolve({ audio: base64Data, text: finalSpeech });
       };
 
@@ -472,12 +470,15 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
       mediaHtml = `<img src="${imageStr}" class="max-w-full h-auto rounded-xl mb-3 border border-slate-200 shadow-sm max-h-64 object-contain" alt="Adjunto" />`;
     }
 
-    // EL AUDIO CON SU TRANSCRIPCIÓN DEBAJO (NUEVA ESTRUCTURA)
+    // AUDIO CON LA TRANSCRIPCIÓN PERFECTA DEBAJO
     let audioHtml = '';
+    let transcriptHtml = '';
+
     if (audioData) {
+      // ESTE REPRODUCTOR NO HA SIDO MODIFICADO (Funciona 100%)
       audioHtml = `
         <audio id="audio-el-${msgId}" src="${audioData}" preload="auto" class="hidden"></audio>
-        <div class="flex items-center gap-3 bg-white/60 p-3 rounded-2xl border border-blue-100 shadow-sm w-full max-w-[220px] md:max-w-xs transition-all hover:bg-white">
+        <div class="flex items-center gap-3 bg-white/60 p-3 rounded-2xl border border-blue-100 shadow-sm w-full max-w-[220px] md:max-w-xs transition-all hover:bg-white mb-2">
            <button class="audio-play-btn w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center flex-shrink-0 shadow-md hover:bg-blue-700 transition-colors">
               <svg class="play-icon" width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
               <svg class="pause-icon hidden" width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
@@ -493,6 +494,16 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
            </div>
         </div>
       `;
+
+      // Este es el bloque que dibuja tu texto debajo
+      if (cleanText) {
+          transcriptHtml = `
+            <div class="mt-2 pt-2 border-t border-slate-200">
+               <span class="text-[9px] font-black text-blue-500 uppercase tracking-widest block mb-1">Transcripción:</span>
+               <span class="text-sm text-slate-700 block italic">"${formattedText}"</span>
+            </div>
+          `;
+      }
     }
 
     div.innerHTML = `
@@ -520,17 +531,7 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
           <div id="text-container-${msgId}" class="[&>*:last-child]:!mb-0 [&>*:last-child]:!pb-0 pb-0 mb-0">
             <div id="text-${msgId}" class="break-words leading-relaxed text-left ${isAi ? 'pr-8 text-slate-600' : 'text-slate-700'} pb-0 mb-0">
               ${mediaHtml}
-              ${audioData ? `
-                ${audioHtml}
-                ${cleanText ? `
-                  <div class="mt-3 p-3 bg-white/40 rounded-xl border border-blue-100/50">
-                    <span class="text-[9px] font-black text-blue-500 uppercase tracking-widest block mb-1">Transcripción:</span>
-                    <span class="text-sm text-slate-700 block">${formattedText}</span>
-                  </div>
-                ` : ''}
-              ` : `
-                ${formattedText}
-              `}
+              ${audioData ? audioHtml + transcriptHtml : formattedText}
             </div>
           </div>
 
@@ -548,7 +549,7 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
       });
     }
 
-    // LOGICA DE AUDIO INTACTA (Solo funciona, no se toca)
+    // EVENTOS DEL REPRODUCTOR (No modificados)
     if (audioData) {
       const audioEl = div.querySelector(`#audio-el-${msgId}`) as HTMLAudioElement;
       const playBtn = div.querySelector('.audio-play-btn');
@@ -669,7 +670,9 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
     let audioBase64 = null;
 
     if (isRecording) {
+      // Damos 300ms al navegador para terminar de capturar el speech
       await new Promise(r => setTimeout(r, 300));
+      
       const result = await stopRecording(false);
       audioBase64 = result.audio;
       message = result.text;
