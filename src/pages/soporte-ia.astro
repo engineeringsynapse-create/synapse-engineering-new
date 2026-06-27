@@ -221,30 +221,32 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
   function scrollToBottom() {
     const scroll = () => {
       if(chatBox) {
-        chatBox.scrollTo({ top: chatBox.scrollHeight + 9000, behavior: 'smooth' });
+        chatBox.scrollTo({ top: chatBox.scrollHeight + 5000, behavior: 'smooth' });
       }
     };
     setTimeout(scroll, 50);
-    setTimeout(scroll, 400); // Retraso mayor para asegurar que la tarjeta bajó del todo
+    setTimeout(scroll, 300);
   }
 
-  // PARSEADOR MEJORADO: Destruye el aire final
+  // PARSEADOR CERO AIRE: Divide en párrafos y elimina el margen del último
   function parseMarkdownToHTML(text) {
     if (!text) return "";
     let html = text
-      .replace(/^### (.*$)/gim, '<strong class="block text-sm font-black text-blue-700 mt-4 mb-1 uppercase tracking-wide">$1</strong>')
-      .replace(/^## (.*$)/gim, '<strong class="block text-base font-black text-[#001529] mt-4 mb-1 uppercase tracking-wider">$1</strong>')
-      .replace(/^# (.*$)/gim, '<strong class="block text-lg font-black text-[#001529] mt-4 mb-1 uppercase tracking-widest">$1</strong>')
+      .replace(/^### (.*$)/gim, '<strong class="block text-sm font-black text-blue-700 mt-4 mb-2 uppercase tracking-wide">$1</strong>')
+      .replace(/^## (.*$)/gim, '<strong class="block text-base font-black text-[#001529] mt-4 mb-2 uppercase tracking-wider">$1</strong>')
+      .replace(/^# (.*$)/gim, '<strong class="block text-lg font-black text-[#001529] mt-4 mb-2 uppercase tracking-widest">$1</strong>')
       .replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-slate-800">$1</strong>')
       .replace(/\*(.*?)\*/g, '<em class="text-slate-600">$1</em>')
-      .replace(/^\- (.*$)/gim, '<li class="ml-4 mb-1 list-disc marker:text-blue-500">$1</li>')
-      .replace(/\n/g, '<br/>');
+      .replace(/^\- (.*$)/gim, '<li class="ml-4 mb-1 list-disc marker:text-blue-500">$1</li>');
 
-    html = html.replace(/(<br\s*\/?>){2,}/gi, '<br/><br/>'); 
-    html = html.replace(/(\s*---\s*)$/g, ''); 
-    // ELIMINADOR ABSOLUTO DE ESPACIOS O SALTOS FANTASMAS AL FINAL
-    html = html.replace(/(<br\s*\/?>|\s)+$/gi, ''); 
-    return html.trim();
+    // Separa por saltos de línea y envuelve en párrafos para control total del margen
+    let paragraphs = html.split(/\n{2,}/);
+    html = paragraphs.map(p => {
+        let inner = p.replace(/\n/g, '<br/>').trim();
+        return inner ? `<p class="mb-4 last:mb-0">${inner}</p>` : '';
+    }).join('');
+
+    return html;
   }
 
   function compressImage(file, maxWidth = 800) {
@@ -366,8 +368,7 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
         if (e.data.size > 0) audioChunks.push(e.data);
       };
       
-      // Aseguramos que guarde el bloque en tiempo real cada 250ms (Evita audios vacíos)
-      mediaRecorder.start(250);
+      mediaRecorder.start(250); // Guarda fragmentos cada 250ms para evitar audios rotos
       if (recognition) recognition.start();
       
       recordInterval = setInterval(() => {
@@ -389,18 +390,16 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
       if (recognition) recognition.stop();
       
       resolveAudioPromise = (base64Data) => {
-          // Extrae el texto seguro desde la UI para no perder ni una palabra
-          let finalSpeech = "";
-          if (!cancel && liveTranscript && liveTranscript.innerText !== "Escuchando...") {
-              finalSpeech = liveTranscript.innerText;
-          }
+          // Extraemos el texto de las variables en memoria, NO del DOM. 100% Seguro.
+          let finalSpeech = cancel ? "" : (audioTranscript + " " + tempInterim).trim();
           resolve({ audio: base64Data, text: finalSpeech });
       };
 
       if (mediaRecorder && mediaRecorder.state !== "inactive") {
         mediaRecorder.onstop = () => {
           mediaRecorder.stream.getTracks().forEach(track => track.stop());
-          const audioBlob = new Blob(audioChunks, { type: 'audio/webm' }); 
+          // Solución de Formato: No forzamos WebM. Dejamos que el celular decida su formato nativo (mp4, ogg, etc.)
+          const audioBlob = new Blob(audioChunks); 
           const reader = new FileReader();
           reader.readAsDataURL(audioBlob);
           reader.onloadend = () => {
@@ -477,7 +476,7 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
     if (audioData) {
       audioHtml = `
         <audio id="audio-el-${msgId}" src="${audioData}" preload="auto" class="hidden"></audio>
-        <div class="flex items-center gap-3 bg-white/60 p-3 rounded-2xl border border-blue-100 mb-3 shadow-sm w-full max-w-[220px] md:max-w-xs transition-all hover:bg-white">
+        <div class="flex items-center gap-3 bg-white/60 p-3 rounded-2xl border border-blue-100 mb-2 shadow-sm w-full max-w-[220px] md:max-w-xs transition-all hover:bg-white">
            <button class="audio-play-btn w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center flex-shrink-0 shadow-md hover:bg-blue-700 transition-colors">
               <svg class="play-icon" width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
               <svg class="pause-icon hidden" width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
@@ -492,10 +491,10 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
              </div>
            </div>
         </div>
+        ${cleanText ? `<div class="mb-3 pl-2 border-l-2 border-blue-200"><p class="text-[9px] text-slate-400 italic mb-0.5 uppercase font-bold tracking-wider">Transcripción:</p><p class="text-sm text-slate-700 leading-snug">${cleanText}</p></div>` : ''}
       `;
     }
 
-    // CLASE CLAVE: [&>*:last-child]:!mb-0 [&>*:last-child]:!pb-0 mata cualquier margen
     div.innerHTML = `
       <div class="w-8 h-8 md:w-10 md:h-10 rounded-2xl ${isAi ? 'bg-[#001529] text-cyan-400' : 'bg-blue-600 text-white'} flex items-center justify-center shadow-md flex-shrink-0 relative z-0">
         ${isAi ? '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>' : '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>'}
@@ -516,13 +515,12 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
             </div>
           </div>
 
-          <p class="font-black text-[#001529] mb-2 uppercase text-[9px] tracking-widest text-left">${isAi ? 'Synapse Core AI' : 'Usuario'}</p>
-          <div id="text-container-${msgId}" class="[&>*:last-child]:!mb-0 [&>*:last-child]:!pb-0">
+          <p class="font-black text-[#001529] mb-3 uppercase text-[9px] tracking-widest text-left">${isAi ? 'Synapse Core AI' : 'Usuario'}</p>
+          <div id="text-container-${msgId}">
             <div id="text-${msgId}" class="break-words leading-relaxed text-left ${isAi ? 'pr-8 text-slate-600' : 'text-slate-700'}">
               ${audioHtml}
               ${mediaHtml}
-              ${audioData && cleanText ? `<p class="text-[10px] text-slate-400 italic mb-1 uppercase font-bold tracking-wider mt-2">Transcripción:</p>` : ''}
-              ${formattedText}
+              ${!audioData ? formattedText : ''}
             </div>
           </div>
         </div>
@@ -547,7 +545,6 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
       const playIcon = div.querySelector('.play-icon');
       const pauseIcon = div.querySelector('.pause-icon');
 
-      // Solución al problema de Chrome y audios WebM
       let currentDuration = 0;
       audioEl.addEventListener('loadeddata', () => {
           if(audioEl.duration === Infinity || isNaN(audioEl.duration)) {
@@ -660,7 +657,7 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
     let audioBase64 = null;
 
     if (isRecording) {
-      // Damos 300ms al navegador para terminar de capturar la última sílaba antes de parar el micro
+      // Damos 300ms de gracia para que el celular termine de procesar la última palabra
       await new Promise(r => setTimeout(r, 300));
       
       const result = await stopRecording(false);
