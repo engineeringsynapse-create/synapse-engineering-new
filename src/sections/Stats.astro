@@ -9,7 +9,6 @@ const stats = [
 ];
 ---
 
-<!-- Redujimos drásticamente el padding superior (pt-2 md:pt-4) para equilibrar el espacio extra que deja la sección de arriba -->
 <section class="relative pt-2 pb-16 md:pt-4 md:pb-24 bg-white overflow-hidden">
   
   <div class="container mx-auto px-4 md:px-6 relative z-10">
@@ -19,17 +18,16 @@ const stats = [
         return (
           <div class="group relative bg-white border border-slate-100 rounded-3xl p-6 md:p-8 flex flex-col items-center justify-center text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-900/5 cursor-default">
             
-            <!-- Contenedor del Icono: Estilo Premium exacto a tu referencia -->
+            <!-- Contenedor del Icono: Fondo celeste suave con bordes muy redondeados -->
             <div class="relative mb-6 z-10">
-              <!-- Fondo celeste nativo de Tailwind para garantizar que compile -->
               <div class="w-14 h-14 md:w-16 md:h-16 flex items-center justify-center rounded-2xl bg-blue-50 group-hover:bg-blue-100 transition-colors duration-300">
-                <!-- Icono azul vibrante con trazo grueso -->
-                <Icon strokeWidth={2.5} size={28} class="text-blue-600 transition-transform duration-300 group-hover:scale-110" />
+                <!-- Inyectamos el color directamente (color="#2563eb") para forzar el azul vibrante de tu imagen -->
+                <Icon strokeWidth={2.5} size={28} color="#2563eb" className="transition-transform duration-300 group-hover:scale-110" />
               </div>
             </div>
 
-            <!-- Número -->
-            <div class="text-3xl md:text-5xl font-black text-slate-900 mb-2 tracking-tighter">
+            <!-- Número con tu azul corporativo -->
+            <div class="text-3xl md:text-5xl font-black text-[#003d6b] mb-2 tracking-tighter">
               {stat.value}
             </div>
 
