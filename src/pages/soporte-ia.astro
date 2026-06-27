@@ -2,7 +2,7 @@
 import Layout from '../layouts/MainLayout.astro';
 import Navbar from '../components/shared/Navbar.astro';
 import Footer from '../components/shared/Footer.astro';
-import { Send, ShieldCheck, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as ImageIcon } from 'lucide-react';
+import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as ImageIcon, Play } from 'lucide-react';
 ---
 
 <Layout title="Soporte IA | Synapse Engineering">
@@ -64,7 +64,7 @@ import { Send, ShieldCheck, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Trian
           <div id="sidebar-overlay" class="fixed inset-0 bg-black/20 backdrop-blur-sm z-30 hidden md:hidden transition-opacity"></div>
 
           <div class="flex-1 flex flex-col min-w-0 relative">
-            <div class="px-8 py-5 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
+            <div class="px-8 py-5 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center relative z-20">
               <div class="flex items-center gap-3">
                 <button id="toggle-sidebar" class="p-2 text-slate-600 hover:bg-slate-200 rounded-lg transition-colors">
                   <Menu size={20} />
@@ -87,9 +87,9 @@ import { Send, ShieldCheck, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Trian
               </div>
             </div>
 
-            <div id="chat-box" class="flex-1 overflow-y-auto p-6 md:p-10 space-y-8 custom-scrollbar pb-32"></div>
+            <div id="chat-box" class="flex-1 overflow-y-auto p-4 md:p-10 space-y-8 custom-scrollbar pb-40 z-0"></div>
 
-            <form id="chat-form" class="absolute bottom-0 w-full p-4 md:p-6 bg-gradient-to-t from-white via-white to-transparent pt-10">
+            <form id="chat-form" class="absolute bottom-0 w-full p-4 md:p-6 bg-white/95 backdrop-blur-md border-t border-slate-100 z-40">
               <div class="max-w-4xl mx-auto relative flex flex-col items-start w-full">
                 
                 <div id="image-preview-container" class="hidden mb-4 relative ml-4">
@@ -101,54 +101,74 @@ import { Send, ShieldCheck, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Trian
                   </button>
                 </div>
 
-                <div class="relative flex items-center bg-white rounded-[24px] border-2 border-slate-200 focus-within:border-blue-600 focus-within:shadow-lg transition-all shadow-sm w-full p-1.5">
+                <div class="relative flex items-center bg-white rounded-[24px] border-2 border-slate-200 focus-within:border-blue-600 focus-within:shadow-lg transition-all shadow-sm w-full p-1.5 min-w-0">
                   
-                  <div id="attach-menu" class="hidden absolute bottom-full left-0 mb-4 bg-[#1c1c1e] p-5 rounded-3xl shadow-2xl border border-white/10 flex gap-4 md:gap-6 z-50 animate-in slide-in-from-bottom-2">
+                  <div id="attach-menu" class="hidden absolute bottom-full left-0 mb-4 bg-white p-5 rounded-3xl shadow-[0_20px_60px_-10px_rgba(0,0,0,0.15)] border border-slate-100 flex gap-4 md:gap-6 z-50 animate-in slide-in-from-bottom-2">
                     <button type="button" id="btn-camera" class="flex flex-col items-center gap-2 group">
-                      <div class="w-14 h-14 bg-[#2c2c2e] group-hover:bg-slate-700 rounded-full flex items-center justify-center text-white transition-colors">
+                      <div class="w-14 h-14 bg-slate-50 group-hover:bg-blue-50 border border-slate-100 group-hover:border-blue-100 rounded-full flex items-center justify-center text-slate-500 group-hover:text-blue-600 transition-all shadow-sm">
                         <Camera size={24} strokeWidth={1.5} />
                       </div>
-                      <span class="text-white text-xs font-medium">Cámara</span>
+                      <span class="text-slate-600 text-[10px] font-bold uppercase tracking-wider">Cámara</span>
                     </button>
                     <button type="button" id="btn-archivos" class="flex flex-col items-center gap-2 group">
-                      <div class="w-14 h-14 bg-[#2c2c2e] group-hover:bg-slate-700 rounded-full flex items-center justify-center text-white transition-colors">
+                      <div class="w-14 h-14 bg-slate-50 group-hover:bg-blue-50 border border-slate-100 group-hover:border-blue-100 rounded-full flex items-center justify-center text-slate-500 group-hover:text-blue-600 transition-all shadow-sm">
                         <Paperclip size={24} strokeWidth={1.5} />
                       </div>
-                      <span class="text-white text-xs font-medium">Archivos</span>
+                      <span class="text-slate-600 text-[10px] font-bold uppercase tracking-wider">Archivos</span>
                     </button>
                     <button type="button" id="btn-drive" class="flex flex-col items-center gap-2 group">
-                      <div class="w-14 h-14 bg-[#2c2c2e] group-hover:bg-slate-700 rounded-full flex items-center justify-center text-white transition-colors">
+                      <div class="w-14 h-14 bg-slate-50 group-hover:bg-blue-50 border border-slate-100 group-hover:border-blue-100 rounded-full flex items-center justify-center text-slate-500 group-hover:text-blue-600 transition-all shadow-sm">
                         <Triangle size={24} strokeWidth={1.5} class="rotate-180" />
                       </div>
-                      <span class="text-white text-xs font-medium">Drive</span>
+                      <span class="text-slate-600 text-[10px] font-bold uppercase tracking-wider">Drive</span>
                     </button>
                     <button type="button" id="btn-fotos" class="flex flex-col items-center gap-2 group">
-                      <div class="w-14 h-14 bg-[#2c2c2e] group-hover:bg-slate-700 rounded-full flex items-center justify-center text-white transition-colors">
+                      <div class="w-14 h-14 bg-slate-50 group-hover:bg-blue-50 border border-slate-100 group-hover:border-blue-100 rounded-full flex items-center justify-center text-slate-500 group-hover:text-blue-600 transition-all shadow-sm">
                         <ImageIcon size={24} strokeWidth={1.5} />
                       </div>
-                      <span class="text-white text-xs font-medium">Fotos</span>
+                      <span class="text-slate-600 text-[10px] font-bold uppercase tracking-wider">Fotos</span>
                     </button>
                   </div>
 
-                  <button type="button" id="attach-btn" class="p-3 text-slate-400 hover:text-[#001529] hover:bg-slate-100 rounded-xl transition-colors ml-1">
-                    <Plus size={24} strokeWidth={2.5} />
-                  </button>
+                  <div id="text-input-wrapper" class="flex items-center flex-1 min-w-0 w-full transition-all">
+                    <button type="button" id="attach-btn" class="p-2 md:p-3 text-slate-400 hover:text-[#001529] hover:bg-slate-100 rounded-xl transition-colors flex-shrink-0">
+                      <Plus size={24} strokeWidth={2.5} />
+                    </button>
+                    <input type="file" id="file-input" accept="image/*" class="hidden" />
+                    <input type="file" id="camera-input" accept="image/*" capture="environment" class="hidden" />
+                    
+                    <input id="user-input" type="text" autocomplete="off" placeholder="Describa su requerimiento..." class="flex-1 w-full bg-transparent py-2 md:py-3 px-2 md:px-3 text-sm focus:outline-none text-slate-700 font-medium placeholder-slate-400 min-w-0" />
+                  </div>
 
-                  <input type="file" id="file-input" accept="image/*" class="hidden" />
-                  <input type="file" id="camera-input" accept="image/*" capture="environment" class="hidden" />
-
-                  <input id="user-input" type="text" autocomplete="off" placeholder="Describa su requerimiento o suba una imagen..." class="flex-1 bg-transparent py-3 md:py-4 px-3 text-sm focus:outline-none text-slate-700 font-medium placeholder-slate-400" />
+                  <div id="audio-record-wrapper" class="hidden flex-1 items-center bg-blue-50/50 rounded-2xl px-4 py-2 border border-blue-100 min-w-0">
+                    <div class="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse mr-3 flex-shrink-0"></div>
+                    <span id="record-time" class="text-xs font-bold text-slate-600 w-8">0:00</span>
+                    
+                    <div class="flex items-center gap-1 h-6 flex-1 px-4 justify-center">
+                      <div class="w-1 bg-blue-400 rounded-full h-2/3 animate-[bounce_1s_infinite]"></div>
+                      <div class="w-1 bg-blue-400 rounded-full h-full animate-[bounce_1.2s_infinite]"></div>
+                      <div class="w-1 bg-blue-400 rounded-full h-1/2 animate-[bounce_0.8s_infinite]"></div>
+                      <div class="w-1 bg-blue-400 rounded-full h-3/4 animate-[bounce_1.1s_infinite]"></div>
+                      <div class="w-1 bg-blue-400 rounded-full h-1/3 animate-[bounce_0.9s_infinite]"></div>
+                      <div class="w-1 bg-blue-400 rounded-full h-full animate-[bounce_1.3s_infinite]"></div>
+                      <div class="w-1 bg-blue-400 rounded-full h-2/3 hidden md:block animate-[bounce_1.5s_infinite]"></div>
+                    </div>
+                    
+                    <button type="button" id="cancel-mic-btn" class="p-2 text-slate-400 hover:text-red-500 transition-colors flex-shrink-0">
+                      <Trash2 size={18} />
+                    </button>
+                  </div>
                   
-                  <div class="flex items-center gap-1 pr-1">
-                    <button type="button" id="mic-btn" class="p-3 text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-all rounded-xl relative group">
-                      <Mic size={22} strokeWidth={2} class="relative z-10" />
-                      <span id="mic-pulse" class="hidden absolute inset-0 bg-red-100 rounded-xl animate-ping z-0"></span>
+                  <div class="flex items-center gap-1 pr-1 flex-shrink-0">
+                    <button type="button" id="mic-btn" class="p-2 md:p-3 text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-all rounded-xl relative">
+                      <Mic size={22} strokeWidth={2} />
                     </button>
                     
-                    <button type="submit" class="bg-[#001529] text-white p-3 md:p-4 rounded-xl hover:bg-blue-600 transition-all shadow-md">
+                    <button type="submit" id="send-btn" class="bg-[#001529] text-white p-2 md:p-4 rounded-xl hover:bg-blue-600 transition-all shadow-md flex items-center justify-center">
                       <Send size={20} />
                     </button>
                   </div>
+
                 </div>
               </div>
             </form>
@@ -173,7 +193,7 @@ import { Send, ShieldCheck, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Trian
   const deleteModal = document.getElementById('delete-modal');
   const modalChatName = document.getElementById('modal-chat-name');
 
-  // Lógica de UI para carga de imágenes
+  // Elementos UI Imagen y Audio
   const attachBtn = document.getElementById('attach-btn');
   const attachMenu = document.getElementById('attach-menu');
   const fileInput = document.getElementById('file-input') as HTMLInputElement;
@@ -181,15 +201,51 @@ import { Send, ShieldCheck, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Trian
   const imgPreviewContainer = document.getElementById('image-preview-container');
   const imgPreview = document.getElementById('image-preview') as HTMLImageElement;
   const removeImgBtn = document.getElementById('remove-image');
+  
+  const textWrapper = document.getElementById('text-input-wrapper');
+  const audioWrapper = document.getElementById('audio-record-wrapper');
+  const micBtn = document.getElementById('mic-btn');
+  const cancelMicBtn = document.getElementById('cancel-mic-btn');
+  const sendBtn = document.getElementById('send-btn');
+  const recordTime = document.getElementById('record-time');
 
   let currentChatId = localStorage.getItem('active_chat_id') || Date.now().toString();
   let chatHistory = JSON.parse(localStorage.getItem('synapse_history') || '[]');
   let idToDelete = "";
   let currentImageData = null;
+  let isRecording = false;
+  let audioTranscript = "";
+  let recordInterval;
+  let recordSeconds = 0;
 
-  const WELCOME_MSG = "Saludos. Soy el asistente inteligente de **Synapse Engineering**. ¿En qué puedo asesorarle hoy? Puede enviarme consultas técnicas o imágenes de planos, tableros o esquemas eléctricos.";
+  const WELCOME_MSG = "Saludos. Soy el asistente inteligente de **Synapse Engineering**. ¿En qué puedo asesorarle hoy? Puede enviarme consultas técnicas, notas de voz o imágenes de diagramas y tableros.";
 
-  // Función premium para comprimir imagen y evitar que colapse el localStorage
+  // ==========================================
+  // LÓGICA DE UTILIDADES (Scroll, Markdown)
+  // ==========================================
+  
+  function scrollToBottom() {
+    setTimeout(() => { 
+      if(chatBox) chatBox.scrollTop = chatBox.scrollHeight + 100; 
+    }, 150); // Pequeño delay para asegurar que el DOM pintó todo
+  }
+
+  // Parseador Profesional de Markdown a HTML (Estilo ChatGPT)
+  function parseMarkdownToHTML(text) {
+    if (!text) return "";
+    let html = text
+      .replace(/^### (.*$)/gim, '<h3 class="text-sm font-black text-blue-700 mt-5 mb-2 uppercase tracking-wide">$1</h3>')
+      .replace(/^## (.*$)/gim, '<h2 class="text-base font-black text-[#001529] mt-5 mb-2 uppercase tracking-wider">$1</h2>')
+      .replace(/^# (.*$)/gim, '<h1 class="text-lg font-black text-[#001529] mt-5 mb-2 uppercase tracking-widest">$1</h1>')
+      .replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-slate-800">$1</strong>')
+      .replace(/\*(.*?)\*/g, '<em class="text-slate-600">$1</em>')
+      .replace(/^\- (.*$)/gim, '<li class="ml-4 mb-1 list-disc marker:text-blue-500">$1</li>')
+      .replace(/\n/g, '<br/>');
+
+    // Limpia saltos de linea excesivos
+    return html.replace(/(<br\/>){3,}/g, '<br/><br/>');
+  }
+
   function compressImage(file, maxWidth = 800) {
     return new Promise((resolve) => {
       const reader = new FileReader();
@@ -210,7 +266,10 @@ import { Send, ShieldCheck, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Trian
     });
   }
 
-  // Eventos del Menú Flotante
+  // ==========================================
+  // EVENTOS UI (Menú, Adjuntos)
+  // ==========================================
+
   attachBtn?.addEventListener('click', (e) => {
     e.stopPropagation();
     attachMenu?.classList.toggle('hidden');
@@ -234,6 +293,7 @@ import { Send, ShieldCheck, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Trian
       imgPreview.src = currentImageData;
       imgPreviewContainer?.classList.remove('hidden');
       attachMenu?.classList.add('hidden');
+      scrollToBottom();
     }
   }
 
@@ -247,57 +307,93 @@ import { Send, ShieldCheck, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Trian
     cameraInput.value = '';
   });
 
-  // Integración Web Speech API (Micrófono)
-  const micBtn = document.getElementById('mic-btn');
-  const micPulse = document.getElementById('mic-pulse');
-  
+  // ==========================================
+  // GRABADORA DE VOZ (AUDIO UI)
+  // ==========================================
+
+  let recognition;
   if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    const recognition = new SpeechRecognition();
+    recognition = new SpeechRecognition();
     recognition.lang = 'es-ES';
     recognition.interimResults = true;
-
-    let isRecording = false;
-
-    recognition.onstart = () => {
-      isRecording = true;
-      micBtn?.classList.add('text-red-500');
-      micBtn?.classList.remove('text-slate-400');
-      micPulse?.classList.remove('hidden');
-    };
+    recognition.continuous = true;
 
     recognition.onresult = (e) => {
       let finalTranscript = '';
       for (let i = e.resultIndex; i < e.results.length; ++i) {
         if (e.results[i].isFinal) finalTranscript += e.results[i][0].transcript;
       }
-      if (finalTranscript) userInput.value += (userInput.value ? ' ' : '') + finalTranscript;
+      if (finalTranscript) audioTranscript += finalTranscript + ' ';
     };
 
     recognition.onend = () => {
-      isRecording = false;
-      micBtn?.classList.remove('text-red-500');
-      micBtn?.classList.add('text-slate-400');
-      micPulse?.classList.add('hidden');
+      if (isRecording) recognition.start(); // Evita que se corte por silencio
     };
-
-    micBtn?.addEventListener('click', () => {
-      if (isRecording) {
-        recognition.stop();
-      } else {
-        recognition.start();
-      }
-    });
-  } else {
-    micBtn!.style.display = 'none';
   }
 
-  // Modificamos llamada a la API para enviar imagen
+  function formatTime(sec) {
+    const m = Math.floor(sec / 60);
+    const s = sec % 60;
+    return `${m}:${s.toString().padStart(2, '0')}`;
+  }
+
+  function startRecording() {
+    isRecording = true;
+    audioTranscript = "";
+    recordSeconds = 0;
+    recordTime!.innerText = "0:00";
+    
+    // Cambiar Interfaz
+    textWrapper?.classList.add('hidden');
+    micBtn?.classList.add('hidden');
+    audioWrapper?.classList.replace('hidden', 'flex');
+    
+    // Cambiar color botón enviar a Azul Grabación
+    sendBtn?.classList.replace('bg-[#001529]', 'bg-blue-600');
+    sendBtn?.classList.add('animate-pulse');
+
+    recordInterval = setInterval(() => {
+      recordSeconds++;
+      recordTime!.innerText = formatTime(recordSeconds);
+    }, 1000);
+
+    if (recognition) recognition.start();
+  }
+
+  function stopRecording(cancel = false) {
+    isRecording = false;
+    clearInterval(recordInterval);
+    if (recognition) recognition.stop();
+    
+    // Restaurar Interfaz
+    audioWrapper?.classList.replace('flex', 'hidden');
+    textWrapper?.classList.remove('hidden');
+    micBtn?.classList.remove('hidden');
+    
+    sendBtn?.classList.replace('bg-blue-600', 'bg-[#001529]');
+    sendBtn?.classList.remove('animate-pulse');
+
+    if (cancel) audioTranscript = "";
+  }
+
+  micBtn?.addEventListener('click', () => {
+    if (!isRecording) startRecording();
+  });
+
+  cancelMicBtn?.addEventListener('click', () => {
+    stopRecording(true);
+  });
+
+  // ==========================================
+  // MOTOR DEL CHAT (Lógica API)
+  // ==========================================
+
   async function getAIResponse(message, image = null) {
     const chat = chatHistory.find(c => c.id === currentChatId);
     const isReturningUser = chat && chat.messages.length > 0;
     const finalMessage = isReturningUser 
-      ? `[Omitir presentaciones]: ${message}` 
+      ? `[Usuario frecuente]: ${message}` 
       : message;
 
     const payload = { message: finalMessage, image: image };
@@ -311,63 +407,158 @@ import { Send, ShieldCheck, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Trian
     return data.response;
   }
 
-  function toggleEditMode(msgId) {
-    const textContainer = document.getElementById(`text-container-${msgId}`);
-    const currentText = (document.getElementById(`text-${msgId}`) as HTMLElement).innerText;
+  function loadActiveChat() {
+    if (!chatBox) return;
+    chatBox.innerHTML = '';
+    const chat = chatHistory.find(c => c.id === currentChatId);
+    if (chat && chat.messages.length > 0) {
+      chat.messages.forEach(m => chatBox.appendChild(createMessage(m.text, m.role === 'ai', m.id, m.image, m.isAudio)));
+    } else {
+      chatBox.appendChild(createMessage(WELCOME_MSG, true, 'welcome'));
+    }
+    scrollToBottom();
+  }
+
+  // Se añade el parámetro isAudio para pintar el reproductor
+  function createMessage(text, isAi, specificId, imageStr = null, isAudio = false) {
+    const div = document.createElement('div');
+    const msgId = specificId;
+    div.className = `group flex gap-3 md:gap-5 max-w-4xl relative ${isAi ? '' : 'ml-auto flex-row-reverse animate-in fade-in slide-in-from-right-4'}`;
     
-    textContainer!.innerHTML = `
-      <div class="flex flex-col gap-3 animate-in fade-in zoom-in-95 duration-200">
-        <textarea id="edit-input-${msgId}" class="w-full bg-white border-2 border-blue-500 rounded-xl p-3 text-sm focus:outline-none min-h-[80px] text-slate-700 font-medium">${currentText}</textarea>
-        <div class="flex gap-2 justify-end">
-          <button class="cancel-edit px-4 py-2 bg-slate-100 text-slate-500 rounded-lg text-[10px] font-black uppercase hover:bg-slate-200 transition-all">Cancelar</button>
-          <button class="save-edit px-4 py-2 bg-blue-600 text-white rounded-lg text-[10px] font-black uppercase hover:bg-blue-700 transition-all shadow-md">Actualizar</button>
+    const formattedText = parseMarkdownToHTML(text);
+    const toolPosition = isAi ? 'top-1 right-4' : 'top-1 left-4';
+    
+    let mediaHtml = '';
+    if (imageStr) {
+      mediaHtml = `<img src="${imageStr}" class="max-w-full h-auto rounded-xl mb-3 border border-slate-200 shadow-sm max-h-64 object-contain" alt="Adjunto" onload="window.dispatchEvent(new Event('resize'))" />`;
+    }
+
+    let audioHtml = '';
+    if (isAudio) {
+      audioHtml = `
+        <div class="flex items-center gap-3 bg-white/50 p-3 rounded-2xl border border-blue-100 mb-3 shadow-sm w-64 md:w-80">
+           <button class="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center flex-shrink-0 shadow-md">
+              <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+           </button>
+           <div class="flex-1 flex flex-col gap-1">
+             <div class="w-full h-1.5 bg-blue-200 rounded-full overflow-hidden">
+                <div class="w-1/3 h-full bg-blue-600 rounded-full"></div>
+             </div>
+             <div class="flex justify-between w-full">
+               <span class="text-[9px] font-bold text-blue-600">0:00</span>
+               <span class="text-[9px] font-bold text-slate-400">Nota de Voz</span>
+             </div>
+           </div>
+        </div>
+      `;
+    }
+
+    div.innerHTML = `
+      <div class="w-8 h-8 md:w-10 md:h-10 rounded-2xl ${isAi ? 'bg-[#001529] text-cyan-400' : 'bg-blue-600 text-white'} flex items-center justify-center shadow-md flex-shrink-0 relative z-0">
+        ${isAi ? '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>' : '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>'}
+      </div>
+      <div class="space-y-2 ${isAi ? '' : 'text-right'} relative max-w-[85%] md:max-w-[75%]">
+        <div class="bg-white border border-slate-200 p-4 md:p-6 rounded-[28px] ${isAi ? 'rounded-tl-none pt-7 md:pt-7' : 'rounded-tr-none bg-blue-50/50 pt-7 md:pt-7'} shadow-sm text-slate-700 text-sm relative transition-all group-hover:border-blue-300">
+          
+          <div class="absolute ${toolPosition} opacity-0 group-hover:opacity-100 transition-all duration-200 z-20">
+            <div class="flex flex-row bg-white border border-slate-200 shadow-md rounded-xl p-0 gap-0.5">
+              <button class="copy-msg p-0.5 ${isAi ? 'hover:bg-slate-100' : 'hover:bg-slate-50'} rounded-lg text-slate-400 hover:text-emerald-600 transition-colors">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+              </button>
+            </div>
+          </div>
+
+          <p class="font-black text-[#001529] mb-2 uppercase text-[9px] tracking-widest text-left">${isAi ? 'Synapse Core AI' : 'Usuario'}</p>
+          <div id="text-container-${msgId}">
+            <div id="text-${msgId}" class="break-words leading-relaxed text-left ${isAi ? 'pr-8 text-slate-600' : 'text-slate-700'}">
+              ${audioHtml}
+              ${mediaHtml}
+              ${isAudio ? `<p class="text-[10px] text-slate-400 italic mb-1 uppercase font-bold tracking-wider">Transcripción:</p>` : ''}
+              ${formattedText}
+            </div>
+          </div>
         </div>
       </div>
     `;
 
-    textContainer!.querySelector('.cancel-edit')?.addEventListener('click', () => loadActiveChat());
-    
-    textContainer!.querySelector('.save-edit')?.addEventListener('click', async () => {
-      const newText = (document.getElementById(`edit-input-${msgId}`) as HTMLTextAreaElement).value.trim();
-      if (newText && newText !== currentText) {
-        await processUpdate(msgId, newText);
-      } else {
-        loadActiveChat();
-      }
+    div.querySelector('.copy-msg')?.addEventListener('click', () => {
+      copyToClipboard(text, div.querySelector('.copy-msg'));
     });
+
+    // Escuchar cuando la imagen cargue para hacer scroll nuevamente
+    const imgElement = div.querySelector('img');
+    if (imgElement) {
+      imgElement.onload = scrollToBottom;
+    }
+
+    return div;
   }
 
-  async function processUpdate(msgId, newText) {
-    const chat = chatHistory.find(c => c.id === currentChatId);
-    if (!chat) return;
-    const userMsgIndex = chat.messages.findIndex(m => m.id === msgId);
-    if (userMsgIndex === -1) return;
-    chat.messages[userMsgIndex].text = newText;
-    chat.messages = chat.messages.slice(0, userMsgIndex + 1);
-    localStorage.setItem('synapse_history', JSON.stringify(chatHistory));
-    loadActiveChat();
+  chatForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    let message = userInput.value.trim();
+    let sentImage = currentImageData;
+    let wasAudio = false;
+
+    // Si estábamos grabando, tomamos el audioTranscript
+    if (isRecording) {
+      stopRecording(); // Detiene UI y WebSpeech
+      message = audioTranscript.trim() || "¿Puedes explicarme un tema de ingeniería eléctrica?";
+      wasAudio = true;
+    }
+
+    if (!message && !sentImage) return; 
+
+    const uId = `u-${Date.now()}`;
+    
+    // Pintar mensaje de usuario (Incluye bandera isAudio si grabó)
+    chatBox?.appendChild(createMessage(message, false, uId, sentImage, wasAudio));
+    saveMessage('user', message, uId, sentImage, wasAudio);
+    
+    // Limpieza
+    userInput.value = '';
+    currentImageData = null;
+    imgPreviewContainer?.classList.add('hidden');
+    fileInput.value = '';
+    cameraInput.value = '';
+    scrollToBottom();
+    
     const typingId = `typing-${Date.now()}`;
     showTyping(typingId);
+    
     try {
-      const aiResponse = await getAIResponse(newText, chat.messages[userMsgIndex].image);
+      const aiResponse = await getAIResponse(message, sentImage);
       hideTyping(typingId);
       const aId = `a-${Date.now()}`;
       saveMessage('ai', aiResponse, aId);
-      loadActiveChat();
-    } catch (e) {
+      loadActiveChat(); // loadActiveChat hace scrollToBottom() interno
+    } catch (error) {
       hideTyping(typingId);
-      saveMessage('ai', "[ERROR DE CONEXIÓN]", `err-${Date.now()}`);
+      saveMessage('ai', "[ERROR DE SISTEMA O CONEXIÓN]", `err-${Date.now()}`);
       loadActiveChat();
     }
+  });
+
+  function saveMessage(role, text, id, image = null, isAudio = false) {
+    let chat = chatHistory.find(c => c.id === currentChatId);
+    let chatTitle = text ? text.substring(0, 20).toUpperCase() + "..." : (isAudio ? "NOTA DE VOZ" : "IMAGEN ADJUNTA");
+    if (!chat) {
+      chat = { id: currentChatId, title: chatTitle, messages: [], pinned: false };
+      chatHistory.unshift(chat);
+    }
+    chat.messages.push({ role, text, id, image, isAudio });
+    localStorage.setItem('synapse_history', JSON.stringify(chatHistory));
+    renderHistory();
   }
 
   function showTyping(id) {
     const typingDiv = document.createElement('div');
     typingDiv.id = id;
     typingDiv.className = "text-slate-400 text-[10px] font-bold uppercase tracking-widest animate-pulse ml-16 mb-4";
-    typingDiv.innerText = "IA Procesando requerimiento...";
+    typingDiv.innerText = "IA Procesando...";
     chatBox?.appendChild(typingDiv);
-    chatBox!.scrollTop = chatBox!.scrollHeight;
+    scrollToBottom();
   }
 
   function hideTyping(id) {
@@ -381,6 +572,16 @@ import { Send, ShieldCheck, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Trian
       btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>';
       setTimeout(() => { btn.innerHTML = originalInner; }, 2000);
     } catch (err) { console.error('Error al copiar:', err); }
+  }
+
+  // ==========================================
+  // SIDEBAR & HISTORY (Sin Modificar su lógica base)
+  // ==========================================
+  function saveAndRefresh() {
+    localStorage.setItem('synapse_history', JSON.stringify(chatHistory));
+    localStorage.setItem('active_chat_id', currentChatId);
+    renderHistory();
+    loadActiveChat();
   }
 
   function renderHistory() {
@@ -456,138 +657,11 @@ import { Send, ShieldCheck, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Trian
     });
   }
 
-  function loadActiveChat() {
-    if (!chatBox) return;
-    chatBox.innerHTML = '';
-    const chat = chatHistory.find(c => c.id === currentChatId);
-    if (chat && chat.messages.length > 0) {
-      chat.messages.forEach(m => chatBox.appendChild(createMessage(m.text, m.role === 'ai', m.id, m.image)));
-    } else {
-      chatBox.appendChild(createMessage(WELCOME_MSG, true, 'welcome'));
-    }
-    chatBox.scrollTop = chatBox.scrollHeight;
-  }
-
-  function createMessage(text, isAi, specificId, imageStr = null) {
-    const div = document.createElement('div');
-    const msgId = specificId;
-    div.className = `group flex gap-5 max-w-4xl relative ${isAi ? '' : 'ml-auto flex-row-reverse animate-in fade-in slide-in-from-right-4'}`;
-    const formattedText = (text || "").replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-    
-    const toolPosition = isAi ? 'top-1 right-4' : 'top-1 left-4';
-    
-    // Inyectamos la imagen si el usuario subió una
-    let mediaHtml = '';
-    if (imageStr) {
-      mediaHtml = `<img src="${imageStr}" class="max-w-full h-auto rounded-xl mb-3 border border-slate-200 shadow-sm max-h-64 object-contain" alt="Adjunto del usuario" />`;
-    }
-
-    div.innerHTML = `
-      <div class="w-10 h-10 md:w-12 md:h-12 rounded-2xl ${isAi ? 'bg-[#001529] text-cyan-400' : 'bg-blue-600 text-white'} flex items-center justify-center shadow-xl flex-shrink-0 relative z-10">
-        ${isAi ? '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>' : '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>'}
-      </div>
-      <div class="space-y-2 ${isAi ? '' : 'text-right'} relative max-w-[85%] md:max-w-[75%]">
-        <div class="bg-white border border-slate-200 p-4 md:p-6 rounded-[28px] ${isAi ? 'rounded-tl-none pt-7 md:pt-7' : 'rounded-tr-none bg-blue-50/50 pt-7 md:pt-7'} shadow-sm text-slate-700 text-sm relative transition-all group-hover:border-blue-300">
-          
-          <div class="absolute ${toolPosition} opacity-0 group-hover:opacity-100 transition-all duration-200 z-20">
-            <div class="flex flex-row bg-white border border-slate-200 shadow-md rounded-xl p-0 gap-0.5">
-              <button class="copy-msg p-0.5 ${isAi ? 'hover:bg-slate-100' : 'hover:bg-slate-50'} rounded-lg text-slate-400 hover:text-emerald-600 transition-colors">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-              </button>
-              ${!isAi ? `
-              <button class="edit-msg p-0.5 hover:bg-slate-50 rounded-lg text-slate-400 hover:text-blue-600 transition-colors" data-id="${msgId}">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-              </button>
-              ` : ''}
-            </div>
-          </div>
-
-          <p class="font-black text-[#001529] mb-1 uppercase text-[9px] tracking-widest text-left">${isAi ? 'Synapse Core AI' : 'Usuario'}</p>
-          <div id="text-container-${msgId}">
-            <div id="text-${msgId}" class="break-words leading-relaxed text-left ${isAi ? 'pr-8' : ''}">
-              ${mediaHtml}
-              ${formattedText}
-            </div>
-          </div>
-        </div>
-      </div>
-    `;
-
-    div.querySelector('.copy-msg')?.addEventListener('click', () => {
-      copyToClipboard((div.querySelector(`#text-${msgId}`) as HTMLElement).innerText, div.querySelector('.copy-msg'));
-    });
-
-    if (!isAi) {
-      div.querySelector('.edit-msg')?.addEventListener('click', () => {
-        toggleEditMode(msgId);
-      });
-    }
-    return div;
-  }
-
-  // Modificamos el submit para que atrape tanto el texto como la imagen
-  chatForm?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const message = userInput.value.trim();
-    if (!message && !currentImageData) return; // Ahora puede enviar solo imagen
-    const uId = `u-${Date.now()}`;
-    
-    const sentImage = currentImageData; // Guardamos la foto antes de limpiar
-    chatBox?.appendChild(createMessage(message, false, uId, sentImage));
-    saveMessage('user', message, uId, sentImage);
-    
-    // Limpieza de UI
-    userInput.value = '';
-    currentImageData = null;
-    imgPreviewContainer?.classList.add('hidden');
-    fileInput.value = '';
-    cameraInput.value = '';
-    
-    const typingId = `typing-${Date.now()}`;
-    showTyping(typingId);
-    try {
-      // El payload enviado a la API ahora incluye "image: sentImage" (Base64)
-      const aiResponse = await getAIResponse(message, sentImage);
-      hideTyping(typingId);
-      const aId = `a-${Date.now()}`;
-      saveMessage('ai', aiResponse, aId);
-      loadActiveChat();
-    } catch (error) {
-      hideTyping(typingId);
-      saveMessage('ai', "[ERROR DE SISTEMA O CONEXIÓN]", `err-${Date.now()}`);
-      loadActiveChat();
-    }
-  });
-
-  // Modificamos la base de datos local para guardar imágenes
-  function saveMessage(role, text, id, image = null) {
-    let chat = chatHistory.find(c => c.id === currentChatId);
-    let chatTitle = text ? text.substring(0, 20).toUpperCase() + "..." : "CONSULTA CON IMAGEN";
-    if (!chat) {
-      chat = { id: currentChatId, title: chatTitle, messages: [], pinned: false };
-      chatHistory.unshift(chat);
-    }
-    chat.messages.push({ role, text, id, image });
-    localStorage.setItem('synapse_history', JSON.stringify(chatHistory));
-    renderHistory();
-  }
-
-  function saveAndRefresh() {
-    localStorage.setItem('synapse_history', JSON.stringify(chatHistory));
-    localStorage.setItem('active_chat_id', currentChatId);
-    renderHistory();
-    loadActiveChat();
-  }
-
   function openMenu() { sidebar?.classList.remove('-translate-x-full'); overlay?.classList.replace('hidden', 'block'); }
   function closeMenu() { sidebar?.classList.add('-translate-x-full'); overlay?.classList.replace('block', 'hidden'); }
 
   toggleSidebar?.addEventListener('click', () => {
-    if (window.innerWidth >= 768) {
-      sidebar?.classList.toggle('md:hidden');
-    } else { 
-      openMenu(); 
-    }
+    if (window.innerWidth >= 768) { sidebar?.classList.toggle('md:hidden'); } else { openMenu(); }
   });
 
   closeSidebar?.addEventListener('click', closeMenu);
