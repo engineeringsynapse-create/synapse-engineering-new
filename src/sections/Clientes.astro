@@ -1,12 +1,12 @@
 ---
-// Aquí luego podrás mapear tus logos reales
+// Aquí mapeamos tus logos reales sin romper tu estructura
 const clientes = [
-  { nombre: 'Empresa 1', logo: '/logos/cliente1.png' },
-  { nombre: 'Empresa 2', logo: '/logos/cliente2.png' },
-  { nombre: 'Empresa 3', logo: '/logos/cliente3.png' },
-  { nombre: 'Empresa 4', logo: '/logos/cliente4.png' },
-  { nombre: 'Empresa 5', logo: '/logos/cliente5.png' },
-  { nombre: 'Empresa 6', logo: '/logos/cliente6.png' },
+  { nombre: 'NAZ', logo: '/logos/naz.png' },
+  { nombre: 'SEIL', logo: '/logos/seil.png' },
+  { nombre: 'DMAS', logo: '/logos/dmas.png' },
+  { nombre: 'PID', logo: '/logos/pid.png' },
+  { nombre: 'RITTAL', logo: '/logos/rittal.png' },
+  { nombre: 'WEG', logo: '/logos/weg.png' },
 ];
 ---
 
@@ -38,7 +38,7 @@ const clientes = [
             <img 
               src={cliente.logo} 
               alt={cliente.nombre}
-              class="max-h-full max-w-full grayscale opacity-40 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500 ease-out"
+              class="max-h-full max-w-full grayscale opacity-40 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500 ease-out relative z-10"
             />
           </div>
         </div>
