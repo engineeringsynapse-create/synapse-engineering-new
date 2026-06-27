@@ -11,7 +11,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     if (message === '[Audio ininteligible]') {
         return new Response(JSON.stringify({ 
-            response: "Entendido. El sistema no pudo procesar la grabación debido a la ausencia de voz detectable. Por favor, inténtelo de nuevo enviando otra nota de voz o, si lo prefiere, escriba su consulta en el panel de texto para que pueda asistirle de manera efectiva." 
+            response: "Entendido. El sistema no pudo procesar la grabación debido a la ausencia de voz detectable. Por favor, inténtelo de nuevo enviando otra nota de voz o escriba su consulta detallada en el panel inferior para poder asistirle con la calidad que acostumbramos en Synapse Engineering." 
         }), { status: 200 });
     }
 
@@ -29,19 +29,21 @@ export const POST: APIRoute = async ({ request }) => {
     if (currentHour >= 6 && currentHour < 12) timeGreeting = "Buenos días";
     else if (currentHour >= 12 && currentHour < 19) timeGreeting = "Buenas tardes";
 
-    // ORDEN ABSOLUTA PARA EL SALUDO
-    const systemPrompt = `Eres Synapse Core AI, un altamente capacitado ingeniero eléctrico senior experto de Synapse Engineering. 
+    // ORDEN ABSOLUTA PARA EL SALUDO, LA IDENTIDAD Y EL FORMATO
+    const systemPrompt = `Eres Synapse Core AI, un altamente capacitado ingeniero eléctrico senior experto. 
     Tu comunicación es formal, técnica, objetiva y precisa (estilo ChatGPT o Gemini avanzado). 
     
+    IDENTIDAD Y CREADOR: 
+    Fuiste creado y desarrollado exclusivamente por Synapse Engineering, una empresa líder en ingeniería eléctrica, tableros y automatización. NUNCA menciones a Mistral AI, OpenAI ni a terceros. Si te preguntan quién eres o quién te creó, responde con orgullo que eres obra de Synapse Engineering.
+
     ESTADO DE LA CONVERSACIÓN:
-    ${isFirstMessage ? `REGLA DE ORO INQUEBRANTABLE: Este es el PRIMER mensaje del usuario. Tu respuesta DEBE tener MÁXIMO 2 líneas. DEBES empezar EXACTAMENTE con "${timeGreeting}. Soy el asistente inteligente de Synapse Engineering." seguido inmediatamente por tu respuesta a lo que te preguntó el usuario. ESTÁ ESTRICTAMENTE PROHIBIDO USAR VIÑETAS, PUNTOS O LISTAS EN ESTE MENSAJE.` : `Ya están conversando. ESTÁ ESTRICTAMENTE PROHIBIDO decir "Buenos días", "Buenas tardes" o "Buenas noches". Ve directo al grano.`}
+    ${isFirstMessage ? `REGLA DE ORO INQUEBRANTABLE: Este es el PRIMER mensaje del usuario. DEBES empezar EXACTAMENTE con "${timeGreeting}. Soy el asistente inteligente de Synapse Engineering. " Luego, EN EL MISMO PÁRRAFO, responde a la duda del usuario de forma directa y concisa. ESTÁ ESTRICTAMENTE PROHIBIDO USAR VIÑETAS, PUNTOS O LISTAS EN ESTE MENSAJE INICIAL.` : `Ya están conversando. ESTÁ ESTRICTAMENTE PROHIBIDO decir "Buenos días", "Buenas tardes" o "Buenas noches". Ve directo al grano.`}
     
     REGLAS GENERALES DE FORMATO:
-    1. NUNCA uses el símbolo de hashtag (#) bajo ninguna circunstancia.
-    2. Evita el uso excesivo de asteriscos (*).
+    1. PROHIBIDO usar el símbolo de hashtag (#) bajo ninguna circunstancia.
+    2. Evita el uso excesivo de asteriscos (*). Úsalos solo para negritas.
     3. Si el usuario dice "gracias", despídete amablemente, pero mantén tu rol técnico.
-    4. NO generes espacios, guiones ni texto innecesario al final de tus respuestas.
-    5. Si el usuario sube imágenes, analízalas con rigor técnico.`;
+    4. NO generes saltos de línea extras al final de tus respuestas. Responde lo necesario y termina el texto limpiamente.`;
 
     let userContent: any = finalMessage;
 
@@ -73,11 +75,14 @@ export const POST: APIRoute = async ({ request }) => {
     clearTimeout(timeoutId);
 
     const data = await response.json();
-    const aiText = data.choices?.[0]?.message?.content?.trim();
+    let aiText = data.choices?.[0]?.message?.content?.trim();
 
     if (!aiText) {
       return new Response(JSON.stringify({ response: "Error en el análisis de los circuitos lógicos. ¿Puede proporcionar los datos técnicos nuevamente?" }), { status: 200 });
     }
+
+    // FILTRO DESTRUCTIVO (Garantiza que Mistral no envíe hashtags jamás)
+    aiText = aiText.replace(/#/g, '');
 
     return new Response(JSON.stringify({ response: aiText }), { status: 200 });
 
