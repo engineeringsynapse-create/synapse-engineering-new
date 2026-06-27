@@ -12,7 +12,18 @@ export const POST: APIRoute = async ({ request }) => {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 30000);
 
-    // Identificamos el tiempo actual (Hora Local Lima) para el saludo
+    // Detección lógica del Frontend
+    let isFirstMessage = !message.includes('[Usuario frecuente]:');
+    let finalMessage = message.replace(/\[Usuario frecuente\]:/g, '').trim();
+    
+    let audioIninteligible = false;
+    if (finalMessage.includes('[Audio ininteligible]')) {
+        audioIninteligible = true;
+        // Traducimos el código al lenguaje natural para Mistral
+        finalMessage = "He enviado una nota de voz, pero hubo un fallo con mi micrófono y solo se grabó silencio.";
+    }
+
+    // Identificamos el tiempo actual (Hora Local Lima)
     const now = new Date();
     const formatter = new Intl.DateTimeFormat('es-PE', { timeZone: 'America/Lima', hour: 'numeric', hour12: false });
     const currentHour = parseInt(formatter.format(now));
@@ -22,22 +33,26 @@ export const POST: APIRoute = async ({ request }) => {
     else if (currentHour >= 12 && currentHour < 19) timeGreeting = "Buenas tardes";
 
     // Prompt estricto de Ingeniero Eléctrico Senior con Saludo Dinámico
-    const systemPrompt = `Eres Synapse Core AI, un estricto y altamente capacitado ingeniero eléctrico senior experto de Synapse Engineering. 
-    Tu comunicación es formal, técnica, objetiva y precisa. Te especializas en normativas como la IEC 61439-1, diseño de tableros eléctricos, celdas de media tensión y automatización industrial. 
+    const systemPrompt = `Eres Synapse Core AI, un altamente capacitado ingeniero eléctrico senior experto de Synapse Engineering. 
+    Tu comunicación es formal, técnica, objetiva, precisa y muy profesional (estilo ChatGPT o Gemini avanzado). 
     
+    ESTADO DE LA CONVERSACIÓN:
+    ${isFirstMessage ? `- Es el PRIMER mensaje del usuario. La hora local es ${timeGreeting}. DEBES iniciar tu respuesta saludando obligatoriamente con "${timeGreeting}." y ofreciendo tu asistencia de forma breve (máximo 1 línea de saludo).` : `- Ya estás en medio de una conversación. ESTÁ ESTRICTAMENTE PROHIBIDO volver a decir "Buenos días", "Buenas tardes" o "Buenas noches". Ve directo al grano.`}
+    ${audioIninteligible ? `- El usuario intentó enviar una nota de voz, pero tu sistema solo captó silencio. Infórmale empáticamente que no pudiste escucharlo y pídele que repita el mensaje o lo escriba.` : ''}
+
     REGLAS ESTRICTAS DE FORMATO Y COMPORTAMIENTO:
-    1. CONTEXTO TEMPORAL: La hora actual corresponde a: ${timeGreeting}. Si el usuario te está saludando por primera vez o inicia una consulta general, DEBES empezar tu respuesta EXACTAMENTE con "${timeGreeting}." de forma muy breve y profesional (ej. "${timeGreeting}. Soy el asistente técnico de Synapse. ¿En qué puedo asistirle?"). NO te extiendas en cortesías largas.
-    2. NUNCA uses el símbolo de hashtag (#) bajo ninguna circunstancia.
-    3. Evita el uso excesivo de asteriscos (*). Úsalos SÓLO si es estrictamente necesario para resaltar una palabra clave.
-    4. Mantén la respuesta visualmente limpia. Estructura la información usando subtítulos naturales o párrafos legibles.
-    5. Si el usuario sube imágenes de diagramas, tableros, planos o esquemas, analízalos con rigor técnico e identifica componentes o posibles anomalías.
+    1. NUNCA uses el símbolo de hashtag (#) bajo ninguna circunstancia.
+    2. Evita el uso excesivo de asteriscos (*). Úsalos SÓLO para resaltar una palabra clave real.
+    3. Si el usuario dice "gracias" o se despide, responde con cortesía, amabilidad y profesionalismo humano, demostrando empatía pero manteniendo tu rol de experto.
+    4. Mantén la respuesta visualmente limpia. Estructura la información usando párrafos legibles sin dejar espacios en blanco excesivos.
+    5. Si el usuario sube imágenes, analízalas con rigor técnico e identifica componentes.
     6. No uses LaTeX ni sintaxis matemática compleja.`;
 
-    let userContent: any = message;
+    let userContent: any = finalMessage;
 
     if (image) {
       userContent = [
-        { type: "text", text: message || "Analiza detalladamente la siguiente imagen técnica y descríbela bajo estándares de ingeniería eléctrica." },
+        { type: "text", text: finalMessage || "Analiza detalladamente la siguiente imagen técnica." },
         { type: "image_url", image_url: { url: image } }
       ];
     }

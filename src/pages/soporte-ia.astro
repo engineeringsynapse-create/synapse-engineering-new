@@ -87,8 +87,7 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
               </div>
             </div>
 
-            <!-- FIX SCROLL: Ampliamos radicalmente el padding-bottom (pb-60 md:pb-72) para evitar que las tarjetas choquen con la barra de input en PC -->
-            <div id="chat-box" class="flex-1 overflow-y-auto overflow-x-hidden p-4 md:p-10 space-y-8 custom-scrollbar pb-60 md:pb-72 z-0"></div>
+            <div id="chat-box" class="flex-1 overflow-y-auto overflow-x-hidden p-4 md:p-10 space-y-6 custom-scrollbar pb-60 md:pb-72 z-0"></div>
 
             <form id="chat-form" class="absolute bottom-0 w-full p-4 md:p-6 bg-white/95 backdrop-blur-md border-t border-slate-100 z-40">
               <div class="max-w-4xl mx-auto relative flex flex-col items-start w-full">
@@ -141,12 +140,10 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
                     <input id="user-input" type="text" autocomplete="off" placeholder="Describa su requerimiento..." class="flex-1 w-full bg-transparent py-2 md:py-3 px-2 md:px-3 text-sm focus:outline-none text-slate-700 font-medium placeholder-slate-400 min-w-0" />
                   </div>
 
-                  <!-- CONTENEDOR DE GRABACIÓN DE AUDIO -->
                   <div id="audio-record-wrapper" class="hidden flex-1 items-center bg-blue-50/50 rounded-2xl px-2 md:px-4 py-2 border border-blue-100 min-w-0 overflow-hidden">
                     <div class="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse mr-2 md:mr-3 flex-shrink-0"></div>
                     <span id="record-time" class="text-[10px] md:text-xs font-bold text-slate-600 w-6 md:w-8">0:00</span>
                     
-                    <!-- Ondas Animadas -->
                     <div class="flex items-center gap-1 h-6 flex-1 px-2 md:px-4 justify-center">
                       <div class="w-1 bg-blue-400 rounded-full h-2/3 animate-[bounce_1s_infinite]"></div>
                       <div class="w-1 bg-blue-400 rounded-full h-full animate-[bounce_1.2s_infinite]"></div>
@@ -220,7 +217,7 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
   let recordInterval;
   let recordSeconds = 0;
 
-  // Variables para Grabación de Audio Real
+  // Variables Grabación Funcional
   let mediaRecorder;
   let audioChunks = [];
   let resolveAudioPromise;
@@ -228,35 +225,33 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
   const WELCOME_MSG = "Saludos. Soy el asistente inteligente de **Synapse Engineering**. ¿En qué puedo asesorarle hoy? Puede enviarme consultas técnicas, notas de voz o imágenes de diagramas y tableros.";
 
   // ==========================================
-  // SCROLL PERFECTO PARA PC Y MÓVIL (CORREGIDO)
+  // SCROLL PERFECTO PARA PC Y MÓVIL
   // ==========================================
   function scrollToBottom() {
     const scroll = () => {
       if(chatBox) {
-        chatBox.scrollTo({
-          top: chatBox.scrollHeight + 5000, // Fuerza un valor excesivo para asegurar que llegue al final
-          behavior: 'smooth'
-        });
+        chatBox.scrollTo({ top: chatBox.scrollHeight + 5000, behavior: 'smooth' });
       }
     };
-    // Doble gatillo: Inmediato y con retraso para esperar al renderizado completo de las imágenes/textos
-    setTimeout(scroll, 100);
-    setTimeout(scroll, 600); 
+    setTimeout(scroll, 50);
+    setTimeout(scroll, 300); // Doble seguro para renders lentos de imágenes o textos muy largos
   }
 
-  // Parseador de Markdown limpio
+  // Parseador de Markdown limpio (Elimina el exceso de aire al final de las tarjetas)
   function parseMarkdownToHTML(text) {
     if (!text) return "";
     let html = text
-      .replace(/^### (.*$)/gim, '<h3 class="text-sm font-black text-blue-700 mt-5 mb-2 uppercase tracking-wide">$1</h3>')
-      .replace(/^## (.*$)/gim, '<h2 class="text-base font-black text-[#001529] mt-5 mb-2 uppercase tracking-wider">$1</h2>')
-      .replace(/^# (.*$)/gim, '<h1 class="text-lg font-black text-[#001529] mt-5 mb-2 uppercase tracking-widest">$1</h1>')
+      .replace(/^### (.*$)/gim, '<h3 class="text-sm font-black text-blue-700 mt-4 mb-1 uppercase tracking-wide">$1</h3>')
+      .replace(/^## (.*$)/gim, '<h2 class="text-base font-black text-[#001529] mt-4 mb-1 uppercase tracking-wider">$1</h2>')
+      .replace(/^# (.*$)/gim, '<h1 class="text-lg font-black text-[#001529] mt-4 mb-1 uppercase tracking-widest">$1</h1>')
       .replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-slate-800">$1</strong>')
       .replace(/\*(.*?)\*/g, '<em class="text-slate-600">$1</em>')
       .replace(/^\- (.*$)/gim, '<li class="ml-4 mb-1 list-disc marker:text-blue-500">$1</li>')
       .replace(/\n/g, '<br/>');
 
-    return html.replace(/(<br\/>){3,}/g, '<br/><br/>');
+    html = html.replace(/(<br\/>){2,}/g, '<br/><br/>'); // Limita saltos excesivos
+    html = html.replace(/(<br\/>)+$/g, ''); // ELIMINA SALTOS FANTASMAS AL FINAL PARA QUITAR EL AIRE
+    return html.trim();
   }
 
   function compressImage(file, maxWidth = 800) {
@@ -317,7 +312,7 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
   });
 
   // ==========================================
-  // GRABADORA DE VOZ REAL (API NATIVA)
+  // GRABADORA DE VOZ REAL (CORREGIDA)
   // ==========================================
   let recognition;
   if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
@@ -368,12 +363,14 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
         if (e.data.size > 0) audioChunks.push(e.data);
       };
       
+      // Aseguramos que el stream se detenga correctamente y genere el Blob jugable
       mediaRecorder.onstop = () => {
-        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+        mediaRecorder.stream.getTracks().forEach(track => track.stop());
+        const audioBlob = new Blob(audioChunks); 
         const reader = new FileReader();
         reader.readAsDataURL(audioBlob);
         reader.onloadend = () => {
-           if(resolveAudioPromise) resolveAudioPromise(reader.result); // Retorna Base64
+           if(resolveAudioPromise) resolveAudioPromise(reader.result); 
         }
       };
 
@@ -400,8 +397,7 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
       if (recognition) recognition.stop();
       
       if (mediaRecorder && mediaRecorder.state !== "inactive") {
-        mediaRecorder.stop();
-        mediaRecorder.stream.getTracks().forEach(track => track.stop());
+        mediaRecorder.stop(); // Esto detona mediaRecorder.onstop
       } else {
         resolve(null);
       }
@@ -428,11 +424,12 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
   // MOTOR DEL CHAT (Lógica API)
   // ==========================================
   async function getAIResponse(message, image = null) {
+    // Mandamos el historial básico para que la IA sepa si es el primer saludo o no
     const chat = chatHistory.find(c => c.id === currentChatId);
     const isReturningUser = chat && chat.messages.length > 0;
-    const finalMessage = isReturningUser 
-      ? `[Usuario frecuente]: ${message}` 
-      : message;
+    
+    // Si el usuario grabó silencio, le mandamos esa etiqueta interna
+    const finalMessage = isReturningUser ? `[Usuario frecuente]: ${message}` : message;
 
     const payload = { message: finalMessage, image: image };
 
@@ -457,13 +454,16 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
     scrollToBottom();
   }
 
-  // Modificada para recibir y reproducir audioData real
   function createMessage(text, isAi, specificId, imageStr = null, audioData = null) {
     const div = document.createElement('div');
     const msgId = specificId;
     div.className = `group flex gap-3 md:gap-5 max-w-4xl relative mb-4 ${isAi ? '' : 'ml-auto flex-row-reverse animate-in fade-in slide-in-from-right-4'}`;
     
-    const formattedText = parseMarkdownToHTML(text);
+    // Limpiamos etiquetas ocultas antes de parsear a la UI
+    const isSilence = text === "[Audio ininteligible]";
+    const cleanText = isSilence ? "" : text.replace(/\[Usuario frecuente\]: /g, '').replace(/\[Audio ininteligible\]/g, '').trim();
+    
+    const formattedText = parseMarkdownToHTML(cleanText);
     const toolPosition = isAi ? 'top-1 right-4' : 'top-1 left-4';
     
     let mediaHtml = '';
@@ -519,7 +519,7 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
             <div id="text-${msgId}" class="break-words leading-relaxed text-left ${isAi ? 'pr-8 text-slate-600' : 'text-slate-700'}">
               ${audioHtml}
               ${mediaHtml}
-              ${audioData ? `<p class="text-[10px] text-slate-400 italic mb-1 uppercase font-bold tracking-wider mt-2">Transcripción:</p>` : ''}
+              ${audioData && cleanText ? `<p class="text-[10px] text-slate-400 italic mb-1 uppercase font-bold tracking-wider mt-2">Transcripción:</p>` : ''}
               ${formattedText}
             </div>
           </div>
@@ -529,7 +529,7 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
 
     // Botón Copiar
     div.querySelector('.copy-msg')?.addEventListener('click', () => {
-      copyToClipboard(text, div.querySelector('.copy-msg'));
+      copyToClipboard(cleanText, div.querySelector('.copy-msg'));
     });
 
     // Botón Editar
@@ -548,14 +548,13 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
       const playIcon = div.querySelector('.play-icon');
       const pauseIcon = div.querySelector('.pause-icon');
 
-      // Actualizar tiempo total al cargar
       audioEl.addEventListener('loadedmetadata', () => {
-         timeLabel.innerText = formatTime(Math.floor(audioEl.duration));
+         if (isFinite(audioEl.duration)) timeLabel.innerText = formatTime(Math.floor(audioEl.duration));
       });
 
       playBtn?.addEventListener('click', () => {
         if (audioEl.paused) {
-          audioEl.play();
+          audioEl.play().catch(e => console.error("Error al reproducir audio:", e));
           playIcon?.classList.add('hidden');
           pauseIcon?.classList.remove('hidden');
         } else {
@@ -567,15 +566,15 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
 
       audioEl.addEventListener('timeupdate', () => {
         const percent = (audioEl.currentTime / audioEl.duration) * 100;
-        progressBar.style.width = `${percent}%`;
-        timeLabel.innerText = formatTime(Math.floor(audioEl.currentTime));
+        if(isFinite(percent)) progressBar.style.width = `${percent}%`;
+        if(isFinite(audioEl.currentTime)) timeLabel.innerText = formatTime(Math.floor(audioEl.currentTime));
       });
 
       audioEl.addEventListener('ended', () => {
         playIcon?.classList.remove('hidden');
         pauseIcon?.classList.add('hidden');
         progressBar.style.width = '0%';
-        timeLabel.innerText = formatTime(Math.floor(audioEl.duration || 0));
+        if (isFinite(audioEl.duration)) timeLabel.innerText = formatTime(Math.floor(audioEl.duration));
       });
     }
 
@@ -587,11 +586,13 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
     return div;
   }
 
-  // EDICIÓN DE MENSAJES (Mantiene el texto limpio)
+  // EDICIÓN DE MENSAJES
   function toggleEditMode(msgId) {
     const chat = chatHistory.find(c => c.id === currentChatId);
     const msg = chat.messages.find(m => m.id === msgId);
-    const currentText = msg ? msg.text : "";
+    
+    // Limpiamos etiquetas crudas para no ensuciar la edición
+    const currentText = msg ? msg.text.replace(/\[Usuario frecuente\]: /g, '').replace(/\[Audio ininteligible\]/g, '').trim() : "";
     const textContainer = document.getElementById(`text-container-${msgId}`);
     
     textContainer!.innerHTML = `
@@ -640,7 +641,7 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
     }
   }
 
-  // ENVÍO DE FORMULARIO (Manejo inteligente de audio y texto)
+  // ENVÍO DE FORMULARIO CON AUDIO INTELIGENTE
   chatForm?.addEventListener('submit', async (e) => {
     e.preventDefault();
     
@@ -652,12 +653,9 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
       audioBase64 = await stopRecording(false);
       message = audioTranscript.trim();
       
-      // INTELIGENCIA LOCAL: Si el usuario mandó audio pero no dijo nada
+      // Inteligencia: Si grabó audio pero no habló, enviamos tag de silencio
       if (!message) {
-         const aId = `a-${Date.now()}`;
-         chatBox?.appendChild(createMessage("No logré identificar su voz en el audio. Por favor, verifique su micrófono o escriba su consulta en el panel de texto.", true, aId));
-         scrollToBottom();
-         return; 
+         message = "[Audio ininteligible]";
       }
     }
 
@@ -690,10 +688,9 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
     }
   });
 
-  // Modificamos guardado local para incluir Base64 del audio
   function saveMessage(role, text, id, image = null, audioData = null) {
     let chat = chatHistory.find(c => c.id === currentChatId);
-    let chatTitle = text ? text.substring(0, 20).toUpperCase() + "..." : (audioData ? "NOTA DE VOZ" : "IMAGEN ADJUNTA");
+    let chatTitle = text && text !== "[Audio ininteligible]" ? text.replace(/\[Usuario frecuente\]: /g, '').substring(0, 20).toUpperCase() + "..." : (audioData ? "NOTA DE VOZ" : "IMAGEN ADJUNTA");
     if (!chat) {
       chat = { id: currentChatId, title: chatTitle, messages: [], pinned: false };
       chatHistory.unshift(chat);
