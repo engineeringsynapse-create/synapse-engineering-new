@@ -1,98 +1,71 @@
 ---
+import { Briefcase, Award, ThumbsUp, Headset } from 'lucide-react';
 
 const stats = [
-
-  { label: "Proyectos Ejecutados", value: "+500" },
-
-  { label: "Años de Experiencia", value: "06" },
-
-  { label: "Clientes Satisfechos", value: "100%" },
-
-  { label: "Soporte Técnico", value: "24/7" }
-
+  { label: "Proyectos Ejecutados", value: "+500", icon: Briefcase },
+  { label: "Años de Experiencia", value: "06", icon: Award },
+  { label: "Clientes Satisfechos", value: "100%", icon: ThumbsUp },
+  { label: "Soporte Técnico", value: "24/7", icon: Headset }
 ];
-
 ---
 
-
-
 <section class="py-20 bg-[#003d6b] relative overflow-hidden stats-section">
-
-  <div class="absolute inset-0 opacity-10 pointer-events-none">
-
+  <!-- Malla de fondo sutil -->
+  <div class="absolute inset-0 opacity-20 pointer-events-none">
     <div class="absolute top-0 left-0 w-full h-full engineering-grid"></div>
-
   </div>
-
-
 
   <div class="container mx-auto px-6 relative z-10">
+    <!-- Se agregaron divisores (divide-x) para escritorio y flexbox para alinear mejor -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-y-12 gap-x-4 lg:gap-x-0 lg:divide-x lg:divide-white/10 text-center">
+      {stats.map((stat) => {
+        const Icon = stat.icon;
+        return (
+          <div class="stat-card group flex flex-col items-center justify-center p-4 transition-transform duration-300 hover:-translate-y-1 cursor-default">
+            
+            <!-- Icono animado al hover -->
+            <div class="mb-4 text-cyan-400 opacity-70 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300">
+              <Icon size={36} strokeWidth={1.5} />
+            </div>
 
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-12 text-center">
+            <!-- Número -->
+            <div class="text-5xl md:text-6xl font-black text-white mb-3 tracking-tighter drop-shadow-md group-hover:text-cyan-50 transition-colors duration-300">
+              {stat.value}
+            </div>
 
-      {stats.map((stat) => (
-
-        <div class="stat-card">
-
-          <div class="text-5xl md:text-6xl font-black text-white mb-2 tracking-tighter">
-
-            {stat.value}
-
+            <!-- Etiqueta -->
+            <div class="text-cyan-400 text-[10px] md:text-xs font-black uppercase tracking-[0.25em] md:tracking-[0.3em]">
+              {stat.label}
+            </div>
+            
           </div>
-
-          <div class="text-cyan-400 text-[10px] font-black uppercase tracking-[0.3em]">
-
-            {stat.label}
-
-          </div>
-
-        </div>
-
-      ))}
-
+        );
+      })}
     </div>
-
   </div>
-
 </section>
 
-
-
 <style>
-
   .stats-section {
-
     /* Aislamos el renderizado de la sección de estadísticas */
-
     contain: layout paint;
-
     /* Forzamos a que el navegador trate esta sección como una capa de video independiente */
-
     transform: translateZ(0);
-
   }
-
-
 
   .stat-card {
-
     /* Evitamos que el texto cambie de grosor o "tiemble" al hacer scroll */
-
     backface-visibility: hidden;
-
     -webkit-font-smoothing: antialiased;
-
   }
-
-
 
   .engineering-grid {
-
     /* Aseguramos que la malla no sea recalculada constantemente */
-
     will-change: transform;
-
+    /* Patrón de cuadrícula para darle aspecto de planos de ingeniería */
+    background-image: 
+      linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
   }
-
-</style> 
-
+</style>
