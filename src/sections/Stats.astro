@@ -9,8 +9,8 @@ const stats = [
 ];
 ---
 
-<!-- Ajustamos pt-4 y md:pt-8 para quitar el exceso de aire arriba -->
-<section class="relative pt-4 pb-16 md:pt-8 md:pb-24 bg-white overflow-hidden">
+<!-- Simetría perfecta: py-12 en móvil, py-16 en escritorio (mismo aire arriba y abajo) -->
+<section class="relative py-12 md:py-16 bg-white overflow-hidden">
   <!-- Fondo Tecnológico (Malla sutil corporativa) -->
   <div class="absolute inset-0 z-0 pointer-events-none flex justify-center items-center">
     <div class="absolute inset-0 opacity-[0.03]" style="background-image: radial-gradient(#003d6b 1px, transparent 1px); background-size: 32px 32px;"></div>
@@ -21,19 +21,18 @@ const stats = [
       {stats.map((stat) => {
         const Icon = stat.icon;
         return (
-          <!-- Tarjeta con contraste (slate-50/100) en lugar de blanco puro -->
-          <div class="group relative bg-gradient-to-b from-slate-50 to-slate-100/80 border border-slate-200 rounded-2xl p-5 md:p-8 flex flex-col items-center justify-center text-center transition-all duration-500 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-[#003d6b]/10 cursor-default overflow-hidden">
+          <!-- Tarjetas súper limpias y sutiles -->
+          <div class="group relative bg-slate-50/50 hover:bg-white border border-slate-100 rounded-2xl p-6 md:p-8 flex flex-col items-center justify-center text-center transition-all duration-500 hover:-translate-y-1 hover:shadow-xl hover:shadow-[#003d6b]/5 cursor-default overflow-hidden">
             
-            <!-- Línea LED difuminada que se enciende al hover -->
-            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 z-20"></div>
+            <!-- Línea LED difuminada que se enciende al hover (detalle premium) -->
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#005596] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 z-20"></div>
 
-            <!-- Capa de interacción azul sutil -->
-            <div class="absolute inset-0 bg-[#005596]/[0.02] opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0"></div>
-
-            <!-- Contenedor del Icono (Micro-tarjeta blanca para dar profundidad 3D) -->
-            <div class="relative mb-4 md:mb-6 z-10">
-              <div class="p-3 md:p-4 rounded-xl bg-white border border-slate-100 shadow-sm group-hover:border-cyan-100 group-hover:shadow-md group-hover:shadow-cyan-400/20 transition-all duration-500">
-                <Icon strokeWidth={1.5} class="text-[#005596] w-6 h-6 md:w-8 md:h-8 transition-transform duration-500 group-hover:scale-110 group-hover:text-cyan-500" />
+            <!-- Contenedor del Icono (Estilo exacto de tu referencia) -->
+            <div class="relative mb-5 z-10">
+              <!-- Fondo celeste muy suave, esquinas redondeadas, sin bordes duros -->
+              <div class="w-14 h-14 md:w-16 md:h-16 flex items-center justify-center rounded-2xl bg-[#f4f7fb] group-hover:bg-[#e6eff8] transition-colors duration-500">
+                <!-- Icono azul vibrante con trazo un poco más grueso (strokeWidth={2}) -->
+                <Icon strokeWidth={2} class="text-[#005596] w-7 h-7 md:w-8 md:h-8 transition-transform duration-500 group-hover:scale-110" />
               </div>
             </div>
 
