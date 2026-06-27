@@ -228,7 +228,9 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
     setTimeout(scroll, 300);
   }
 
-  // PARSEADOR: Elimina saltos de línea y destruye los guiones --- sin dejar aire
+  // ==========================================
+  // PARSEADOR: ANIQUILADOR DE AIRE Y GUIONES
+  // ==========================================
   function parseMarkdownToHTML(text) {
     if (!text) return "";
     let html = text
@@ -238,13 +240,13 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
       .replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-slate-800">$1</strong>')
       .replace(/\*(.*?)\*/g, '<em class="text-slate-600">$1</em>')
       .replace(/^\- (.*$)/gim, '<li class="ml-4 mb-1 list-disc marker:text-blue-500">$1</li>')
-      // Reemplaza guiones por un div espaciador limpio
+      // Remplaza TRES GUIONES por un salto limpio invisible
       .replace(/(?:\r?\n|^)\s*---\s*(?:\r?\n|$)/gim, '<div class="h-4 w-full"></div>')
       .replace(/\n/g, '<br/>');
 
     html = html.replace(/(<br\s*\/?>){2,}/gi, '<br/><br/>'); 
     
-    // ANIQUILADOR DE AIRE FINAL (Elimina cualquier salto, espacio o div separador que haya quedado al final)
+    // ANIQUILA CUALQUIER SALTO O ESPACIO AL FINAL PARA QUE NO QUEDE AIRE EN LA TARJETA
     html = html.replace(/(<br\s*\/?>|\s|&nbsp;|<div class="h-4 w-full"><\/div>)+$/gi, ''); 
     return html.trim();
   }
@@ -306,6 +308,9 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
     cameraInput.value = '';
   });
 
+  // ==========================================
+  // GRABACIÓN DE VOZ (Lógica infalible de captura)
+  // ==========================================
   let recognition;
   if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -316,15 +321,16 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
 
     recognition.onresult = (e) => {
       let finalChunk = '';
-      tempInterim = '';
+      let interimChunk = '';
       for (let i = e.resultIndex; i < e.results.length; ++i) {
         if (e.results[i].isFinal) {
           finalChunk += e.results[i][0].transcript;
         } else {
-          tempInterim += e.results[i][0].transcript;
+          interimChunk += e.results[i][0].transcript;
         }
       }
       if (finalChunk) audioTranscript += finalChunk + ' ';
+      tempInterim = interimChunk;
       
       let liveText = (audioTranscript + " " + tempInterim).trim();
       if (liveText && liveTranscript) {
@@ -389,7 +395,7 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
       if (recognition) recognition.stop();
       
       resolveAudioPromise = (base64Data) => {
-          // Extraemos de la memoria de las variables directas, no del HTML. Así no perdemos nada.
+          // Extraemos de forma garantizada lo que capturaron las variables
           let finalSpeech = cancel ? "" : (audioTranscript + " " + tempInterim).trim();
           resolve({ audio: base64Data, text: finalSpeech });
       };
@@ -470,12 +476,13 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
       mediaHtml = `<img src="${imageStr}" class="max-w-full h-auto rounded-xl mb-3 border border-slate-200 shadow-sm max-h-64 object-contain" alt="Adjunto" />`;
     }
 
-    // AUDIO CON LA TRANSCRIPCIÓN PERFECTA DEBAJO
+    // ==========================================
+    // REPRODUCTOR DE AUDIO Y SU TRANSCRIPCIÓN
+    // ==========================================
     let audioHtml = '';
     let transcriptHtml = '';
 
     if (audioData) {
-      // ESTE REPRODUCTOR NO HA SIDO MODIFICADO (Funciona 100%)
       audioHtml = `
         <audio id="audio-el-${msgId}" src="${audioData}" preload="auto" class="hidden"></audio>
         <div class="flex items-center gap-3 bg-white/60 p-3 rounded-2xl border border-blue-100 shadow-sm w-full max-w-[220px] md:max-w-xs transition-all hover:bg-white mb-2">
@@ -495,7 +502,7 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
         </div>
       `;
 
-      // Este es el bloque que dibuja tu texto debajo
+      // Si el audio tiene voz reconocida, dibuja la transcripción justo debajo de forma profesional
       if (cleanText) {
           transcriptHtml = `
             <div class="mt-2 pt-2 border-t border-slate-200">
@@ -549,7 +556,6 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
       });
     }
 
-    // EVENTOS DEL REPRODUCTOR (No modificados)
     if (audioData) {
       const audioEl = div.querySelector(`#audio-el-${msgId}`) as HTMLAudioElement;
       const playBtn = div.querySelector('.audio-play-btn');
@@ -670,8 +676,8 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
     let audioBase64 = null;
 
     if (isRecording) {
-      // Damos 300ms al navegador para terminar de capturar el speech
-      await new Promise(r => setTimeout(r, 300));
+      // Damos 500 milisegundos completos para que tu celular termine de transcribir la última palabra antes de cortar
+      await new Promise(r => setTimeout(r, 500));
       
       const result = await stopRecording(false);
       audioBase64 = result.audio;
