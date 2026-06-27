@@ -2,7 +2,7 @@
 import Layout from '../layouts/MainLayout.astro';
 import Navbar from '../components/shared/Navbar.astro';
 import Footer from '../components/shared/Footer.astro';
-import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as ImageIcon, Play } from 'lucide-react';
+import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as ImageIcon } from 'lucide-react';
 ---
 
 <Layout title="Soporte IA | Synapse Engineering">
@@ -87,7 +87,7 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
               </div>
             </div>
 
-            <div id="chat-box" class="flex-1 overflow-y-auto p-4 md:p-10 space-y-8 custom-scrollbar pb-40 z-0"></div>
+            <div id="chat-box" class="flex-1 overflow-y-auto overflow-x-hidden p-4 md:p-10 space-y-8 custom-scrollbar pb-40 z-0"></div>
 
             <form id="chat-form" class="absolute bottom-0 w-full p-4 md:p-6 bg-white/95 backdrop-blur-md border-t border-slate-100 z-40">
               <div class="max-w-4xl mx-auto relative flex flex-col items-start w-full">
@@ -140,11 +140,11 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
                     <input id="user-input" type="text" autocomplete="off" placeholder="Describa su requerimiento..." class="flex-1 w-full bg-transparent py-2 md:py-3 px-2 md:px-3 text-sm focus:outline-none text-slate-700 font-medium placeholder-slate-400 min-w-0" />
                   </div>
 
-                  <div id="audio-record-wrapper" class="hidden flex-1 items-center bg-blue-50/50 rounded-2xl px-4 py-2 border border-blue-100 min-w-0">
-                    <div class="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse mr-3 flex-shrink-0"></div>
-                    <span id="record-time" class="text-xs font-bold text-slate-600 w-8">0:00</span>
+                  <div id="audio-record-wrapper" class="hidden flex-1 items-center bg-blue-50/50 rounded-2xl px-2 md:px-4 py-2 border border-blue-100 min-w-0 overflow-hidden">
+                    <div class="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse mr-2 md:mr-3 flex-shrink-0"></div>
+                    <span id="record-time" class="text-[10px] md:text-xs font-bold text-slate-600 w-6 md:w-8">0:00</span>
                     
-                    <div class="flex items-center gap-1 h-6 flex-1 px-4 justify-center">
+                    <div class="flex items-center gap-1 h-6 flex-1 px-2 md:px-4 justify-center">
                       <div class="w-1 bg-blue-400 rounded-full h-2/3 animate-[bounce_1s_infinite]"></div>
                       <div class="w-1 bg-blue-400 rounded-full h-full animate-[bounce_1.2s_infinite]"></div>
                       <div class="w-1 bg-blue-400 rounded-full h-1/2 animate-[bounce_0.8s_infinite]"></div>
@@ -193,7 +193,6 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
   const deleteModal = document.getElementById('delete-modal');
   const modalChatName = document.getElementById('modal-chat-name');
 
-  // Elementos UI Imagen y Audio
   const attachBtn = document.getElementById('attach-btn');
   const attachMenu = document.getElementById('attach-menu');
   const fileInput = document.getElementById('file-input') as HTMLInputElement;
@@ -221,16 +220,20 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
   const WELCOME_MSG = "Saludos. Soy el asistente inteligente de **Synapse Engineering**. ¿En qué puedo asesorarle hoy? Puede enviarme consultas técnicas, notas de voz o imágenes de diagramas y tableros.";
 
   // ==========================================
-  // LÓGICA DE UTILIDADES (Scroll, Markdown)
+  // SCROLL PERFECTO PARA PC Y MÓVIL
   // ==========================================
-  
   function scrollToBottom() {
     setTimeout(() => { 
-      if(chatBox) chatBox.scrollTop = chatBox.scrollHeight + 100; 
-    }, 150); // Pequeño delay para asegurar que el DOM pintó todo
+      if(chatBox) {
+        chatBox.scrollTo({
+          top: chatBox.scrollHeight + 1000,
+          behavior: 'smooth'
+        });
+      }
+    }, 300); // Retraso mayor para asegurar que el DOM dibujó la imagen/texto
   }
 
-  // Parseador Profesional de Markdown a HTML (Estilo ChatGPT)
+  // Parseador de Markdown limpio
   function parseMarkdownToHTML(text) {
     if (!text) return "";
     let html = text
@@ -242,7 +245,6 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
       .replace(/^\- (.*$)/gim, '<li class="ml-4 mb-1 list-disc marker:text-blue-500">$1</li>')
       .replace(/\n/g, '<br/>');
 
-    // Limpia saltos de linea excesivos
     return html.replace(/(<br\/>){3,}/g, '<br/><br/>');
   }
 
@@ -266,10 +268,7 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
     });
   }
 
-  // ==========================================
-  // EVENTOS UI (Menú, Adjuntos)
-  // ==========================================
-
+  // Eventos de interfaz
   attachBtn?.addEventListener('click', (e) => {
     e.stopPropagation();
     attachMenu?.classList.toggle('hidden');
@@ -293,7 +292,7 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
       imgPreview.src = currentImageData;
       imgPreviewContainer?.classList.remove('hidden');
       attachMenu?.classList.add('hidden');
-      scrollToBottom();
+      scrollToBottom(); // Forzamos scroll cuando se previsualiza la imagen
     }
   }
 
@@ -310,7 +309,6 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
   // ==========================================
   // GRABADORA DE VOZ (AUDIO UI)
   // ==========================================
-
   let recognition;
   if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -328,7 +326,7 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
     };
 
     recognition.onend = () => {
-      if (isRecording) recognition.start(); // Evita que se corte por silencio
+      if (isRecording) recognition.start(); 
     };
   }
 
@@ -344,12 +342,10 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
     recordSeconds = 0;
     recordTime!.innerText = "0:00";
     
-    // Cambiar Interfaz
     textWrapper?.classList.add('hidden');
     micBtn?.classList.add('hidden');
     audioWrapper?.classList.replace('hidden', 'flex');
     
-    // Cambiar color botón enviar a Azul Grabación
     sendBtn?.classList.replace('bg-[#001529]', 'bg-blue-600');
     sendBtn?.classList.add('animate-pulse');
 
@@ -366,7 +362,6 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
     clearInterval(recordInterval);
     if (recognition) recognition.stop();
     
-    // Restaurar Interfaz
     audioWrapper?.classList.replace('flex', 'hidden');
     textWrapper?.classList.remove('hidden');
     micBtn?.classList.remove('hidden');
@@ -388,7 +383,6 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
   // ==========================================
   // MOTOR DEL CHAT (Lógica API)
   // ==========================================
-
   async function getAIResponse(message, image = null) {
     const chat = chatHistory.find(c => c.id === currentChatId);
     const isReturningUser = chat && chat.messages.length > 0;
@@ -419,7 +413,6 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
     scrollToBottom();
   }
 
-  // Se añade el parámetro isAudio para pintar el reproductor
   function createMessage(text, isAi, specificId, imageStr = null, isAudio = false) {
     const div = document.createElement('div');
     const msgId = specificId;
@@ -430,19 +423,21 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
     
     let mediaHtml = '';
     if (imageStr) {
-      mediaHtml = `<img src="${imageStr}" class="max-w-full h-auto rounded-xl mb-3 border border-slate-200 shadow-sm max-h-64 object-contain" alt="Adjunto" onload="window.dispatchEvent(new Event('resize'))" />`;
+      mediaHtml = `<img src="${imageStr}" class="max-w-full h-auto rounded-xl mb-3 border border-slate-200 shadow-sm max-h-64 object-contain" alt="Adjunto" />`;
     }
 
+    // REPRODUCTOR DE AUDIO UI ANIMADO (Móvil y PC compatible)
     let audioHtml = '';
     if (isAudio) {
       audioHtml = `
-        <div class="flex items-center gap-3 bg-white/50 p-3 rounded-2xl border border-blue-100 mb-3 shadow-sm w-64 md:w-80">
-           <button class="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center flex-shrink-0 shadow-md">
-              <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        <div class="flex items-center gap-3 bg-white/60 p-3 rounded-2xl border border-blue-100 mb-3 shadow-sm w-full max-w-[220px] md:max-w-xs transition-all hover:bg-white">
+           <button class="audio-play-btn w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center flex-shrink-0 shadow-md hover:bg-blue-700 transition-colors">
+              <svg class="play-icon" width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              <svg class="pause-icon hidden" width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
            </button>
-           <div class="flex-1 flex flex-col gap-1">
-             <div class="w-full h-1.5 bg-blue-200 rounded-full overflow-hidden">
-                <div class="w-1/3 h-full bg-blue-600 rounded-full"></div>
+           <div class="flex-1 flex flex-col gap-1 w-full overflow-hidden">
+             <div class="w-full h-1.5 bg-blue-200 rounded-full overflow-hidden relative">
+                <div class="audio-progress absolute left-0 top-0 h-full bg-blue-600 rounded-full w-0"></div>
              </div>
              <div class="flex justify-between w-full">
                <span class="text-[9px] font-bold text-blue-600">0:00</span>
@@ -465,6 +460,11 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
               <button class="copy-msg p-0.5 ${isAi ? 'hover:bg-slate-100' : 'hover:bg-slate-50'} rounded-lg text-slate-400 hover:text-emerald-600 transition-colors">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
               </button>
+              ${!isAi ? `
+              <button class="edit-msg p-0.5 hover:bg-slate-50 rounded-lg text-slate-400 hover:text-blue-600 transition-colors" data-id="${msgId}">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+              </button>
+              ` : ''}
             </div>
           </div>
 
@@ -481,11 +481,40 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
       </div>
     `;
 
+    // Eventos UI del mensaje creado
     div.querySelector('.copy-msg')?.addEventListener('click', () => {
       copyToClipboard(text, div.querySelector('.copy-msg'));
     });
 
-    // Escuchar cuando la imagen cargue para hacer scroll nuevamente
+    if (!isAi) {
+      div.querySelector('.edit-msg')?.addEventListener('click', () => {
+        toggleEditMode(msgId);
+      });
+    }
+
+    // Funcionalidad Play del audio falso
+    if (isAudio) {
+      const playBtn = div.querySelector('.audio-play-btn');
+      const progressBar = div.querySelector('.audio-progress');
+      const playIcon = div.querySelector('.play-icon');
+      const pauseIcon = div.querySelector('.pause-icon');
+
+      playBtn?.addEventListener('click', () => {
+        progressBar?.classList.add('transition-all', 'duration-[3000ms]', 'ease-linear');
+        progressBar?.classList.replace('w-0', 'w-full');
+        playIcon?.classList.add('hidden');
+        pauseIcon?.classList.remove('hidden');
+
+        setTimeout(() => {
+          progressBar?.classList.remove('transition-all', 'duration-[3000ms]', 'ease-linear');
+          progressBar?.classList.replace('w-full', 'w-0');
+          playIcon?.classList.remove('hidden');
+          pauseIcon?.classList.add('hidden');
+        }, 3000);
+      });
+    }
+
+    // Listener para imagen (fuerza scroll real cuando carga)
     const imgElement = div.querySelector('img');
     if (imgElement) {
       imgElement.onload = scrollToBottom;
@@ -494,6 +523,60 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
     return div;
   }
 
+  // EDICIÓN DE MENSAJES (Extrae texto original crudo para no dañar el formato)
+  function toggleEditMode(msgId) {
+    const chat = chatHistory.find(c => c.id === currentChatId);
+    const msg = chat.messages.find(m => m.id === msgId);
+    const currentText = msg ? msg.text : "";
+    const textContainer = document.getElementById(`text-container-${msgId}`);
+    
+    textContainer!.innerHTML = `
+      <div class="flex flex-col gap-3 animate-in fade-in zoom-in-95 duration-200">
+        <textarea id="edit-input-${msgId}" class="w-full bg-white border-2 border-blue-500 rounded-xl p-3 text-sm focus:outline-none min-h-[80px] text-slate-700 font-medium">${currentText}</textarea>
+        <div class="flex gap-2 justify-end">
+          <button class="cancel-edit px-4 py-2 bg-slate-100 text-slate-500 rounded-lg text-[10px] font-black uppercase hover:bg-slate-200 transition-all">Cancelar</button>
+          <button class="save-edit px-4 py-2 bg-blue-600 text-white rounded-lg text-[10px] font-black uppercase hover:bg-blue-700 transition-all shadow-md">Actualizar</button>
+        </div>
+      </div>
+    `;
+
+    textContainer!.querySelector('.cancel-edit')?.addEventListener('click', () => loadActiveChat());
+    
+    textContainer!.querySelector('.save-edit')?.addEventListener('click', async () => {
+      const newText = (document.getElementById(`edit-input-${msgId}`) as HTMLTextAreaElement).value.trim();
+      if (newText && newText !== currentText) {
+        await processUpdate(msgId, newText);
+      } else {
+        loadActiveChat();
+      }
+    });
+  }
+
+  async function processUpdate(msgId, newText) {
+    const chat = chatHistory.find(c => c.id === currentChatId);
+    if (!chat) return;
+    const userMsgIndex = chat.messages.findIndex(m => m.id === msgId);
+    if (userMsgIndex === -1) return;
+    chat.messages[userMsgIndex].text = newText;
+    chat.messages = chat.messages.slice(0, userMsgIndex + 1);
+    localStorage.setItem('synapse_history', JSON.stringify(chatHistory));
+    loadActiveChat();
+    const typingId = `typing-${Date.now()}`;
+    showTyping(typingId);
+    try {
+      const aiResponse = await getAIResponse(newText, chat.messages[userMsgIndex].image);
+      hideTyping(typingId);
+      const aId = `a-${Date.now()}`;
+      saveMessage('ai', aiResponse, aId);
+      loadActiveChat();
+    } catch (e) {
+      hideTyping(typingId);
+      saveMessage('ai', "[ERROR DE CONEXIÓN]", `err-${Date.now()}`);
+      loadActiveChat();
+    }
+  }
+
+  // ENVÍO DE FORMULARIO (Manejo inteligente de audio vacío)
   chatForm?.addEventListener('submit', async (e) => {
     e.preventDefault();
     
@@ -501,18 +584,23 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
     let sentImage = currentImageData;
     let wasAudio = false;
 
-    // Si estábamos grabando, tomamos el audioTranscript
     if (isRecording) {
-      stopRecording(); // Detiene UI y WebSpeech
-      message = audioTranscript.trim() || "¿Puedes explicarme un tema de ingeniería eléctrica?";
+      stopRecording();
+      message = audioTranscript.trim();
       wasAudio = true;
+      
+      // INTELIGENCIA LOCAL: Si el usuario mandó audio pero no dijo nada
+      if (!message) {
+         const aId = `a-${Date.now()}`;
+         chatBox?.appendChild(createMessage("No logré escuchar ningún sonido en la nota de voz. Por favor, revisa tu micrófono o intenta escribir tu consulta.", true, aId));
+         scrollToBottom();
+         return; 
+      }
     }
 
     if (!message && !sentImage) return; 
 
     const uId = `u-${Date.now()}`;
-    
-    // Pintar mensaje de usuario (Incluye bandera isAudio si grabó)
     chatBox?.appendChild(createMessage(message, false, uId, sentImage, wasAudio));
     saveMessage('user', message, uId, sentImage, wasAudio);
     
@@ -532,7 +620,7 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
       hideTyping(typingId);
       const aId = `a-${Date.now()}`;
       saveMessage('ai', aiResponse, aId);
-      loadActiveChat(); // loadActiveChat hace scrollToBottom() interno
+      loadActiveChat(); 
     } catch (error) {
       hideTyping(typingId);
       saveMessage('ai', "[ERROR DE SISTEMA O CONEXIÓN]", `err-${Date.now()}`);
@@ -558,7 +646,7 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
     typingDiv.className = "text-slate-400 text-[10px] font-bold uppercase tracking-widest animate-pulse ml-16 mb-4";
     typingDiv.innerText = "IA Procesando...";
     chatBox?.appendChild(typingDiv);
-    scrollToBottom();
+    scrollToBottom(); // Aseguramos que se vea
   }
 
   function hideTyping(id) {
@@ -575,7 +663,7 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
   }
 
   // ==========================================
-  // SIDEBAR & HISTORY (Sin Modificar su lógica base)
+  // SIDEBAR & HISTORY
   // ==========================================
   function saveAndRefresh() {
     localStorage.setItem('synapse_history', JSON.stringify(chatHistory));
