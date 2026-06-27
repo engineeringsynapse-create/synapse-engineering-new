@@ -87,7 +87,8 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
               </div>
             </div>
 
-            <div id="chat-box" class="flex-1 overflow-y-auto overflow-x-hidden p-4 md:p-10 space-y-8 custom-scrollbar pb-40 z-0"></div>
+            <!-- FIX SCROLL: Ampliamos radicalmente el padding-bottom (pb-60 md:pb-72) para evitar que las tarjetas choquen con la barra de input en PC -->
+            <div id="chat-box" class="flex-1 overflow-y-auto overflow-x-hidden p-4 md:p-10 space-y-8 custom-scrollbar pb-60 md:pb-72 z-0"></div>
 
             <form id="chat-form" class="absolute bottom-0 w-full p-4 md:p-6 bg-white/95 backdrop-blur-md border-t border-slate-100 z-40">
               <div class="max-w-4xl mx-auto relative flex flex-col items-start w-full">
@@ -140,10 +141,12 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
                     <input id="user-input" type="text" autocomplete="off" placeholder="Describa su requerimiento..." class="flex-1 w-full bg-transparent py-2 md:py-3 px-2 md:px-3 text-sm focus:outline-none text-slate-700 font-medium placeholder-slate-400 min-w-0" />
                   </div>
 
+                  <!-- CONTENEDOR DE GRABACIÓN DE AUDIO -->
                   <div id="audio-record-wrapper" class="hidden flex-1 items-center bg-blue-50/50 rounded-2xl px-2 md:px-4 py-2 border border-blue-100 min-w-0 overflow-hidden">
                     <div class="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse mr-2 md:mr-3 flex-shrink-0"></div>
                     <span id="record-time" class="text-[10px] md:text-xs font-bold text-slate-600 w-6 md:w-8">0:00</span>
                     
+                    <!-- Ondas Animadas -->
                     <div class="flex items-center gap-1 h-6 flex-1 px-2 md:px-4 justify-center">
                       <div class="w-1 bg-blue-400 rounded-full h-2/3 animate-[bounce_1s_infinite]"></div>
                       <div class="w-1 bg-blue-400 rounded-full h-full animate-[bounce_1.2s_infinite]"></div>
@@ -217,20 +220,28 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
   let recordInterval;
   let recordSeconds = 0;
 
+  // Variables para Grabación de Audio Real
+  let mediaRecorder;
+  let audioChunks = [];
+  let resolveAudioPromise;
+
   const WELCOME_MSG = "Saludos. Soy el asistente inteligente de **Synapse Engineering**. ¿En qué puedo asesorarle hoy? Puede enviarme consultas técnicas, notas de voz o imágenes de diagramas y tableros.";
 
   // ==========================================
-  // SCROLL PERFECTO PARA PC Y MÓVIL
+  // SCROLL PERFECTO PARA PC Y MÓVIL (CORREGIDO)
   // ==========================================
   function scrollToBottom() {
-    setTimeout(() => { 
+    const scroll = () => {
       if(chatBox) {
         chatBox.scrollTo({
-          top: chatBox.scrollHeight + 1000,
+          top: chatBox.scrollHeight + 5000, // Fuerza un valor excesivo para asegurar que llegue al final
           behavior: 'smooth'
         });
       }
-    }, 300); // Retraso mayor para asegurar que el DOM dibujó la imagen/texto
+    };
+    // Doble gatillo: Inmediato y con retraso para esperar al renderizado completo de las imágenes/textos
+    setTimeout(scroll, 100);
+    setTimeout(scroll, 600); 
   }
 
   // Parseador de Markdown limpio
@@ -268,7 +279,6 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
     });
   }
 
-  // Eventos de interfaz
   attachBtn?.addEventListener('click', (e) => {
     e.stopPropagation();
     attachMenu?.classList.toggle('hidden');
@@ -292,7 +302,7 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
       imgPreview.src = currentImageData;
       imgPreviewContainer?.classList.remove('hidden');
       attachMenu?.classList.add('hidden');
-      scrollToBottom(); // Forzamos scroll cuando se previsualiza la imagen
+      scrollToBottom(); 
     }
   }
 
@@ -307,7 +317,7 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
   });
 
   // ==========================================
-  // GRABADORA DE VOZ (AUDIO UI)
+  // GRABADORA DE VOZ REAL (API NATIVA)
   // ==========================================
   let recognition;
   if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
@@ -331,45 +341,79 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
   }
 
   function formatTime(sec) {
+    if (isNaN(sec)) return "0:00";
     const m = Math.floor(sec / 60);
     const s = sec % 60;
     return `${m}:${s.toString().padStart(2, '0')}`;
   }
 
-  function startRecording() {
+  async function startRecording() {
     isRecording = true;
     audioTranscript = "";
     recordSeconds = 0;
     recordTime!.innerText = "0:00";
+    audioChunks = [];
     
     textWrapper?.classList.add('hidden');
     micBtn?.classList.add('hidden');
     audioWrapper?.classList.replace('hidden', 'flex');
-    
     sendBtn?.classList.replace('bg-[#001529]', 'bg-blue-600');
     sendBtn?.classList.add('animate-pulse');
 
-    recordInterval = setInterval(() => {
-      recordSeconds++;
-      recordTime!.innerText = formatTime(recordSeconds);
-    }, 1000);
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaRecorder = new MediaRecorder(stream);
+      
+      mediaRecorder.ondataavailable = (e) => {
+        if (e.data.size > 0) audioChunks.push(e.data);
+      };
+      
+      mediaRecorder.onstop = () => {
+        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+        const reader = new FileReader();
+        reader.readAsDataURL(audioBlob);
+        reader.onloadend = () => {
+           if(resolveAudioPromise) resolveAudioPromise(reader.result); // Retorna Base64
+        }
+      };
 
-    if (recognition) recognition.start();
+      mediaRecorder.start();
+      if (recognition) recognition.start();
+      
+      recordInterval = setInterval(() => {
+        recordSeconds++;
+        recordTime!.innerText = formatTime(recordSeconds);
+      }, 1000);
+      
+    } catch (err) {
+      console.error("Error al acceder al micrófono:", err);
+      stopRecording(true);
+    }
   }
 
   function stopRecording(cancel = false) {
-    isRecording = false;
-    clearInterval(recordInterval);
-    if (recognition) recognition.stop();
-    
-    audioWrapper?.classList.replace('flex', 'hidden');
-    textWrapper?.classList.remove('hidden');
-    micBtn?.classList.remove('hidden');
-    
-    sendBtn?.classList.replace('bg-blue-600', 'bg-[#001529]');
-    sendBtn?.classList.remove('animate-pulse');
-
-    if (cancel) audioTranscript = "";
+    return new Promise((resolve) => {
+      isRecording = false;
+      resolveAudioPromise = cancel ? () => resolve(null) : resolve;
+      
+      clearInterval(recordInterval);
+      if (recognition) recognition.stop();
+      
+      if (mediaRecorder && mediaRecorder.state !== "inactive") {
+        mediaRecorder.stop();
+        mediaRecorder.stream.getTracks().forEach(track => track.stop());
+      } else {
+        resolve(null);
+      }
+      
+      audioWrapper?.classList.replace('flex', 'hidden');
+      textWrapper?.classList.remove('hidden');
+      micBtn?.classList.remove('hidden');
+      sendBtn?.classList.replace('bg-blue-600', 'bg-[#001529]');
+      sendBtn?.classList.remove('animate-pulse');
+      
+      if (cancel) audioTranscript = "";
+    });
   }
 
   micBtn?.addEventListener('click', () => {
@@ -406,17 +450,18 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
     chatBox.innerHTML = '';
     const chat = chatHistory.find(c => c.id === currentChatId);
     if (chat && chat.messages.length > 0) {
-      chat.messages.forEach(m => chatBox.appendChild(createMessage(m.text, m.role === 'ai', m.id, m.image, m.isAudio)));
+      chat.messages.forEach(m => chatBox.appendChild(createMessage(m.text, m.role === 'ai', m.id, m.image, m.audioData)));
     } else {
       chatBox.appendChild(createMessage(WELCOME_MSG, true, 'welcome'));
     }
     scrollToBottom();
   }
 
-  function createMessage(text, isAi, specificId, imageStr = null, isAudio = false) {
+  // Modificada para recibir y reproducir audioData real
+  function createMessage(text, isAi, specificId, imageStr = null, audioData = null) {
     const div = document.createElement('div');
     const msgId = specificId;
-    div.className = `group flex gap-3 md:gap-5 max-w-4xl relative ${isAi ? '' : 'ml-auto flex-row-reverse animate-in fade-in slide-in-from-right-4'}`;
+    div.className = `group flex gap-3 md:gap-5 max-w-4xl relative mb-4 ${isAi ? '' : 'ml-auto flex-row-reverse animate-in fade-in slide-in-from-right-4'}`;
     
     const formattedText = parseMarkdownToHTML(text);
     const toolPosition = isAi ? 'top-1 right-4' : 'top-1 left-4';
@@ -426,21 +471,22 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
       mediaHtml = `<img src="${imageStr}" class="max-w-full h-auto rounded-xl mb-3 border border-slate-200 shadow-sm max-h-64 object-contain" alt="Adjunto" />`;
     }
 
-    // REPRODUCTOR DE AUDIO UI ANIMADO (Móvil y PC compatible)
+    // REPRODUCTOR DE AUDIO REAL
     let audioHtml = '';
-    if (isAudio) {
+    if (audioData) {
       audioHtml = `
+        <audio id="audio-el-${msgId}" src="${audioData}" preload="metadata" class="hidden"></audio>
         <div class="flex items-center gap-3 bg-white/60 p-3 rounded-2xl border border-blue-100 mb-3 shadow-sm w-full max-w-[220px] md:max-w-xs transition-all hover:bg-white">
            <button class="audio-play-btn w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center flex-shrink-0 shadow-md hover:bg-blue-700 transition-colors">
               <svg class="play-icon" width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
               <svg class="pause-icon hidden" width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
            </button>
            <div class="flex-1 flex flex-col gap-1 w-full overflow-hidden">
-             <div class="w-full h-1.5 bg-blue-200 rounded-full overflow-hidden relative">
-                <div class="audio-progress absolute left-0 top-0 h-full bg-blue-600 rounded-full w-0"></div>
+             <div class="w-full h-1.5 bg-blue-200 rounded-full overflow-hidden relative cursor-pointer" id="progress-container-${msgId}">
+                <div class="audio-progress absolute left-0 top-0 h-full bg-blue-600 rounded-full w-0 pointer-events-none"></div>
              </div>
              <div class="flex justify-between w-full">
-               <span class="text-[9px] font-bold text-blue-600">0:00</span>
+               <span class="audio-time text-[9px] font-bold text-blue-600">0:00</span>
                <span class="text-[9px] font-bold text-slate-400">Nota de Voz</span>
              </div>
            </div>
@@ -473,7 +519,7 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
             <div id="text-${msgId}" class="break-words leading-relaxed text-left ${isAi ? 'pr-8 text-slate-600' : 'text-slate-700'}">
               ${audioHtml}
               ${mediaHtml}
-              ${isAudio ? `<p class="text-[10px] text-slate-400 italic mb-1 uppercase font-bold tracking-wider">Transcripción:</p>` : ''}
+              ${audioData ? `<p class="text-[10px] text-slate-400 italic mb-1 uppercase font-bold tracking-wider mt-2">Transcripción:</p>` : ''}
               ${formattedText}
             </div>
           </div>
@@ -481,40 +527,58 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
       </div>
     `;
 
-    // Eventos UI del mensaje creado
+    // Botón Copiar
     div.querySelector('.copy-msg')?.addEventListener('click', () => {
       copyToClipboard(text, div.querySelector('.copy-msg'));
     });
 
+    // Botón Editar
     if (!isAi) {
       div.querySelector('.edit-msg')?.addEventListener('click', () => {
         toggleEditMode(msgId);
       });
     }
 
-    // Funcionalidad Play del audio falso
-    if (isAudio) {
+    // Funcionalidad Real de Audio
+    if (audioData) {
+      const audioEl = div.querySelector(`#audio-el-${msgId}`) as HTMLAudioElement;
       const playBtn = div.querySelector('.audio-play-btn');
-      const progressBar = div.querySelector('.audio-progress');
+      const progressBar = div.querySelector('.audio-progress') as HTMLElement;
+      const timeLabel = div.querySelector('.audio-time') as HTMLElement;
       const playIcon = div.querySelector('.play-icon');
       const pauseIcon = div.querySelector('.pause-icon');
 
-      playBtn?.addEventListener('click', () => {
-        progressBar?.classList.add('transition-all', 'duration-[3000ms]', 'ease-linear');
-        progressBar?.classList.replace('w-0', 'w-full');
-        playIcon?.classList.add('hidden');
-        pauseIcon?.classList.remove('hidden');
+      // Actualizar tiempo total al cargar
+      audioEl.addEventListener('loadedmetadata', () => {
+         timeLabel.innerText = formatTime(Math.floor(audioEl.duration));
+      });
 
-        setTimeout(() => {
-          progressBar?.classList.remove('transition-all', 'duration-[3000ms]', 'ease-linear');
-          progressBar?.classList.replace('w-full', 'w-0');
+      playBtn?.addEventListener('click', () => {
+        if (audioEl.paused) {
+          audioEl.play();
+          playIcon?.classList.add('hidden');
+          pauseIcon?.classList.remove('hidden');
+        } else {
+          audioEl.pause();
           playIcon?.classList.remove('hidden');
           pauseIcon?.classList.add('hidden');
-        }, 3000);
+        }
+      });
+
+      audioEl.addEventListener('timeupdate', () => {
+        const percent = (audioEl.currentTime / audioEl.duration) * 100;
+        progressBar.style.width = `${percent}%`;
+        timeLabel.innerText = formatTime(Math.floor(audioEl.currentTime));
+      });
+
+      audioEl.addEventListener('ended', () => {
+        playIcon?.classList.remove('hidden');
+        pauseIcon?.classList.add('hidden');
+        progressBar.style.width = '0%';
+        timeLabel.innerText = formatTime(Math.floor(audioEl.duration || 0));
       });
     }
 
-    // Listener para imagen (fuerza scroll real cuando carga)
     const imgElement = div.querySelector('img');
     if (imgElement) {
       imgElement.onload = scrollToBottom;
@@ -523,7 +587,7 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
     return div;
   }
 
-  // EDICIÓN DE MENSAJES (Extrae texto original crudo para no dañar el formato)
+  // EDICIÓN DE MENSAJES (Mantiene el texto limpio)
   function toggleEditMode(msgId) {
     const chat = chatHistory.find(c => c.id === currentChatId);
     const msg = chat.messages.find(m => m.id === msgId);
@@ -531,7 +595,7 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
     const textContainer = document.getElementById(`text-container-${msgId}`);
     
     textContainer!.innerHTML = `
-      <div class="flex flex-col gap-3 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex flex-col gap-3 animate-in fade-in zoom-in-95 duration-200 mt-2">
         <textarea id="edit-input-${msgId}" class="w-full bg-white border-2 border-blue-500 rounded-xl p-3 text-sm focus:outline-none min-h-[80px] text-slate-700 font-medium">${currentText}</textarea>
         <div class="flex gap-2 justify-end">
           <button class="cancel-edit px-4 py-2 bg-slate-100 text-slate-500 rounded-lg text-[10px] font-black uppercase hover:bg-slate-200 transition-all">Cancelar</button>
@@ -576,23 +640,22 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
     }
   }
 
-  // ENVÍO DE FORMULARIO (Manejo inteligente de audio vacío)
+  // ENVÍO DE FORMULARIO (Manejo inteligente de audio y texto)
   chatForm?.addEventListener('submit', async (e) => {
     e.preventDefault();
     
     let message = userInput.value.trim();
     let sentImage = currentImageData;
-    let wasAudio = false;
+    let audioBase64 = null;
 
     if (isRecording) {
-      stopRecording();
+      audioBase64 = await stopRecording(false);
       message = audioTranscript.trim();
-      wasAudio = true;
       
       // INTELIGENCIA LOCAL: Si el usuario mandó audio pero no dijo nada
       if (!message) {
          const aId = `a-${Date.now()}`;
-         chatBox?.appendChild(createMessage("No logré escuchar ningún sonido en la nota de voz. Por favor, revisa tu micrófono o intenta escribir tu consulta.", true, aId));
+         chatBox?.appendChild(createMessage("No logré identificar su voz en el audio. Por favor, verifique su micrófono o escriba su consulta en el panel de texto.", true, aId));
          scrollToBottom();
          return; 
       }
@@ -601,10 +664,9 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
     if (!message && !sentImage) return; 
 
     const uId = `u-${Date.now()}`;
-    chatBox?.appendChild(createMessage(message, false, uId, sentImage, wasAudio));
-    saveMessage('user', message, uId, sentImage, wasAudio);
+    chatBox?.appendChild(createMessage(message, false, uId, sentImage, audioBase64));
+    saveMessage('user', message, uId, sentImage, audioBase64);
     
-    // Limpieza
     userInput.value = '';
     currentImageData = null;
     imgPreviewContainer?.classList.add('hidden');
@@ -628,14 +690,15 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
     }
   });
 
-  function saveMessage(role, text, id, image = null, isAudio = false) {
+  // Modificamos guardado local para incluir Base64 del audio
+  function saveMessage(role, text, id, image = null, audioData = null) {
     let chat = chatHistory.find(c => c.id === currentChatId);
-    let chatTitle = text ? text.substring(0, 20).toUpperCase() + "..." : (isAudio ? "NOTA DE VOZ" : "IMAGEN ADJUNTA");
+    let chatTitle = text ? text.substring(0, 20).toUpperCase() + "..." : (audioData ? "NOTA DE VOZ" : "IMAGEN ADJUNTA");
     if (!chat) {
       chat = { id: currentChatId, title: chatTitle, messages: [], pinned: false };
       chatHistory.unshift(chat);
     }
-    chat.messages.push({ role, text, id, image, isAudio });
+    chat.messages.push({ role, text, id, image, audioData });
     localStorage.setItem('synapse_history', JSON.stringify(chatHistory));
     renderHistory();
   }
@@ -646,7 +709,7 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
     typingDiv.className = "text-slate-400 text-[10px] font-bold uppercase tracking-widest animate-pulse ml-16 mb-4";
     typingDiv.innerText = "IA Procesando...";
     chatBox?.appendChild(typingDiv);
-    scrollToBottom(); // Aseguramos que se vea
+    scrollToBottom(); 
   }
 
   function hideTyping(id) {
