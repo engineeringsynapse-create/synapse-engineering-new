@@ -11,7 +11,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     if (message === '[Audio ininteligible]') {
         return new Response(JSON.stringify({ 
-            response: "Entendido. El sistema no pudo procesar la grabación debido a la ausencia de voz detectable. Por favor, inténtelo de nuevo enviando otra nota de voz o escriba su consulta en el panel inferior para poder asistirle con la calidad que acostumbramos en Synapse Engineering." 
+            response: "Entendido. El sistema no pudo procesar la grabación debido a la ausencia de voz detectable. Por favor, inténtelo de nuevo enviando otra nota de voz o escriba su consulta detallada en el panel inferior para poder asistirle con la calidad que acostumbramos en Synapse Engineering." 
         }), { status: 200 });
     }
 
@@ -29,21 +29,21 @@ export const POST: APIRoute = async ({ request }) => {
     if (currentHour >= 6 && currentHour < 12) timeGreeting = "Buenos días";
     else if (currentHour >= 12 && currentHour < 19) timeGreeting = "Buenas tardes";
 
-    // ORDEN ABSOLUTA PARA EL SALUDO, LA IDENTIDAD Y EL FORMATO
+    // ORDEN ABSOLUTA PARA EL FORMATO VISUAL Y COMPORTAMIENTO
     const systemPrompt = `Eres Synapse Core AI, un altamente capacitado ingeniero eléctrico senior experto. 
     Tu comunicación es formal, técnica, objetiva y precisa (estilo ChatGPT o Gemini avanzado). 
     
     IDENTIDAD Y CREADOR: 
-    Fuiste creado y desarrollado exclusivamente por Synapse Engineering. NUNCA menciones a Mistral AI, OpenAI ni a terceros. Si te preguntan quién eres o quién te creó, responde con orgullo que eres una Inteligencia Artificial desarrollada por Synapse Engineering.
+    Fuiste creado y desarrollado exclusivamente por Synapse Engineering, una empresa líder en ingeniería eléctrica, tableros y automatización. NUNCA menciones a Mistral AI, OpenAI ni a terceros. Si te preguntan quién eres o quién te creó, responde con orgullo que eres obra de Synapse Engineering.
 
     ESTADO DE LA CONVERSACIÓN:
     ${isFirstMessage ? `REGLA DE ORO INQUEBRANTABLE: Este es el PRIMER mensaje del usuario. DEBES empezar EXACTAMENTE con "${timeGreeting}. Soy el asistente inteligente de Synapse Engineering." Luego, EN EL MISMO PÁRRAFO, responde a la duda del usuario de forma directa y concisa. ESTÁ ESTRICTAMENTE PROHIBIDO USAR VIÑETAS, PUNTOS O LISTAS EN ESTE MENSAJE INICIAL.` : `Ya están conversando. ESTÁ ESTRICTAMENTE PROHIBIDO decir "Buenos días", "Buenas tardes" o "Buenas noches". Ve directo al grano.`}
     
     REGLAS GENERALES DE FORMATO:
-    1. ESTÁ PROHIBIDO usar el símbolo de hashtag (#) bajo ninguna circunstancia.
-    2. Evita el uso excesivo de asteriscos (*). Úsalos solo para negritas esenciales.
-    3. Si el usuario dice "gracias", despídete amablemente y termina la conversación.
-    4. NO generes saltos de línea extras ni guiones al final de tus respuestas.
+    1. PROHIBIDO usar el símbolo de hashtag (#) bajo ninguna circunstancia.
+    2. Evita el uso excesivo de asteriscos (*). Úsalos solo para negritas.
+    3. Si necesitas separar secciones o hacer un espacio visual, PUEDES usar tres guiones (---) en una línea nueva. El sistema los convertirá en un espacio visual limpio.
+    4. NO generes saltos de línea extras al final de tus respuestas.
     5. Si el usuario sube imágenes, analízalas con rigor técnico.`;
 
     let userContent: any = finalMessage;
@@ -82,10 +82,7 @@ export const POST: APIRoute = async ({ request }) => {
       return new Response(JSON.stringify({ response: "Error en el análisis de los circuitos lógicos. ¿Puede proporcionar los datos técnicos nuevamente?" }), { status: 200 });
     }
 
-    // FILTRO DESTRUCTIVO FINAL: Aniquila cualquier hashtag, guión o salto de línea fantasma generado por la IA
     aiText = aiText.replace(/#/g, '');
-    aiText = aiText.replace(/---+$/, '');
-    aiText = aiText.trim();
 
     return new Response(JSON.stringify({ response: aiText }), { status: 200 });
 

@@ -228,25 +228,27 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
     setTimeout(scroll, 300);
   }
 
-  // PARSEADOR CERO AIRE: Divide en párrafos y elimina el margen del último
+  // ==========================================
+  // PARSEADOR: ELIMINACIÓN DE AIRE Y GUIONES (---)
+  // ==========================================
   function parseMarkdownToHTML(text) {
     if (!text) return "";
     let html = text
-      .replace(/^### (.*$)/gim, '<strong class="block text-sm font-black text-blue-700 mt-4 mb-2 uppercase tracking-wide">$1</strong>')
-      .replace(/^## (.*$)/gim, '<strong class="block text-base font-black text-[#001529] mt-4 mb-2 uppercase tracking-wider">$1</strong>')
-      .replace(/^# (.*$)/gim, '<strong class="block text-lg font-black text-[#001529] mt-4 mb-2 uppercase tracking-widest">$1</strong>')
+      .replace(/^### (.*$)/gim, '<strong class="block text-sm font-black text-blue-700 mt-4 mb-1 uppercase tracking-wide">$1</strong>')
+      .replace(/^## (.*$)/gim, '<strong class="block text-base font-black text-[#001529] mt-4 mb-1 uppercase tracking-wider">$1</strong>')
+      .replace(/^# (.*$)/gim, '<strong class="block text-lg font-black text-[#001529] mt-4 mb-1 uppercase tracking-widest">$1</strong>')
       .replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-slate-800">$1</strong>')
       .replace(/\*(.*?)\*/g, '<em class="text-slate-600">$1</em>')
-      .replace(/^\- (.*$)/gim, '<li class="ml-4 mb-1 list-disc marker:text-blue-500">$1</li>');
+      .replace(/^\- (.*$)/gim, '<li class="ml-4 mb-1 list-disc marker:text-blue-500">$1</li>')
+      // NUEVO: Transforma los guiones (---) en un espacio visual en blanco sin mostrar caracteres
+      .replace(/^\s*---\s*$/gim, '<div class="h-4 w-full"></div>')
+      .replace(/\n/g, '<br/>');
 
-    // Separa por saltos de línea y envuelve en párrafos para control total del margen
-    let paragraphs = html.split(/\n{2,}/);
-    html = paragraphs.map(p => {
-        let inner = p.replace(/\n/g, '<br/>').trim();
-        return inner ? `<p class="mb-4 last:mb-0">${inner}</p>` : '';
-    }).join('');
-
-    return html;
+    html = html.replace(/(<br\s*\/?>){2,}/gi, '<br/><br/>'); 
+    
+    // DESTRUCTOR TOTAL DE AIRE AL FINAL DE LA TARJETA
+    html = html.replace(/(<br\s*\/?>|\s)+$/gi, ''); 
+    return html.trim();
   }
 
   function compressImage(file, maxWidth = 800) {
@@ -306,7 +308,6 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
     cameraInput.value = '';
   });
 
-  // GRABADORA DE VOZ Y TEXTO INFALIBLE
   let recognition;
   if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -368,7 +369,7 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
         if (e.data.size > 0) audioChunks.push(e.data);
       };
       
-      mediaRecorder.start(250); // Guarda fragmentos cada 250ms para evitar audios rotos
+      mediaRecorder.start(250);
       if (recognition) recognition.start();
       
       recordInterval = setInterval(() => {
@@ -390,16 +391,17 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
       if (recognition) recognition.stop();
       
       resolveAudioPromise = (base64Data) => {
-          // Extraemos el texto de las variables en memoria, NO del DOM. 100% Seguro.
-          let finalSpeech = cancel ? "" : (audioTranscript + " " + tempInterim).trim();
+          let finalSpeech = "";
+          if (!cancel && liveTranscript && liveTranscript.innerText !== "Escuchando...") {
+              finalSpeech = liveTranscript.innerText;
+          }
           resolve({ audio: base64Data, text: finalSpeech });
       };
 
       if (mediaRecorder && mediaRecorder.state !== "inactive") {
         mediaRecorder.onstop = () => {
           mediaRecorder.stream.getTracks().forEach(track => track.stop());
-          // Solución de Formato: No forzamos WebM. Dejamos que el celular decida su formato nativo (mp4, ogg, etc.)
-          const audioBlob = new Blob(audioChunks); 
+          const audioBlob = new Blob(audioChunks, { type: 'audio/webm' }); 
           const reader = new FileReader();
           reader.readAsDataURL(audioBlob);
           reader.onloadend = () => {
@@ -472,7 +474,12 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
       mediaHtml = `<img src="${imageStr}" class="max-w-full h-auto rounded-xl mb-3 border border-slate-200 shadow-sm max-h-64 object-contain" alt="Adjunto" />`;
     }
 
+    // ==========================================
+    // AUDIO PERFECTO + TRANSCRIPCIÓN DEBAJO
+    // ==========================================
     let audioHtml = '';
+    let transcriptHtml = formattedText; // Por defecto es solo texto
+
     if (audioData) {
       audioHtml = `
         <audio id="audio-el-${msgId}" src="${audioData}" preload="auto" class="hidden"></audio>
@@ -491,8 +498,17 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
              </div>
            </div>
         </div>
-        ${cleanText ? `<div class="mb-3 pl-2 border-l-2 border-blue-200"><p class="text-[9px] text-slate-400 italic mb-0.5 uppercase font-bold tracking-wider">Transcripción:</p><p class="text-sm text-slate-700 leading-snug">${cleanText}</p></div>` : ''}
       `;
+      
+      // Construimos el bloque visual de transcripción profesional debajo del audio
+      if (cleanText) {
+          transcriptHtml = `
+            <div class="mt-2 pl-2 border-l-2 border-blue-300">
+                <span class="text-[9px] font-black text-blue-500 uppercase tracking-widest block mb-1">Transcripción:</span>
+                <span class="text-slate-700 block">${formattedText}</span>
+            </div>
+          `;
+      }
     }
 
     div.innerHTML = `
@@ -515,14 +531,16 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
             </div>
           </div>
 
-          <p class="font-black text-[#001529] mb-3 uppercase text-[9px] tracking-widest text-left">${isAi ? 'Synapse Core AI' : 'Usuario'}</p>
-          <div id="text-container-${msgId}">
-            <div id="text-${msgId}" class="break-words leading-relaxed text-left ${isAi ? 'pr-8 text-slate-600' : 'text-slate-700'}">
+          <p class="font-black text-[#001529] mb-2 uppercase text-[9px] tracking-widest text-left">${isAi ? 'Synapse Core AI' : 'Usuario'}</p>
+          
+          <div id="text-container-${msgId}" class="[&>*:last-child]:!mb-0 [&>*:last-child]:!pb-0 pb-0 mb-0">
+            <div id="text-${msgId}" class="break-words leading-relaxed text-left ${isAi ? 'pr-8 text-slate-600' : 'text-slate-700'} pb-0 mb-0">
               ${audioHtml}
               ${mediaHtml}
-              ${!audioData ? formattedText : ''}
+              ${transcriptHtml}
             </div>
           </div>
+
         </div>
       </div>
     `;
@@ -657,7 +675,7 @@ import { Send, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as
     let audioBase64 = null;
 
     if (isRecording) {
-      // Damos 300ms de gracia para que el celular termine de procesar la última palabra
+      // Damos 300ms extra para atrapar la última palabra hablada
       await new Promise(r => setTimeout(r, 300));
       
       const result = await stopRecording(false);
