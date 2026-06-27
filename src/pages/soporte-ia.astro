@@ -2,7 +2,7 @@
 import Layout from '../layouts/MainLayout.astro';
 import Navbar from '../components/shared/Navbar.astro';
 import Footer from '../components/shared/Footer.astro';
-import { Send, ShieldCheck, Plus, Menu, X, Trash2 } from 'lucide-react';
+import { Send, ShieldCheck, Plus, Menu, X, Trash2, Mic, Camera, Paperclip, Triangle, Image as ImageIcon } from 'lucide-react';
 ---
 
 <Layout title="Soporte IA | Synapse Engineering">
@@ -63,7 +63,7 @@ import { Send, ShieldCheck, Plus, Menu, X, Trash2 } from 'lucide-react';
 
           <div id="sidebar-overlay" class="fixed inset-0 bg-black/20 backdrop-blur-sm z-30 hidden md:hidden transition-opacity"></div>
 
-          <div class="flex-1 flex flex-col min-w-0">
+          <div class="flex-1 flex flex-col min-w-0 relative">
             <div class="px-8 py-5 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
               <div class="flex items-center gap-3">
                 <button id="toggle-sidebar" class="p-2 text-slate-600 hover:bg-slate-200 rounded-lg transition-colors">
@@ -87,14 +87,69 @@ import { Send, ShieldCheck, Plus, Menu, X, Trash2 } from 'lucide-react';
               </div>
             </div>
 
-            <div id="chat-box" class="flex-1 overflow-y-auto p-6 md:p-10 space-y-8 custom-scrollbar"></div>
+            <div id="chat-box" class="flex-1 overflow-y-auto p-6 md:p-10 space-y-8 custom-scrollbar pb-32"></div>
 
-            <form id="chat-form" class="p-6 md:p-8 bg-slate-50 border-t border-slate-100">
-              <div class="max-w-4xl mx-auto relative">
-                <input id="user-input" type="text" autocomplete="off" placeholder="Describa su requerimiento técnico..." class="w-full bg-white rounded-2xl py-4 md:py-6 px-6 md:px-10 text-sm focus:outline-none border-2 border-slate-200 focus:border-blue-600 transition-all shadow-sm pr-20" />
-                <button type="submit" class="absolute right-3 top-1/2 -translate-y-1/2 bg-[#001529] text-white p-3 md:p-4 rounded-xl hover:bg-blue-600 transition-all">
-                  <Send size={20} />
-                </button>
+            <form id="chat-form" class="absolute bottom-0 w-full p-4 md:p-6 bg-gradient-to-t from-white via-white to-transparent pt-10">
+              <div class="max-w-4xl mx-auto relative flex flex-col items-start w-full">
+                
+                <div id="image-preview-container" class="hidden mb-4 relative ml-4">
+                  <div class="p-1 bg-white border border-slate-200 rounded-2xl shadow-sm">
+                    <img id="image-preview" src="" class="h-20 w-20 md:h-24 md:w-24 rounded-xl object-cover" alt="Previsualización" />
+                  </div>
+                  <button type="button" id="remove-image" class="absolute -top-3 -right-3 bg-slate-800 text-white rounded-full p-1.5 hover:bg-red-500 transition-colors shadow-md z-10">
+                    <X size={14} strokeWidth={3} />
+                  </button>
+                </div>
+
+                <div class="relative flex items-center bg-white rounded-[24px] border-2 border-slate-200 focus-within:border-blue-600 focus-within:shadow-lg transition-all shadow-sm w-full p-1.5">
+                  
+                  <div id="attach-menu" class="hidden absolute bottom-full left-0 mb-4 bg-[#1c1c1e] p-5 rounded-3xl shadow-2xl border border-white/10 flex gap-4 md:gap-6 z-50 animate-in slide-in-from-bottom-2">
+                    <button type="button" id="btn-camera" class="flex flex-col items-center gap-2 group">
+                      <div class="w-14 h-14 bg-[#2c2c2e] group-hover:bg-slate-700 rounded-full flex items-center justify-center text-white transition-colors">
+                        <Camera size={24} strokeWidth={1.5} />
+                      </div>
+                      <span class="text-white text-xs font-medium">Cámara</span>
+                    </button>
+                    <button type="button" id="btn-archivos" class="flex flex-col items-center gap-2 group">
+                      <div class="w-14 h-14 bg-[#2c2c2e] group-hover:bg-slate-700 rounded-full flex items-center justify-center text-white transition-colors">
+                        <Paperclip size={24} strokeWidth={1.5} />
+                      </div>
+                      <span class="text-white text-xs font-medium">Archivos</span>
+                    </button>
+                    <button type="button" id="btn-drive" class="flex flex-col items-center gap-2 group">
+                      <div class="w-14 h-14 bg-[#2c2c2e] group-hover:bg-slate-700 rounded-full flex items-center justify-center text-white transition-colors">
+                        <Triangle size={24} strokeWidth={1.5} class="rotate-180" />
+                      </div>
+                      <span class="text-white text-xs font-medium">Drive</span>
+                    </button>
+                    <button type="button" id="btn-fotos" class="flex flex-col items-center gap-2 group">
+                      <div class="w-14 h-14 bg-[#2c2c2e] group-hover:bg-slate-700 rounded-full flex items-center justify-center text-white transition-colors">
+                        <ImageIcon size={24} strokeWidth={1.5} />
+                      </div>
+                      <span class="text-white text-xs font-medium">Fotos</span>
+                    </button>
+                  </div>
+
+                  <button type="button" id="attach-btn" class="p-3 text-slate-400 hover:text-[#001529] hover:bg-slate-100 rounded-xl transition-colors ml-1">
+                    <Plus size={24} strokeWidth={2.5} />
+                  </button>
+
+                  <input type="file" id="file-input" accept="image/*" class="hidden" />
+                  <input type="file" id="camera-input" accept="image/*" capture="environment" class="hidden" />
+
+                  <input id="user-input" type="text" autocomplete="off" placeholder="Describa su requerimiento o suba una imagen..." class="flex-1 bg-transparent py-3 md:py-4 px-3 text-sm focus:outline-none text-slate-700 font-medium placeholder-slate-400" />
+                  
+                  <div class="flex items-center gap-1 pr-1">
+                    <button type="button" id="mic-btn" class="p-3 text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-all rounded-xl relative group">
+                      <Mic size={22} strokeWidth={2} class="relative z-10" />
+                      <span id="mic-pulse" class="hidden absolute inset-0 bg-red-100 rounded-xl animate-ping z-0"></span>
+                    </button>
+                    
+                    <button type="submit" class="bg-[#001529] text-white p-3 md:p-4 rounded-xl hover:bg-blue-600 transition-all shadow-md">
+                      <Send size={20} />
+                    </button>
+                  </div>
+                </div>
               </div>
             </form>
           </div>
@@ -118,23 +173,139 @@ import { Send, ShieldCheck, Plus, Menu, X, Trash2 } from 'lucide-react';
   const deleteModal = document.getElementById('delete-modal');
   const modalChatName = document.getElementById('modal-chat-name');
 
+  // Lógica de UI para carga de imágenes
+  const attachBtn = document.getElementById('attach-btn');
+  const attachMenu = document.getElementById('attach-menu');
+  const fileInput = document.getElementById('file-input') as HTMLInputElement;
+  const cameraInput = document.getElementById('camera-input') as HTMLInputElement;
+  const imgPreviewContainer = document.getElementById('image-preview-container');
+  const imgPreview = document.getElementById('image-preview') as HTMLImageElement;
+  const removeImgBtn = document.getElementById('remove-image');
+
   let currentChatId = localStorage.getItem('active_chat_id') || Date.now().toString();
   let chatHistory = JSON.parse(localStorage.getItem('synapse_history') || '[]');
   let idToDelete = "";
+  let currentImageData = null;
 
-  const WELCOME_MSG = "Saludos. Soy el asistente inteligente de **Synapse Engineering**. ¿En qué puedo asesorarle hoy?";
+  const WELCOME_MSG = "Saludos. Soy el asistente inteligente de **Synapse Engineering**. ¿En qué puedo asesorarle hoy? Puede enviarme consultas técnicas o imágenes de planos, tableros o esquemas eléctricos.";
 
-  async function getAIResponse(message) {
+  // Función premium para comprimir imagen y evitar que colapse el localStorage
+  function compressImage(file, maxWidth = 800) {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (event) => {
+        const img = new Image();
+        img.src = event.target?.result as string;
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const scaleSize = maxWidth / img.width;
+          canvas.width = maxWidth;
+          canvas.height = img.height * scaleSize;
+          const ctx = canvas.getContext('2d');
+          ctx?.drawImage(img, 0, 0, canvas.width, canvas.height);
+          resolve(canvas.toDataURL('image/jpeg', 0.6));
+        };
+      };
+    });
+  }
+
+  // Eventos del Menú Flotante
+  attachBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    attachMenu?.classList.toggle('hidden');
+  });
+
+  window.addEventListener('click', (e) => {
+    if (!attachMenu?.contains(e.target as Node) && e.target !== attachBtn) {
+      attachMenu?.classList.add('hidden');
+    }
+  });
+
+  document.getElementById('btn-fotos')?.addEventListener('click', () => fileInput.click());
+  document.getElementById('btn-archivos')?.addEventListener('click', () => fileInput.click());
+  document.getElementById('btn-drive')?.addEventListener('click', () => fileInput.click());
+  document.getElementById('btn-camera')?.addEventListener('click', () => cameraInput.click());
+
+  async function handleImageUpload(e) {
+    const file = e.target.files[0];
+    if (file) {
+      currentImageData = await compressImage(file);
+      imgPreview.src = currentImageData;
+      imgPreviewContainer?.classList.remove('hidden');
+      attachMenu?.classList.add('hidden');
+    }
+  }
+
+  fileInput?.addEventListener('change', handleImageUpload);
+  cameraInput?.addEventListener('change', handleImageUpload);
+
+  removeImgBtn?.addEventListener('click', () => {
+    currentImageData = null;
+    imgPreviewContainer?.classList.add('hidden');
+    fileInput.value = '';
+    cameraInput.value = '';
+  });
+
+  // Integración Web Speech API (Micrófono)
+  const micBtn = document.getElementById('mic-btn');
+  const micPulse = document.getElementById('mic-pulse');
+  
+  if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'es-ES';
+    recognition.interimResults = true;
+
+    let isRecording = false;
+
+    recognition.onstart = () => {
+      isRecording = true;
+      micBtn?.classList.add('text-red-500');
+      micBtn?.classList.remove('text-slate-400');
+      micPulse?.classList.remove('hidden');
+    };
+
+    recognition.onresult = (e) => {
+      let finalTranscript = '';
+      for (let i = e.resultIndex; i < e.results.length; ++i) {
+        if (e.results[i].isFinal) finalTranscript += e.results[i][0].transcript;
+      }
+      if (finalTranscript) userInput.value += (userInput.value ? ' ' : '') + finalTranscript;
+    };
+
+    recognition.onend = () => {
+      isRecording = false;
+      micBtn?.classList.remove('text-red-500');
+      micBtn?.classList.add('text-slate-400');
+      micPulse?.classList.add('hidden');
+    };
+
+    micBtn?.addEventListener('click', () => {
+      if (isRecording) {
+        recognition.stop();
+      } else {
+        recognition.start();
+      }
+    });
+  } else {
+    micBtn!.style.display = 'none';
+  }
+
+  // Modificamos llamada a la API para enviar imagen
+  async function getAIResponse(message, image = null) {
     const chat = chatHistory.find(c => c.id === currentChatId);
     const isReturningUser = chat && chat.messages.length > 0;
     const finalMessage = isReturningUser 
-      ? `[Omitir presentaciones. Responder directamente]: ${message}` 
+      ? `[Omitir presentaciones]: ${message}` 
       : message;
+
+    const payload = { message: finalMessage, image: image };
 
     const response = await fetch(`${window.location.origin}/api/chat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: finalMessage })
+      body: JSON.stringify(payload)
     });
     const data = await response.json();
     return data.response;
@@ -144,7 +315,7 @@ import { Send, ShieldCheck, Plus, Menu, X, Trash2 } from 'lucide-react';
     const textContainer = document.getElementById(`text-container-${msgId}`);
     const currentText = (document.getElementById(`text-${msgId}`) as HTMLElement).innerText;
     
-    textContainer.innerHTML = `
+    textContainer!.innerHTML = `
       <div class="flex flex-col gap-3 animate-in fade-in zoom-in-95 duration-200">
         <textarea id="edit-input-${msgId}" class="w-full bg-white border-2 border-blue-500 rounded-xl p-3 text-sm focus:outline-none min-h-[80px] text-slate-700 font-medium">${currentText}</textarea>
         <div class="flex gap-2 justify-end">
@@ -154,9 +325,9 @@ import { Send, ShieldCheck, Plus, Menu, X, Trash2 } from 'lucide-react';
       </div>
     `;
 
-    textContainer.querySelector('.cancel-edit').addEventListener('click', () => loadActiveChat());
+    textContainer!.querySelector('.cancel-edit')?.addEventListener('click', () => loadActiveChat());
     
-    textContainer.querySelector('.save-edit').addEventListener('click', async () => {
+    textContainer!.querySelector('.save-edit')?.addEventListener('click', async () => {
       const newText = (document.getElementById(`edit-input-${msgId}`) as HTMLTextAreaElement).value.trim();
       if (newText && newText !== currentText) {
         await processUpdate(msgId, newText);
@@ -178,7 +349,7 @@ import { Send, ShieldCheck, Plus, Menu, X, Trash2 } from 'lucide-react';
     const typingId = `typing-${Date.now()}`;
     showTyping(typingId);
     try {
-      const aiResponse = await getAIResponse(newText);
+      const aiResponse = await getAIResponse(newText, chat.messages[userMsgIndex].image);
       hideTyping(typingId);
       const aId = `a-${Date.now()}`;
       saveMessage('ai', aiResponse, aId);
@@ -194,7 +365,7 @@ import { Send, ShieldCheck, Plus, Menu, X, Trash2 } from 'lucide-react';
     const typingDiv = document.createElement('div');
     typingDiv.id = id;
     typingDiv.className = "text-slate-400 text-[10px] font-bold uppercase tracking-widest animate-pulse ml-16 mb-4";
-    typingDiv.innerText = "IA Recalculando respuesta...";
+    typingDiv.innerText = "IA Procesando requerimiento...";
     chatBox?.appendChild(typingDiv);
     chatBox!.scrollTop = chatBox!.scrollHeight;
   }
@@ -290,21 +461,26 @@ import { Send, ShieldCheck, Plus, Menu, X, Trash2 } from 'lucide-react';
     chatBox.innerHTML = '';
     const chat = chatHistory.find(c => c.id === currentChatId);
     if (chat && chat.messages.length > 0) {
-      chat.messages.forEach(m => chatBox.appendChild(createMessage(m.text, m.role === 'ai', m.id)));
+      chat.messages.forEach(m => chatBox.appendChild(createMessage(m.text, m.role === 'ai', m.id, m.image)));
     } else {
       chatBox.appendChild(createMessage(WELCOME_MSG, true, 'welcome'));
     }
     chatBox.scrollTop = chatBox.scrollHeight;
   }
 
-  function createMessage(text, isAi, specificId) {
+  function createMessage(text, isAi, specificId, imageStr = null) {
     const div = document.createElement('div');
     const msgId = specificId;
     div.className = `group flex gap-5 max-w-4xl relative ${isAi ? '' : 'ml-auto flex-row-reverse animate-in fade-in slide-in-from-right-4'}`;
     const formattedText = (text || "").replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
     
-    // CAMBIO: Se subió a top-1 para ajustarlo lo más arriba posible
     const toolPosition = isAi ? 'top-1 right-4' : 'top-1 left-4';
+    
+    // Inyectamos la imagen si el usuario subió una
+    let mediaHtml = '';
+    if (imageStr) {
+      mediaHtml = `<img src="${imageStr}" class="max-w-full h-auto rounded-xl mb-3 border border-slate-200 shadow-sm max-h-64 object-contain" alt="Adjunto del usuario" />`;
+    }
 
     div.innerHTML = `
       <div class="w-10 h-10 md:w-12 md:h-12 rounded-2xl ${isAi ? 'bg-[#001529] text-cyan-400' : 'bg-blue-600 text-white'} flex items-center justify-center shadow-xl flex-shrink-0 relative z-10">
@@ -328,7 +504,10 @@ import { Send, ShieldCheck, Plus, Menu, X, Trash2 } from 'lucide-react';
 
           <p class="font-black text-[#001529] mb-1 uppercase text-[9px] tracking-widest text-left">${isAi ? 'Synapse Core AI' : 'Usuario'}</p>
           <div id="text-container-${msgId}">
-            <div id="text-${msgId}" class="break-words leading-relaxed text-left ${isAi ? 'pr-8' : ''}">${formattedText}</div>
+            <div id="text-${msgId}" class="break-words leading-relaxed text-left ${isAi ? 'pr-8' : ''}">
+              ${mediaHtml}
+              ${formattedText}
+            </div>
           </div>
         </div>
       </div>
@@ -346,36 +525,49 @@ import { Send, ShieldCheck, Plus, Menu, X, Trash2 } from 'lucide-react';
     return div;
   }
 
+  // Modificamos el submit para que atrape tanto el texto como la imagen
   chatForm?.addEventListener('submit', async (e) => {
     e.preventDefault();
     const message = userInput.value.trim();
-    if (!message) return;
+    if (!message && !currentImageData) return; // Ahora puede enviar solo imagen
     const uId = `u-${Date.now()}`;
-    chatBox?.appendChild(createMessage(message, false, uId));
-    saveMessage('user', message, uId);
+    
+    const sentImage = currentImageData; // Guardamos la foto antes de limpiar
+    chatBox?.appendChild(createMessage(message, false, uId, sentImage));
+    saveMessage('user', message, uId, sentImage);
+    
+    // Limpieza de UI
     userInput.value = '';
+    currentImageData = null;
+    imgPreviewContainer?.classList.add('hidden');
+    fileInput.value = '';
+    cameraInput.value = '';
+    
     const typingId = `typing-${Date.now()}`;
     showTyping(typingId);
     try {
-      const aiResponse = await getAIResponse(message);
+      // El payload enviado a la API ahora incluye "image: sentImage" (Base64)
+      const aiResponse = await getAIResponse(message, sentImage);
       hideTyping(typingId);
       const aId = `a-${Date.now()}`;
       saveMessage('ai', aiResponse, aId);
       loadActiveChat();
     } catch (error) {
       hideTyping(typingId);
-      saveMessage('ai', "[ERROR DE SISTEMA]", `err-${Date.now()}`);
+      saveMessage('ai', "[ERROR DE SISTEMA O CONEXIÓN]", `err-${Date.now()}`);
       loadActiveChat();
     }
   });
 
-  function saveMessage(role, text, id) {
+  // Modificamos la base de datos local para guardar imágenes
+  function saveMessage(role, text, id, image = null) {
     let chat = chatHistory.find(c => c.id === currentChatId);
+    let chatTitle = text ? text.substring(0, 20).toUpperCase() + "..." : "CONSULTA CON IMAGEN";
     if (!chat) {
-      chat = { id: currentChatId, title: text.substring(0, 20).toUpperCase() + "...", messages: [], pinned: false };
+      chat = { id: currentChatId, title: chatTitle, messages: [], pinned: false };
       chatHistory.unshift(chat);
     }
-    chat.messages.push({ role, text, id });
+    chat.messages.push({ role, text, id, image });
     localStorage.setItem('synapse_history', JSON.stringify(chatHistory));
     renderHistory();
   }

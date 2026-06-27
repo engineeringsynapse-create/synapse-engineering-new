@@ -2,16 +2,30 @@ import type { APIRoute } from 'astro';
 
 export const POST: APIRoute = async ({ request }) => {
   try {
-    const { message } = await request.json();
+    // Ahora recibimos tanto 'message' como 'image' (en formato base64) desde el frontend
+    const { message, image } = await request.json();
     const apiKey = import.meta.env.MISTRAL_API_KEY;
 
     if (!apiKey) {
       return new Response(JSON.stringify({ response: "Error de configuración interna." }), { status: 500 });
     }
 
-    // Mantenemos 30s para dar margen en móviles, pero el modelo nuevo debería responder en < 2s
+    // Mantenemos 30s de timeout (procesar imágenes toma unos segundos más que solo texto)
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 30000);
+
+    // Prompt estricto de Ingeniero Eléctrico Senior
+    const systemPrompt = "Eres Synapse Core AI, un estricto y altamente capacitado ingeniero eléctrico senior experto de Synapse Engineering. Tu comunicación es formal, técnica, objetiva y precisa. Te especializas en normativas como la IEC 61439-1, diseño de tableros eléctricos, celdas de media tensión y automatización industrial. Si el usuario sube imágenes de diagramas, tableros, planos o esquemas, analízalos con rigor técnico e identifica componentes o posibles anomalías. No respondas a temas que salgan de la ingeniería eléctrica o de la empresa. No uses LaTeX.";
+
+    // Estructuramos el contenido dependiendo de si hay imagen o no
+    let userContent: any = message;
+
+    if (image) {
+      userContent = [
+        { type: "text", text: message || "Analiza detalladamente la siguiente imagen técnica y descríbela bajo estándares de ingeniería eléctrica." },
+        { type: "image_url", image_url: { url: image } }
+      ];
+    }
 
     const response = await fetch("https://api.mistral.ai/v1/chat/completions", {
       method: 'POST',
@@ -21,16 +35,21 @@ export const POST: APIRoute = async ({ request }) => {
       },
       signal: controller.signal,
       body: JSON.stringify({
-        model: "open-mistral-7b", // CAMBIO CLAVE: Modelo ultra rápido
+        // Si hay imagen, usa el modelo de visión de Mistral (Pixtral). Si es solo texto, usa el modelo rápido.
+        model: image ? "pixtral-12b-2409" : "open-mistral-7b",
         messages: [
           { 
             role: "system", 
-            content: "Eres Synapse Core AI, un ingeniero eléctrico experto y cercano. Saluda de forma amable y ayuda con precisión técnica. No uses LaTeX." 
+            content: systemPrompt 
           },
-          { role: "user", content: message }
+          { 
+            role: "user", 
+            content: userContent 
+          }
         ],
-        temperature: 0.7,
-        max_tokens: 2500 // SE EXTENDIÓ EL LÍMITE: Para evitar respuestas cortadas en explicaciones técnicas largas
+        // Temperatura a 0.3 para respuestas más precisas, analíticas y menos "creativas" (ideal para ingeniería)
+        temperature: 0.3,
+        max_tokens: 2500
       })
     });
 
@@ -40,15 +59,15 @@ export const POST: APIRoute = async ({ request }) => {
     const aiText = data.choices?.[0]?.message?.content?.trim();
 
     if (!aiText) {
-      return new Response(JSON.stringify({ response: "He tenido un pequeño bache de conexión. ¿Me lo repites?" }), { status: 200 });
+      return new Response(JSON.stringify({ response: "Error en el análisis de los circuitos lógicos. ¿Puede proporcionar los datos técnicos nuevamente?" }), { status: 200 });
     }
 
     return new Response(JSON.stringify({ response: aiText }), { status: 200 });
 
   } catch (e: any) {
     if (e.name === 'AbortError') {
-      return new Response(JSON.stringify({ response: "La red está algo lenta. Intenta enviarlo una vez más, por favor." }), { status: 504 });
+      return new Response(JSON.stringify({ response: "Tiempo de espera agotado en la red. Verifique su conexión y reintente el envío de los datos." }), { status: 504 });
     }
-    return new Response(JSON.stringify({ response: "Circuitos ocupados. ¿Podemos intentarlo de nuevo?" }), { status: 500 });
+    return new Response(JSON.stringify({ response: "Fallo en los sistemas centrales. Por favor, intente la consulta de nuevo." }), { status: 500 });
   }
 };
